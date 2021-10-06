@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
   Form,
   Button,
@@ -11,33 +11,8 @@ import {
   Card,
 } from "react-bootstrap";
 import heroImage from "../../assets/img/login hero/loginhero5.png";
-import axios from "axios";
-const API_URL = "http://localhost:2000";
 
-class VerifPage extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isActivated: false,
-    };
-  }
-  componentDidMount() {
-    let email = this.props.match.params.email;
-    const activateAccount = axios.get(
-      `${API_URL}/user/auth/verification/${email}`,
-      (err, res) => {
-        if (err) console.log(err);
-      }
-    );
-    if (activateAccount) {
-      this.setState({ isActivated: true });
-      if (this.state.isActivated == true) {
-        setTimeout(function () {
-          window.location.href = "/auth/login";
-        }, 1000);
-      }
-    }
-  }
+class RegisterSuccessPage extends React.Component {
   render() {
     return (
       <div>
@@ -54,12 +29,13 @@ class VerifPage extends React.Component {
                 className="animate__fadeInDown"
               ></Image>
               <div className="mt-4 text-center">
-                <h2>Welcome to Ukea</h2>
-                <p className="mt-2 text-secondary">
-                  Your account is now Active <br />
+                <h2>Register Success</h2>
+                <p className="mt-3 text-secondary">
+                  We have sent a verification link to <br />
+                  <strong>{this.props.match.params.verifEmail}</strong>
                 </p>
-                <Button className="my-2" as={Link} to="/auth/login">
-                  Go to login page
+                <Button className="my-4" as={Link} to="/">
+                  Back to home
                 </Button>
               </div>
             </Stack>
@@ -94,4 +70,4 @@ const style = {
   },
 };
 
-export default VerifPage;
+export default RegisterSuccessPage;
