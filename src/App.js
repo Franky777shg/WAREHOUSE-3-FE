@@ -3,6 +3,7 @@ import HomePage from "./pages/homePage";
 import Login from "./pages/auth/loginPage";
 import Register from "./pages/auth/registerPage";
 import VerifPage from "./pages/auth/verifPage";
+import RegisterSuccessPage from "./pages/auth/registerSuccessPage";
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 function App() {
@@ -19,9 +20,11 @@ function App() {
           <Route path="/auth/register">
             <Register />
           </Route>
-          <Route path="/auth/verification">
-            <VerifPage />
-          </Route>
+          <Route
+            path="/auth/register_success/:verifEmail"
+            component={RegisterSuccessPage}
+          ></Route>
+          <Route path="/auth/verification/:email" component={VerifPage}></Route>
         </Switch>
       </Router>
     </div>

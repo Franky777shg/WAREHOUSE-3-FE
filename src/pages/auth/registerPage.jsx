@@ -68,11 +68,11 @@ class RegisterPage extends React.Component {
   submitData = (registerData) => {
     axios.post(`${BASE_URL}/user/auth/register`, registerData).then((res) => {
       if (res.status === 200) {
+        const email = res.data.message;
         this.setState({ registerSuccess: true });
-        console.log(res.data);
-        // window.setTimeout(function () {
-        //   window.location.href = "/auth/login";
-        // }, 1500);
+        window.setTimeout(function () {
+          window.location.href = `/auth/register_success/${email}`;
+        }, 1500);
       }
     });
   };
