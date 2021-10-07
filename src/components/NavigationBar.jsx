@@ -96,7 +96,8 @@ class NavigationBar extends React.Component {
                         className="mt-2"
                         style={style.dropdownMenu}
                       >
-                        <Dropdown.Item style={style.dropdownItem} href="#">
+                        <Dropdown.Item style={style.dropdownItem} as={Link}
+                        to={"/profile"}>
                           <i className="fas fa-user mr-2"></i> profile
                         </Dropdown.Item>
                         <Dropdown.Item style={style.dropdownItem} href="#">
