@@ -17,14 +17,22 @@ class ProfilePage extends React.Component{
             successUpdate: false,
             warning: null,
             warningvisible: false,
+            idEdit: null
 
 
         }
     }
 
     fectDataAddress = () => {
-
-            Axios.get(`${URL_API}/get-useraddress/14`)
+    let token = localStorage.getItem("token")
+            Axios.post(`${URL_API}/get-useraddress/`,
+            {},
+                {
+                    headers: {
+                    Authorization: `Bearer ${token}`,
+                    },
+                }
+            )
             .then(res => {
                 console.log(res.data)
                 this.setState({ dataaddress: res.data })
@@ -72,9 +80,6 @@ class ProfilePage extends React.Component{
             age : ageEdit
             
         }
-
-          
-          
         let token = localStorage.getItem("token")
         Axios.post(`${URL_API}/update-user/`, 
         dataUser,
@@ -96,6 +101,97 @@ class ProfilePage extends React.Component{
         })
     }
 
+    onAddAddress = () => {
+        const addressadd = this.refs.addressadd.value
+        const kecamatanadd = this.refs.kecamatanadd.value
+        const kabupatenadd = this.refs.kabupatenadd.value
+
+        const addressInput = {
+            address : addressadd,
+            kecamatan : kecamatanadd,
+            kabupaten : kabupatenadd
+        }
+        console.log(addressInput)
+
+        let token = localStorage.getItem("token")
+        Axios.post(`${URL_API}/get-add-user-address/`, 
+        addressInput,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+        .then(res => {
+            this.setState({ dataaddress: res.data })
+
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
+    onEditAddress = (id) => {
+        const addressEdit = this.refs.addressEdit.value
+        const kecamatanEdit = this.refs.kecamatanEdit.value
+        const kabupatenEdit = this.refs.kabupatenEdit.value
+
+        const editAddress = {
+            address : addressEdit,
+            kecamatan : kecamatanEdit,
+            kabupaten : kabupatenEdit
+        }
+        console.log(editAddress)
+
+        let token = localStorage.getItem("token")
+        Axios.post(`${URL_API}/get-update-user-address/`, 
+        editAddress,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+        .then(res => {
+            this.setState({ dataaddress: res.data, idEdit: null })
+
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
+    onDeleteAddress = (id) => {
+        let token = localStorage.getItem("token")
+        Axios.post(`${URL_API}/get-delete-user-address/`, 
+        {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        )
+        .then(res => {
+            this.setState({ dataaddress: res.data })
+
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    renderTInput = () => {
+        return (
+          <tfoot>
+            <tr>
+              <td><Form.Control ref="addressadd" type="text" placeholder="Enter Address " /></td>
+              <td><Form.Control ref="kecamatanadd" type="text" placeholder="Enter Kecamatan " /></td>
+              <td><Form.Control ref="kabupatenadd" type="text" placeholder="Enter Kabupaten " /></td>
+              <td><Button variant="outline-success" onClick={this.onAddAddress}>Submit</Button></td>
+            </tr>
+          </tfoot>
+        )
+      }
+
     render(){
         // console.log(this.state.datauser.map(item => { console.log(item.username) }))
         const { successUpdate, warningvisible, warning} = this.state
@@ -105,12 +201,12 @@ class ProfilePage extends React.Component{
                 <NavigationBar/>
                 <Container>
                         <Row style={styles.cont}>
-                        <Col sm={4}>
+                        <Col sm={3}>
                             <div style={styles.imgProfile}>
                                 
                             </div>
                         </Col>
-                        <Col sm={8}>                        
+                        <Col sm={9}>                        
                             <div style={styles.dataProfile}>
 
                                     <Tabs defaultActiveKey="Profile" id="uncontrolled-tab-example" className="mb-3">
@@ -161,39 +257,55 @@ class ProfilePage extends React.Component{
                                         <Table striped bordered hover size="sm">
                                         <thead>
                                                 <tr>
-                                                    <th>ID</th>
                                                     <th>Address</th>
                                                     <th>Kecamatan</th>
                                                     <th>Kabupaten</th>
+                                                    <th>Action</th>
+
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {this.state.dataaddress.map(item => {
-                                                        return(
-                                                            <tr>
-                                                            <td>{item.id_address}</td>
+                                                {this.state.dataaddress.map((item, index) => {
+                                                    if(this.state.idEdit === item.id_address){
+                                                         return(
+                                                            <tr key={index}>
                                                             <td>
                                                                 <Form.Group className="mb-3">
-                                                                <Form.Label>Address</Form.Label>
-                                                                <Form.Control type="Address" defaultValue={item.address} placeholder="Enter Address" />
+                                                                <Form.Control ref= "addressEdit" type="text" defaultValue={item.address} placeholder="Enter Address" />
                                                                 </Form.Group></td>
                                                             <td>
                                                                 <Form.Group className="mb-3">
-                                                                <Form.Label>Kecamatan</Form.Label>
-                                                                <Form.Control type="Kecamatan" defaultValue={item.kecamatan} placeholder="Enter Kecamatan" />
+                                                                <Form.Control ref= "kecamatanEdit" type="text" defaultValue={item.kecamatan} placeholder="Enter Kecamatan" />
                                                                 </Form.Group>
                                                             </td>
                                                             <td>
                                                                 <Form.Group className="mb-3">
-                                                                <Form.Label>Kabupaten</Form.Label>
-                                                                <Form.Control type="Kabupaten" defaultValue={item.kabupaten} placeholder="Enter Kabupaten" />
+                                                                <Form.Control ref= "kabupatenEdit" type="text" defaultValue={item.kabupaten} placeholder="Enter Kabupaten" />
                                                                 </Form.Group>
+                                                            </td>
+                                                            <td>
+                                                                <Button variant="outline-success" onClick={() => this.onEditAddress(item.id_address)}>Save</Button>
+                                                                <Button variant="outline-danger" onClick={() => this.setState({ idEdit: null })}>Cancel</Button>
                                                             </td>
                                                         </tr>
                                                         )
+                                                    }return (
+                                                        <tr key={index}>
+                                                        <td>{item.address}</td>
+                                                        <td>{item.kecamatan}</td>
+                                                        <td>{item.kabupaten}</td>
+                                                        <td>
+                                                            <Button variant="outline-warning" onClick={() => this.setState({ idEdit: item.id_address })}>Edit</Button>
+                                                            <Button variant="outline-danger" onClick={() => this.onDeleteAddress(item.id_address)}>Delete</Button>
+                                                        </td>
+                                                        </tr>
+                                                    )
+
                                                 })}
-                                            
-                                            </tbody>                       
+
+                                            </tbody> 
+                                            {this.renderTInput()}
+
                                         </Table>
                                         </Tab>
                                     </Tabs>                                                            
