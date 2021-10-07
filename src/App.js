@@ -5,6 +5,7 @@ import Register from "./pages/auth/registerPage";
 import VerifPage from "./pages/auth/verifPage";
 import RegisterSuccessPage from "./pages/auth/registerSuccessPage";
 import ChangePassPage from "./pages/changePass";
+import ProfilePage from "./pages/ProfilePage";
 
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
@@ -39,6 +40,7 @@ class App extends React.Component {
               component={VerifPage}
             ></Route>
             <Route path= "/change-password/:id" component={ ChangePassPage }></Route>
+            <Route path="/profile" component={ProfilePage} />
           </Switch>
         </Router>
       </div>
