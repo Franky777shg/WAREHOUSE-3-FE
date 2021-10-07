@@ -4,6 +4,8 @@ import Login from "./pages/auth/loginPage";
 import Register from "./pages/auth/registerPage";
 import VerifPage from "./pages/auth/verifPage";
 import RegisterSuccessPage from "./pages/auth/registerSuccessPage";
+import ChangePassPage from "./pages/changePass";
+
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
 function App() {
@@ -25,6 +27,7 @@ function App() {
             component={RegisterSuccessPage}
           ></Route>
           <Route path="/auth/verification/:email" component={VerifPage}></Route>
+          <Route path= "/change-password/:id" component={ ChangePassPage }></Route>
         </Switch>
       </Router>
     </div>
