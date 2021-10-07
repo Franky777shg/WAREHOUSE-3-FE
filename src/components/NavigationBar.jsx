@@ -13,6 +13,9 @@ import {
 import logo from "../assets/img/logo.svg";
 import avatar from "../assets/img/avatar/avatar2.png";
 
+import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+
 class NavigationBar extends React.Component {
   constructor(props) {
     super(props);
@@ -52,7 +55,7 @@ class NavigationBar extends React.Component {
                 />
               </Nav>
               <Form inline className="d-flex">
-                {this.state.isLogedIn ? (
+                {this.props.username ? (
                   <>
                     <Button
                       variant="default"
@@ -83,7 +86,10 @@ class NavigationBar extends React.Component {
                         id="dropdown-basic"
                       >
                         <Image src={avatar} width="35"></Image>
-                        <span style={style.navUserName}>Ade Mahendra</span>
+                        <span style={style.navUserName}>
+                          {" "}
+                          {this.props.username}{" "}
+                        </span>
                       </Dropdown.Toggle>
 
                       <Dropdown.Menu
@@ -118,8 +124,8 @@ class NavigationBar extends React.Component {
                 ) : (
                   <div style={style.navAuthButton} className="nav-auth-button">
                     <Button
-                      // as={Link}
-                      // to={"/login"}
+                      as={Link}
+                      to={"auth/login"}
                       variant="primary"
                       className="mx-2"
                       style={style.navLoginButton}
@@ -128,8 +134,8 @@ class NavigationBar extends React.Component {
                     </Button>
 
                     <Button
-                      // as={Link}
-                      // to={"/register"}
+                      as={Link}
+                      to={"auth/register"}
                       variant="primary"
                       className="mr-1"
                       style={style.navRegButton}
@@ -263,4 +269,10 @@ const style = {
   },
 };
 
-export default NavigationBar;
+const mapStateToProps = (state) => {
+  return {
+    username: state.userReducer.username,
+  };
+};
+
+export default connect(mapStateToProps)(NavigationBar);
