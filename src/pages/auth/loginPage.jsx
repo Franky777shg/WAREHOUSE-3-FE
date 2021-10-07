@@ -1,5 +1,7 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import { userLogin } from "../../redux/actions";
 import {
   Form,
   Button,
@@ -11,12 +13,15 @@ import {
 } from "react-bootstrap";
 import heroImage from "../../assets/img/login hero/loginhero5.png";
 
+import axios from "axios";
+const BASE_URL = "http://localhost:2000";
+
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       showPassword: false,
-      usernameEmpty: [false, ""],
+      emailEmpty: [false, ""],
       passwordEmpty: [false, ""],
     };
   }
@@ -24,21 +29,24 @@ class LoginPage extends React.Component {
   onLogin = (e) => {
     e.preventDefault();
     let userLoginData = {
-      username: this.refs.username.value,
+      email: this.refs.email.value,
       password: this.refs.password.value,
     };
 
-    if (userLoginData.username === "") {
-      this.setState({ usernameEmpty: [true, "Username is required"] });
+    if (userLoginData.email === "") {
+      this.setState({ emailEmpty: [true, "Email is required"] });
     }
     if (userLoginData.password === "") {
       this.setState({ passwordEmpty: [true, "Password is required"] });
     } else {
-      this.props.loginAction(userLoginData.username, userLoginData.password);
+      this.props.userLogin(userLoginData.email, userLoginData.password);
     }
   };
 
   render() {
+    if (this.props.username) {
+      return <Redirect to="/" />;
+    }
     return (
       <div>
         <Container fluid>
@@ -53,39 +61,43 @@ class LoginPage extends React.Component {
 
             <Col style={style.loginForm}>
               <Form style={style.loginFormWrapper}>
-                <Alert
-                  show={this.props.loginFailed}
-                  variant="danger"
-                  dismissible
-                >
-                  <strong>Login failed,</strong> check your account
-                </Alert>
+                {this.props.loginFailed ? (
+                  <Alert variant="danger" dismissible>
+                    <strong>Login failed,</strong> check your account
+                  </Alert>
+                ) : null}
+
+                {this.props.username ? (
+                  <Alert variant="success" dismissible>
+                    <strong>Login success </strong>
+                  </Alert>
+                ) : null}
+
                 <div className="form-title mb-4 mt-6">
                   <h2>Welcome back!</h2>
                   <Form.Text muted>Plese login with your account</Form.Text>
                 </div>
-                <hr />
 
                 <Form.Group controlId="formBasicEmail" hasValidation>
-                  <Form.Label>Username</Form.Label>
+                  <Form.Label>Email</Form.Label>
                   <Form.Control
-                    ref="username"
-                    type="text"
-                    placeholder="Username"
+                    ref="email"
+                    type="email"
+                    placeholder="Email"
                     required
-                    isInvalid={this.state.usernameEmpty[0]}
+                    isInvalid={this.state.emailEmpty[0]}
                     onChange={(e) =>
                       this.setState({
-                        usernameEmpty: [false, ""],
+                        emailEmpty: [false, ""],
                       })
                     }
                   />
                   <Form.Control.Feedback type="invalid">
-                    {this.state.usernameEmpty[1]}
+                    {this.state.emailEmpty[1]}
                   </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group controlId="formBasicPassword">
+                <Form.Group controlId="formBasicPassword" className="mt-3">
                   <Form.Label>Password</Form.Label>
                   <Form.Control
                     type={this.state.showPassword ? "text" : "password"}
@@ -217,4 +229,11 @@ const style = {
   },
 };
 
-export default LoginPage;
+const mapStateToProps = (state) => {
+  return {
+    username: state.userReducer.username,
+    loginFailed: state.userReducer.login_failed,
+  };
+};
+
+export default connect(mapStateToProps, { userLogin })(LoginPage);

@@ -8,30 +8,48 @@ import ChangePassPage from "./pages/changePass";
 
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 
-function App() {
-  return (
-    <div>
-      <Router>
-        <Switch>
-          <Route exact path="/">
-            <HomePage />
-          </Route>
-          <Route path="/auth/login">
-            <Login />
-          </Route>
-          <Route path="/auth/register">
-            <Register />
-          </Route>
-          <Route
-            path="/auth/register_success/:verifEmail"
-            component={RegisterSuccessPage}
-          ></Route>
-          <Route path="/auth/verification/:email" component={VerifPage}></Route>
-          <Route path= "/change-password/:id" component={ ChangePassPage }></Route>
-        </Switch>
-      </Router>
-    </div>
-  );
+import { keepLogin } from "./redux/actions";
+import { connect } from "react-redux";
+
+class App extends React.Component {
+  componentDidMount() {
+    let userid = localStorage.getItem("token");
+    this.props.keepLogin(userid);
+  }
+  render() {
+    return (
+      <div>
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <HomePage />
+            </Route>
+            <Route path="/auth/login">
+              <Login />
+            </Route>
+            <Route path="/auth/register">
+              <Register />
+            </Route>
+            <Route
+              path="/auth/register_success/:verifEmail"
+              component={RegisterSuccessPage}
+            ></Route>
+            <Route
+              path="/auth/verification/:email"
+              component={VerifPage}
+            ></Route>
+            <Route path= "/change-password/:id" component={ ChangePassPage }></Route>
+          </Switch>
+        </Router>
+      </div>
+    );
+  }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    username: state.userReducer.username,
+  };
+};
+
+export default connect(mapStateToProps, { keepLogin })(App);

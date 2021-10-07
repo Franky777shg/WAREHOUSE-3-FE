@@ -1,12 +1,28 @@
 const INITIAL_STATE = {
-    successChangePass: false,
-    failedChangePass: false,
-    msgFailedChangePass: ''
-}
+  userID: null,
+  username: "",
+  login_failed: false,
+  login_failed_message: "",
+  successChangePass: false,
+  failedChangePass: false,
+  msgFailedChangePass: ''
+};
 
 const userReducer = (state = INITIAL_STATE, action) => {
-    switch (action.type) {
-        case 'SUCCESS_CHANGE_PASSWORD':
+  switch (action.type) {
+    case "LOGIN":
+      return {
+        ...state,
+        userID: action.payload.token,
+        username: action.payload.username,
+      };
+    case "LOGIN_FAILED":
+      return {
+        ...state,
+        login_failed: true,
+        msgFailedLogin: action.payload,
+      };
+      case 'SUCCESS_CHANGE_PASSWORD':
             return {
                 ...state,
                 successChangePass: true
@@ -23,9 +39,9 @@ const userReducer = (state = INITIAL_STATE, action) => {
                 failedChangePass: false,
                 msgFailedChangePass: ''
             }
-        default:
-            return state
-    }
-}
+    default:
+      return state;
+  }
+};
 
-export default userReducer
+export default userReducer;
