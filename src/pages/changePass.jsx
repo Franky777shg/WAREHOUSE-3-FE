@@ -1,4 +1,5 @@
 import React from 'react'
+// import Axios from 'axios'
 import { Link, Redirect } from 'react-router-dom'
 import {
     InputGroup,
@@ -9,7 +10,7 @@ import {
 } from 'react-bootstrap'
 import { connect } from 'react-redux'
 import { changepassword, closeModalFailedChangePass } from '../redux/actions'
-
+// const URL_API = 'http://localhost:2000/user'
 
 class ChangePassPage extends React.Component {
     constructor(props) {

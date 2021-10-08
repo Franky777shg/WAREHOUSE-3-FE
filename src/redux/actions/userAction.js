@@ -76,3 +76,16 @@ export const closeModalFailedChangePass = () => {
         })
     }
 }
+
+export const getAllProd = (data) => {
+    return(dispatch) => {
+        Axios.get(`${BASE_URL}/product/get-product/?page=${data}`)
+        .then(res => {
+            dispatch({
+                type: 'PAGE_PAGINATION',
+                payload : res.data
+            })
+        })
+        .catch(err => console.log(err))
+    }
+}

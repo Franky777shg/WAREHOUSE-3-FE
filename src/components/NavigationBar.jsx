@@ -40,19 +40,12 @@ class NavigationBar extends React.Component {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="me-auto">
-                <Nav.Link href="#" style={style.navbarLink}>
+                <Nav.Link href="/" style={style.navbarLink}>
                   Home
                 </Nav.Link>
-                <Nav.Link href="#" style={style.navbarLink} className="ml-5">
-                  Categories
+                <Nav.Link href="/product" style={style.navbarLink} className="ml-5">
+                  Products
                 </Nav.Link>
-                <Form.Control
-                  type="text"
-                  size="sm"
-                  placeholder="cari iphone x"
-                  className="mx-2"
-                  style={style.searchForm}
-                />
               </Nav>
               <Form inline className="d-flex">
                 {this.props.username ? (
@@ -99,6 +92,9 @@ class NavigationBar extends React.Component {
                         <Dropdown.Item style={style.dropdownItem} as={Link}
                         to={"/profile"}>
                           <i className="fas fa-user mr-2"></i> profile
+                        </Dropdown.Item>
+                        <Dropdown.Item style={style.dropdownItem} href="#">
+                          <i className="fas fa-user-lock"></i> change password
                         </Dropdown.Item>
                         <Dropdown.Item style={style.dropdownItem} href="#">
                           <i className="fas fa-heart mr-2"></i> wishlists
