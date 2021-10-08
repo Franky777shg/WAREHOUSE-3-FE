@@ -105,11 +105,13 @@ class ProfilePage extends React.Component{
         const addressadd = this.refs.addressadd.value
         const kecamatanadd = this.refs.kecamatanadd.value
         const kabupatenadd = this.refs.kabupatenadd.value
+        const status_aktifadd = this.refs.status_aktifadd.value
 
         const addressInput = {
             address : addressadd,
             kecamatan : kecamatanadd,
-            kabupaten : kabupatenadd
+            kabupaten : kabupatenadd,
+            status_aktif : status_aktifadd
         }
         console.log(addressInput)
 
@@ -135,11 +137,14 @@ class ProfilePage extends React.Component{
         const addressEdit = this.refs.addressEdit.value
         const kecamatanEdit = this.refs.kecamatanEdit.value
         const kabupatenEdit = this.refs.kabupatenEdit.value
+        const status_aktifadd = this.refs.status_aktifadd.value
 
         const editAddress = {
             address : addressEdit,
             kecamatan : kecamatanEdit,
-            kabupaten : kabupatenEdit
+            kabupaten : kabupatenEdit,
+            status_aktif : status_aktifadd
+
         }
         console.log(editAddress)
 
@@ -180,6 +185,8 @@ class ProfilePage extends React.Component{
             console.log(err)
         })
     }
+
+    // input
     renderTInput = () => {
         return (
           <tfoot>
@@ -187,12 +194,20 @@ class ProfilePage extends React.Component{
               <td><Form.Control ref="addressadd" type="text" placeholder="Enter Address " /></td>
               <td><Form.Control ref="kecamatanadd" type="text" placeholder="Enter Kecamatan " /></td>
               <td><Form.Control ref="kabupatenadd" type="text" placeholder="Enter Kabupaten " /></td>
-              <td><Button variant="outline-success" onClick={this.onAddAddress}>Submit</Button></td>
+              {/* <td><Form.Control ref="status_aktifadd" type="text" placeholder="Enter Status " /></td> */}
+              <td>
+                <Form.Select ref="status_aktifadd" type="text"  size="md" placeholder="Choose">
+                <option>Aktif</option>
+                 <option>Tidak Aktif</option>
+
+                </Form.Select>  
+            </td>
+              <td><Button variant="outline-success" onClick={this.onAddAddress}>Add</Button></td>
             </tr>
           </tfoot>
         )
       }
-
+    // input
     render(){
         // console.log(this.state.datauser.map(item => { console.log(item.username) }))
         const { successUpdate, warningvisible, warning} = this.state
@@ -219,9 +234,7 @@ class ProfilePage extends React.Component{
 
                                             <Form.Group className="mb-3" >
                                                 <Form.Label>Username</Form.Label>
-                                                <Form.Control ref="usernameEdit" type="text" defaultValue={item.username} placeholder="Enter Username"  
-                                                
-                                                />
+                                                <Form.Control ref="usernameEdit" type="text" defaultValue={item.username} placeholder="Enter Username"  />
                                             
                                             </Form.Group>
                                             <Form.Group className="mb-3">
@@ -230,8 +243,7 @@ class ProfilePage extends React.Component{
                                             </Form.Group>
                                             <Form.Group className="mb-3">
                                                 <Form.Label>Email</Form.Label>
-                                                <Form.Control ref="emailEdit" type="text" defaultValue={item.email} placeholder="Enter Email" 
-                                                 />
+                                                <Form.Control ref="emailEdit" type="text" defaultValue={item.email} placeholder="Enter Email"/>
                                                 
                                             </Form.Group>
                                             
@@ -261,6 +273,8 @@ class ProfilePage extends React.Component{
                                                     <th>Address</th>
                                                     <th>Kecamatan</th>
                                                     <th>Kabupaten</th>
+                                                    <th>Status</th>
+
                                                     <th>Action</th>
 
                                                 </tr>
@@ -285,6 +299,15 @@ class ProfilePage extends React.Component{
                                                                 </Form.Group>
                                                             </td>
                                                             <td>
+                                                                <Form.Group className="mb-3">
+                                                                {/* <Form.Control ref= "kabupatenEdit" type="text" defaultValue={item.status_aktif} placeholder="Enter Status" /> */}
+                                                                    <Form.Select ref="status_aktifadd" type="text"  defaultValue={item.status_aktif} size="md" placeholder="Choose">
+                                                                    <option>Aktif</option>
+                                                                    <option>Tidak Aktif</option>
+                                                                    </Form.Select>  
+                                                                </Form.Group>
+                                                            </td>
+                                                            <td>
                                                                 <Button variant="outline-success" onClick={() => this.onEditAddress(item.id_address)}>Save</Button>
                                                                 <Button variant="outline-danger" onClick={() => this.setState({ idEdit: null })}>Cancel</Button>
                                                                 <Button variant="outline-danger" onClick={() => this.onDeleteAddress(item.id_address)}>Delete</Button>
@@ -297,6 +320,8 @@ class ProfilePage extends React.Component{
                                                         <td>{item.address}</td>
                                                         <td>{item.kecamatan}</td>
                                                         <td>{item.kabupaten}</td>
+                                                        <td>{item.status_aktif}</td>
+
                                                         <td>
                                                             <Button variant="outline-warning" onClick={() => this.setState({ idEdit: item.id_address })}>Edit</Button>
                                                         </td>
