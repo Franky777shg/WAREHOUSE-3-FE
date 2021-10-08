@@ -163,16 +163,17 @@ class ProfilePage extends React.Component{
 
     onDeleteAddress = (id) => {
         let token = localStorage.getItem("token")
-        Axios.post(`${URL_API}/get-delete-user-address/`, 
-        {},
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
+        Axios.delete(`${URL_API}/get-delete-user-address/${id}`, 
+        // {},
+        //   {
+        //     headers: {
+        //       Authorization: `Bearer ${token}`,
+        //     },
+        //   },
         )
         .then(res => {
             this.setState({ dataaddress: res.data })
+            this.fectDataAddress()
 
         })
         .catch(err => {
@@ -286,6 +287,8 @@ class ProfilePage extends React.Component{
                                                             <td>
                                                                 <Button variant="outline-success" onClick={() => this.onEditAddress(item.id_address)}>Save</Button>
                                                                 <Button variant="outline-danger" onClick={() => this.setState({ idEdit: null })}>Cancel</Button>
+                                                                <Button variant="outline-danger" onClick={() => this.onDeleteAddress(item.id_address)}>Delete</Button>
+
                                                             </td>
                                                         </tr>
                                                         )
@@ -296,7 +299,6 @@ class ProfilePage extends React.Component{
                                                         <td>{item.kabupaten}</td>
                                                         <td>
                                                             <Button variant="outline-warning" onClick={() => this.setState({ idEdit: item.id_address })}>Edit</Button>
-                                                            <Button variant="outline-danger" onClick={() => this.onDeleteAddress(item.id_address)}>Delete</Button>
                                                         </td>
                                                         </tr>
                                                     )
