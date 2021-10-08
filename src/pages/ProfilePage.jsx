@@ -1,10 +1,9 @@
 
 import React from 'react';
 import Axios from 'axios'
-
 import NavigationBar from "../components/NavigationBar"; 
 
-import {Container, Col, Row, Form, Button, Tab, Tabs, Table, Alert} from 'react-bootstrap'
+import {Container, Col, Row, Form, Button, Tab, Tabs, Table, Alert, Image} from 'react-bootstrap'
 const URL_API = 'http://localhost:2000/user'
 
 class ProfilePage extends React.Component{
@@ -17,7 +16,8 @@ class ProfilePage extends React.Component{
             successUpdate: false,
             warning: null,
             warningvisible: false,
-            idEdit: null
+            idEdit: null,
+            images: ''
 
 
         }
@@ -48,6 +48,7 @@ class ProfilePage extends React.Component{
         {},
           {
             headers: {
+            'Content-Type': 'multipart/form-data',
               Authorization: `Bearer ${token}`,
             },
           }
@@ -60,9 +61,29 @@ class ProfilePage extends React.Component{
             console.log(err)
           })
     }
+    getUserProfile = () => {
+        let token = localStorage.getItem("token")
+        Axios.post(`${URL_API}/get-user/`,
+        {},
+          {
+            headers: {
+            'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${token}`,
+            },
+          })
+        .then(res => {
+            // console.log("dataget", res.data[0].profile_picture)
+            this.setState({images : res.data[0].profile_picture})
+        })
+        .catch(err => {
+            console.log("error get", err)
+        })
+    }
     componentDidMount() {
         this.fectDataUser()
         this.fectDataAddress()
+        this.getUserProfile()
+
     }
 
     onUpdateUser = () => {
@@ -186,6 +207,38 @@ class ProfilePage extends React.Component{
         })
     }
 
+    handleChoose = (e) => {
+        console.log('e.target.files', e.target.files)
+        this.setState({ images: e.target.files[0] })
+    }
+
+    handleUpload = () => {
+        const data = new FormData()
+        console.log(data)
+        data.append('IMG', this.state.images)
+        console.log(data.get('IMG'))
+
+        let token = localStorage.getItem("token")
+        Axios.post(`${URL_API}/upload-pic/`, 
+        data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
+            },
+          }
+        )
+        .then(res => {
+            this.setState({ images: res.data})
+            console.log(res.data)
+            this.fectDataUser()
+            this.getUserProfile()
+
+          })
+          .catch(err => {
+            console.log(err)
+          })
+    }
     // input
     renderTInput = () => {
         return (
@@ -210,8 +263,10 @@ class ProfilePage extends React.Component{
     // input
     render(){
         // console.log(this.state.datauser.map(item => { console.log(item.username) }))
-        const { successUpdate, warningvisible, warning} = this.state
-
+        const { successUpdate, warningvisible, warning, images} = this.state
+        // console.log(this.state.datauser[0].profile_picture)
+        // console.log(this.setState.datauser[0].profile_picture)
+        // console.log(images)
         return(
             <div>
                 <NavigationBar/>
@@ -220,6 +275,33 @@ class ProfilePage extends React.Component{
                         <Col sm={3}>
                             <div style={styles.imgProfile}>
                                 
+                                <Image rounded   src={images ? `http://localhost:2000/${images}` : `http://localhost:2000/asset/default.png` } 
+                                style={{
+                                        height: '100%',
+                                        width: '100%',
+                                        backgroundPosition: 'center',
+                                        backgroundSize: 'contain',
+                                        backgroundRepeat: 'no-repeat',
+                                        display : 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center'
+                                    }}>  
+                                    
+                                </Image> 
+                                <div style={{ marginTop: '1vh' }}>  
+                                    <form encType="multipart/form-data">
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        name="IMG"
+                                        onChange={(e) => this.handleChoose(e)}
+                                    />
+                                    </form>
+                                        <div style={styles.uploadButton}> 
+                                            <Button onClick={this.handleUpload} >Upload</Button>
+                                            <Button >Delete</Button>
+                                        </div>       
+                                    </div>
                             </div>
                         </Col>
                         <Col sm={9}>                        
@@ -345,14 +427,25 @@ class ProfilePage extends React.Component{
     }
 }
 
-export default ProfilePage
+
+
+export default ProfilePage;
 
 const styles= {
     cont:{
-        margin:'10vh 0vh'
+        margin:'10vh -2vh'
     },
     imgProfile: {
-        border : '1px solid black'
+        // border : '1px solid black',
+        // borderRadius: '2%',
+
+    },
+    uploadButton:{
+        marginTop: '2vh',
+        display : 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     dataProfile: {
         border : '1px solid black',

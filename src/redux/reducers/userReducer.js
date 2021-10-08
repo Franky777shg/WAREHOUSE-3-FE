@@ -10,7 +10,7 @@ const INITIAL_STATE = {
   totalProd: '',
   prodPerPage: '',
   product: [],
-  counterPage: 1
+  counterPage: 1,
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
