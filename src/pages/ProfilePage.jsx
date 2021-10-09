@@ -1,10 +1,9 @@
 
 import React from 'react';
 import Axios from 'axios'
-
 import NavigationBar from "../components/NavigationBar"; 
 
-import {Container, Col, Row, Form, Button, Tab, Tabs, Table, Alert} from 'react-bootstrap'
+import {Container, Col, Row, Form, Button, Tab, Tabs, Table, Alert, Image} from 'react-bootstrap'
 const URL_API = 'http://localhost:2000/user'
 
 class ProfilePage extends React.Component{
@@ -17,7 +16,8 @@ class ProfilePage extends React.Component{
             successUpdate: false,
             warning: null,
             warningvisible: false,
-            idEdit: null
+            idEdit: null,
+            images: ''
 
 
         }
@@ -48,6 +48,7 @@ class ProfilePage extends React.Component{
         {},
           {
             headers: {
+            'Content-Type': 'multipart/form-data',
               Authorization: `Bearer ${token}`,
             },
           }
@@ -60,9 +61,29 @@ class ProfilePage extends React.Component{
             console.log(err)
           })
     }
+    getUserProfile = () => {
+        let token = localStorage.getItem("token")
+        Axios.post(`${URL_API}/get-user/`,
+        {},
+          {
+            headers: {
+            'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${token}`,
+            },
+          })
+        .then(res => {
+            // console.log("dataget", res.data[0].profile_picture)
+            this.setState({images : res.data[0].profile_picture})
+        })
+        .catch(err => {
+            console.log("error get", err)
+        })
+    }
     componentDidMount() {
         this.fectDataUser()
         this.fectDataAddress()
+        this.getUserProfile()
+
     }
 
     onUpdateUser = () => {
@@ -105,11 +126,13 @@ class ProfilePage extends React.Component{
         const addressadd = this.refs.addressadd.value
         const kecamatanadd = this.refs.kecamatanadd.value
         const kabupatenadd = this.refs.kabupatenadd.value
+        const status_aktifadd = this.refs.status_aktifadd.value
 
         const addressInput = {
             address : addressadd,
             kecamatan : kecamatanadd,
-            kabupaten : kabupatenadd
+            kabupaten : kabupatenadd,
+            status_aktif : status_aktifadd
         }
         console.log(addressInput)
 
@@ -135,11 +158,14 @@ class ProfilePage extends React.Component{
         const addressEdit = this.refs.addressEdit.value
         const kecamatanEdit = this.refs.kecamatanEdit.value
         const kabupatenEdit = this.refs.kabupatenEdit.value
+        const status_aktifadd = this.refs.status_aktifadd.value
 
         const editAddress = {
             address : addressEdit,
             kecamatan : kecamatanEdit,
-            kabupaten : kabupatenEdit
+            kabupaten : kabupatenEdit,
+            status_aktif : status_aktifadd
+
         }
         console.log(editAddress)
 
@@ -180,6 +206,40 @@ class ProfilePage extends React.Component{
             console.log(err)
         })
     }
+
+    handleChoose = (e) => {
+        console.log('e.target.files', e.target.files)
+        this.setState({ images: e.target.files[0] })
+    }
+
+    handleUpload = () => {
+        const data = new FormData()
+        console.log(data)
+        data.append('IMG', this.state.images)
+        console.log(data.get('IMG'))
+
+        let token = localStorage.getItem("token")
+        Axios.post(`${URL_API}/upload-pic/`, 
+        data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
+            },
+          }
+        )
+        .then(res => {
+            this.setState({ images: res.data})
+            console.log(res.data)
+            this.fectDataUser()
+            this.getUserProfile()
+
+          })
+          .catch(err => {
+            console.log(err)
+          })
+    }
+    // input
     renderTInput = () => {
         return (
           <tfoot>
@@ -187,16 +247,26 @@ class ProfilePage extends React.Component{
               <td><Form.Control ref="addressadd" type="text" placeholder="Enter Address " /></td>
               <td><Form.Control ref="kecamatanadd" type="text" placeholder="Enter Kecamatan " /></td>
               <td><Form.Control ref="kabupatenadd" type="text" placeholder="Enter Kabupaten " /></td>
-              <td><Button variant="outline-success" onClick={this.onAddAddress}>Submit</Button></td>
+              {/* <td><Form.Control ref="status_aktifadd" type="text" placeholder="Enter Status " /></td> */}
+              <td>
+                <Form.Select ref="status_aktifadd" type="text"  size="md" placeholder="Choose">
+                <option>Aktif</option>
+                 <option>Tidak Aktif</option>
+
+                </Form.Select>  
+            </td>
+              <td><Button variant="outline-success" onClick={this.onAddAddress}>Add</Button></td>
             </tr>
           </tfoot>
         )
       }
-
+    // input
     render(){
         // console.log(this.state.datauser.map(item => { console.log(item.username) }))
-        const { successUpdate, warningvisible, warning} = this.state
-
+        const { successUpdate, warningvisible, warning, images} = this.state
+        // console.log(this.state.datauser[0].profile_picture)
+        // console.log(this.setState.datauser[0].profile_picture)
+        // console.log(images)
         return(
             <div>
                 <NavigationBar/>
@@ -205,6 +275,33 @@ class ProfilePage extends React.Component{
                         <Col sm={3}>
                             <div style={styles.imgProfile}>
                                 
+                                <Image rounded   src={images ? `http://localhost:2000/${images}` : `http://localhost:2000/asset/default.png` } 
+                                style={{
+                                        height: '100%',
+                                        width: '100%',
+                                        backgroundPosition: 'center',
+                                        backgroundSize: 'contain',
+                                        backgroundRepeat: 'no-repeat',
+                                        display : 'flex',
+                                        flexDirection: 'row',
+                                        alignItems: 'center'
+                                    }}>  
+                                    
+                                </Image> 
+                                <div style={{ marginTop: '1vh' }}>  
+                                    <form encType="multipart/form-data">
+                                    <input
+                                        type="file"
+                                        accept="image/*"
+                                        name="IMG"
+                                        onChange={(e) => this.handleChoose(e)}
+                                    />
+                                    </form>
+                                        <div style={styles.uploadButton}> 
+                                            <Button onClick={this.handleUpload} >Upload</Button>
+                                            <Button >Delete</Button>
+                                        </div>       
+                                    </div>
                             </div>
                         </Col>
                         <Col sm={9}>                        
@@ -219,9 +316,7 @@ class ProfilePage extends React.Component{
 
                                             <Form.Group className="mb-3" >
                                                 <Form.Label>Username</Form.Label>
-                                                <Form.Control ref="usernameEdit" type="text" defaultValue={item.username} placeholder="Enter Username"  
-                                                
-                                                />
+                                                <Form.Control ref="usernameEdit" type="text" defaultValue={item.username} placeholder="Enter Username"  />
                                             
                                             </Form.Group>
                                             <Form.Group className="mb-3">
@@ -230,8 +325,7 @@ class ProfilePage extends React.Component{
                                             </Form.Group>
                                             <Form.Group className="mb-3">
                                                 <Form.Label>Email</Form.Label>
-                                                <Form.Control ref="emailEdit" type="text" defaultValue={item.email} placeholder="Enter Email" 
-                                                 />
+                                                <Form.Control ref="emailEdit" type="text" defaultValue={item.email} placeholder="Enter Email"/>
                                                 
                                             </Form.Group>
                                             
@@ -261,6 +355,8 @@ class ProfilePage extends React.Component{
                                                     <th>Address</th>
                                                     <th>Kecamatan</th>
                                                     <th>Kabupaten</th>
+                                                    <th>Status</th>
+
                                                     <th>Action</th>
 
                                                 </tr>
@@ -285,6 +381,15 @@ class ProfilePage extends React.Component{
                                                                 </Form.Group>
                                                             </td>
                                                             <td>
+                                                                <Form.Group className="mb-3">
+                                                                {/* <Form.Control ref= "kabupatenEdit" type="text" defaultValue={item.status_aktif} placeholder="Enter Status" /> */}
+                                                                    <Form.Select ref="status_aktifadd" type="text"  defaultValue={item.status_aktif} size="md" placeholder="Choose">
+                                                                    <option>Aktif</option>
+                                                                    <option>Tidak Aktif</option>
+                                                                    </Form.Select>  
+                                                                </Form.Group>
+                                                            </td>
+                                                            <td>
                                                                 <Button variant="outline-success" onClick={() => this.onEditAddress(item.id_address)}>Save</Button>
                                                                 <Button variant="outline-danger" onClick={() => this.setState({ idEdit: null })}>Cancel</Button>
                                                                 <Button variant="outline-danger" onClick={() => this.onDeleteAddress(item.id_address)}>Delete</Button>
@@ -297,6 +402,8 @@ class ProfilePage extends React.Component{
                                                         <td>{item.address}</td>
                                                         <td>{item.kecamatan}</td>
                                                         <td>{item.kabupaten}</td>
+                                                        <td>{item.status_aktif}</td>
+
                                                         <td>
                                                             <Button variant="outline-warning" onClick={() => this.setState({ idEdit: item.id_address })}>Edit</Button>
                                                         </td>
@@ -320,14 +427,25 @@ class ProfilePage extends React.Component{
     }
 }
 
-export default ProfilePage
+
+
+export default ProfilePage;
 
 const styles= {
     cont:{
-        margin:'10vh 0vh'
+        margin:'10vh -2vh'
     },
     imgProfile: {
-        border : '1px solid black'
+        // border : '1px solid black',
+        // borderRadius: '2%',
+
+    },
+    uploadButton:{
+        marginTop: '2vh',
+        display : 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     dataProfile: {
         border : '1px solid black',
