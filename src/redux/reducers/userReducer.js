@@ -6,11 +6,6 @@ const INITIAL_STATE = {
   successChangePass: false,
   failedChangePass: false,
   msgFailedChangePass: '',
-  pageActive: 1,
-  totalProd: '',
-  prodPerPage: '',
-  product: [],
-  counterPage: 1
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -43,15 +38,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         failedChangePass: false,
         msgFailedChangePass: ''
-      };
-    case 'PAGE_PAGINATION':
-      return{
-        ...state,
-        product: action.payload[0],
-        prodPerPage: action.payload[2].per_page,
-        pageActive: action.payload[1].current_page,
-        totalProd: action.payload[3].totalItems,
-        counterPage: action.payload[1].current_page
       };
     default:
       return state;
