@@ -2,7 +2,6 @@
 import React from 'react';
 import Axios from 'axios'
 import NavigationBar from "../components/NavigationBar"; 
-const fs = require('fs')
 
 import {Container, Col, Row, Form, Button, Tab, Tabs, Table, Alert, Image} from 'react-bootstrap'
 const URL_API = 'http://localhost:2000/user'
@@ -232,9 +231,9 @@ class ProfilePage extends React.Component{
         )
         .then(res => {
             this.setState({ images: res.data})
-            console.log(`hello ${{images: res.data}}`)
+            console.log(res.data)
             this.fectDataUser()
-            
+
           })
           .catch(err => {
             console.log(err)
@@ -338,7 +337,7 @@ class ProfilePage extends React.Component{
                                             <Form.Group className="mb-3" >
                                                 <Form.Label>Username</Form.Label>
                                                 <Form.Control ref="usernameEdit" type="text" defaultValue={item.username} placeholder="Enter Username"  />
-                                                
+                                            
                                             </Form.Group>
                                             <Form.Group className="mb-3">
                                                 <Form.Label>Full Name</Form.Label>
@@ -347,6 +346,7 @@ class ProfilePage extends React.Component{
                                             <Form.Group className="mb-3">
                                                 <Form.Label>Email</Form.Label>
                                                 <Form.Control ref="emailEdit" type="text" defaultValue={item.email} placeholder="Enter Email"/>
+                                                
                                             </Form.Group>
                                             
                                             <Form.Group className="mb-3">
@@ -362,7 +362,6 @@ class ProfilePage extends React.Component{
                                                 <Form.Label>Age</Form.Label>
                                                 <Form.Control ref="ageEdit" type="number" defaultValue={item.age} placeholder="Enter Age" />
                                             </Form.Group>
-                                           
                                             <Button onClick={this.onUpdateUser}>Save</Button>
                                             </Tab>
                                          )
