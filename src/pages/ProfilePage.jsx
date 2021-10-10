@@ -2,6 +2,7 @@
 import React from 'react';
 import Axios from 'axios'
 import NavigationBar from "../components/NavigationBar"; 
+const fs = require('fs')
 
 import {Container, Col, Row, Form, Button, Tab, Tabs, Table, Alert, Image} from 'react-bootstrap'
 const URL_API = 'http://localhost:2000/user'
@@ -56,33 +57,34 @@ class ProfilePage extends React.Component{
         .then(res => {
             console.log(res.data)
             this.setState({ datauser: res.data})
+            this.setState({images : res.data[0].profile_picture})
+
           })
           .catch(err => {
             console.log(err)
           })
     }
-    getUserProfile = () => {
-        let token = localStorage.getItem("token")
-        Axios.post(`${URL_API}/get-user/`,
-        {},
-          {
-            headers: {
-            'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${token}`,
-            },
-          })
-        .then(res => {
-            // console.log("dataget", res.data[0].profile_picture)
-            this.setState({images : res.data[0].profile_picture})
-        })
-        .catch(err => {
-            console.log("error get", err)
-        })
-    }
+    // getUserProfile = () => {
+    //     let token = localStorage.getItem("token")
+    //     Axios.post(`${URL_API}/get-user/`,
+    //     {},
+    //       {
+    //         headers: {
+    //         'Content-Type': 'multipart/form-data',
+    //           Authorization: `Bearer ${token}`,
+    //         },
+    //       })
+    //     .then(res => {
+    //         // console.log("dataget", res.data[0].profile_picture)
+    //     })
+    //     .catch(err => {
+    //         console.log("error get", err)
+    //     })
+    // }
     componentDidMount() {
         this.fectDataUser()
         this.fectDataAddress()
-        this.getUserProfile()
+        // this.getUserProfile()
 
     }
 
@@ -230,15 +232,34 @@ class ProfilePage extends React.Component{
         )
         .then(res => {
             this.setState({ images: res.data})
-            console.log(res.data)
+            console.log(`hello ${{images: res.data}}`)
             this.fectDataUser()
-            this.getUserProfile()
-
+            
           })
           .catch(err => {
             console.log(err)
           })
     }
+
+    deletePic = () => {
+        let token = localStorage.getItem("token")
+        Axios.post(`${URL_API}/delete-pic/`,
+        {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+        .then(res => {
+            // console.log("dataget", res.data[0].profile_picture)
+            this.setState({dataUser: res.data})
+            this.setState({images : res.data[0].profile_picture})
+        })
+        .catch(err => {
+            console.log("error get", err)
+        })
+    }
+
     // input
     renderTInput = () => {
         return (
@@ -299,7 +320,7 @@ class ProfilePage extends React.Component{
                                     </form>
                                         <div style={styles.uploadButton}> 
                                             <Button onClick={this.handleUpload} >Upload</Button>
-                                            <Button >Delete</Button>
+                                            <Button onClick={this.deletePic} >Delete</Button>
                                         </div>       
                                     </div>
                             </div>
@@ -317,7 +338,7 @@ class ProfilePage extends React.Component{
                                             <Form.Group className="mb-3" >
                                                 <Form.Label>Username</Form.Label>
                                                 <Form.Control ref="usernameEdit" type="text" defaultValue={item.username} placeholder="Enter Username"  />
-                                            
+                                                
                                             </Form.Group>
                                             <Form.Group className="mb-3">
                                                 <Form.Label>Full Name</Form.Label>
@@ -326,7 +347,6 @@ class ProfilePage extends React.Component{
                                             <Form.Group className="mb-3">
                                                 <Form.Label>Email</Form.Label>
                                                 <Form.Control ref="emailEdit" type="text" defaultValue={item.email} placeholder="Enter Email"/>
-                                                
                                             </Form.Group>
                                             
                                             <Form.Group className="mb-3">
@@ -342,6 +362,7 @@ class ProfilePage extends React.Component{
                                                 <Form.Label>Age</Form.Label>
                                                 <Form.Control ref="ageEdit" type="number" defaultValue={item.age} placeholder="Enter Age" />
                                             </Form.Group>
+                                           
                                             <Button onClick={this.onUpdateUser}>Save</Button>
                                             </Tab>
                                          )
