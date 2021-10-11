@@ -56,33 +56,34 @@ class ProfilePage extends React.Component{
         .then(res => {
             console.log(res.data)
             this.setState({ datauser: res.data})
+            this.setState({images : res.data[0].profile_picture})
+
           })
           .catch(err => {
             console.log(err)
           })
     }
-    getUserProfile = () => {
-        let token = localStorage.getItem("token")
-        Axios.post(`${URL_API}/get-user/`,
-        {},
-          {
-            headers: {
-            'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${token}`,
-            },
-          })
-        .then(res => {
-            // console.log("dataget", res.data[0].profile_picture)
-            this.setState({images : res.data[0].profile_picture})
-        })
-        .catch(err => {
-            console.log("error get", err)
-        })
-    }
+    // getUserProfile = () => {
+    //     let token = localStorage.getItem("token")
+    //     Axios.post(`${URL_API}/get-user/`,
+    //     {},
+    //       {
+    //         headers: {
+    //         'Content-Type': 'multipart/form-data',
+    //           Authorization: `Bearer ${token}`,
+    //         },
+    //       })
+    //     .then(res => {
+    //         // console.log("dataget", res.data[0].profile_picture)
+    //     })
+    //     .catch(err => {
+    //         console.log("error get", err)
+    //     })
+    // }
     componentDidMount() {
         this.fectDataUser()
         this.fectDataAddress()
-        this.getUserProfile()
+        // this.getUserProfile()
 
     }
 
@@ -232,13 +233,32 @@ class ProfilePage extends React.Component{
             this.setState({ images: res.data})
             console.log(res.data)
             this.fectDataUser()
-            this.getUserProfile()
 
           })
           .catch(err => {
             console.log(err)
           })
     }
+
+    deletePic = () => {
+        let token = localStorage.getItem("token")
+        Axios.post(`${URL_API}/delete-pic/`,
+        {},
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+        .then(res => {
+            // console.log("dataget", res.data[0].profile_picture)
+            this.setState({dataUser: res.data})
+            this.setState({images : res.data[0].profile_picture})
+        })
+        .catch(err => {
+            console.log("error get", err)
+        })
+    }
+
     // input
     renderTInput = () => {
         return (
@@ -299,7 +319,7 @@ class ProfilePage extends React.Component{
                                     </form>
                                         <div style={styles.uploadButton}> 
                                             <Button onClick={this.handleUpload} >Upload</Button>
-                                            <Button >Delete</Button>
+                                            <Button onClick={this.deletePic} >Delete</Button>
                                         </div>       
                                     </div>
                             </div>
