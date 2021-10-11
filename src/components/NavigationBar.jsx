@@ -120,7 +120,8 @@ class NavigationBar extends React.Component {
                         to={"/profile"}>
                           <i className="fas fa-user mr-2"></i> profile
                         </Dropdown.Item>
-                        <Dropdown.Item style={style.dropdownItem} href="#">
+                        <Dropdown.Item style={style.dropdownItem} as={Link}
+                        to={"/change-password"}>
                           <i className="fas fa-user-lock"></i> change password
                         </Dropdown.Item>
                         <Dropdown.Item style={style.dropdownItem} href="#">
