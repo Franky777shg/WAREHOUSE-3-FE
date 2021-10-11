@@ -1,0 +1,22 @@
+.myButton {
+  outline: none !important;
+  border: none !important;
+}
+.myButton:focus {
+  outline: none !important;
+  border: none !important;
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}
+.myButton:hover {
+  background-color: #f3f4f6;
+}
+
+/* input */
+.myInput {
+}
+
+.myInput:focus {
+  -webkit-box-shadow: none !important;
+  box-shadow: none !important;
+}

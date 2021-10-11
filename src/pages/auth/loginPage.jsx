@@ -13,9 +13,6 @@ import {
 } from "react-bootstrap";
 import heroImage from "../../assets/img/login hero/loginhero5.png";
 
-import axios from "axios";
-const BASE_URL = "http://localhost:2000";
-
 class LoginPage extends React.Component {
   constructor(props) {
     super(props);
@@ -79,7 +76,7 @@ class LoginPage extends React.Component {
                 </div>
 
                 <Form.Group controlId="formBasicEmail" hasValidation>
-                  <Form.Label>Email</Form.Label>
+                  <Form.Label className="myLabel">Email</Form.Label>
                   <Form.Control
                     ref="email"
                     type="email"
@@ -97,8 +94,8 @@ class LoginPage extends React.Component {
                   </Form.Control.Feedback>
                 </Form.Group>
 
-                <Form.Group controlId="formBasicPassword" className="mt-3">
-                  <Form.Label>Password</Form.Label>
+                <Form.Group controlId="formBasicPassword" className="mt-2">
+                  <Form.Label className="myLabel">Password</Form.Label>
                   <Form.Control
                     type={this.state.showPassword ? "text" : "password"}
                     placeholder="Password"
@@ -112,7 +109,7 @@ class LoginPage extends React.Component {
                     }
                   />
                   <Form.Control.Feedback type="invalid">
-                    This form is required
+                    {this.state.passwordEmpty[1]}
                   </Form.Control.Feedback>
                   {!this.state.passwordEmpty[0] ? (
                     <a
@@ -138,7 +135,7 @@ class LoginPage extends React.Component {
                 </Form.Group>
 
                 <div style={style.loginForgetPass} className="mt-4">
-                  <Form.Text as={Link} to="/auth/login" muted>
+                  <Form.Text as={Link} to="/auth/forgot" muted>
                     Forget password?
                   </Form.Text>
                   <Form.Text as={Link} to="/auth/register" muted>
@@ -148,9 +145,9 @@ class LoginPage extends React.Component {
 
                 <div className="d-grid gap-2">
                   <Button
-                    variant="default"
+                    variant="primary"
                     type="submit"
-                    style={style.authButton}
+                    style={style.myButton}
                     onClick={this.onLogin}
                     block
                   >
@@ -223,9 +220,12 @@ const style = {
     textDecoration: "none",
     fontSize: "13px",
   },
-  authButton: {
-    backgroundColor: "#0275d8",
-    color: "#fff",
+  myButton: {
+    border: "none",
+    padding: "10px",
+    fontWeight: 500,
+    backgroundColor: "#3554d1",
+    borderRadius: "8px",
   },
 };
 

@@ -12,7 +12,7 @@ import {
 } from "react-bootstrap";
 import heroImage from "../../assets/img/login hero/loginhero5.png";
 
-class RegisterSuccessPage extends React.Component {
+class InfoPage extends React.Component {
   render() {
     return (
       <div>
@@ -70,4 +70,4 @@ const style = {
   },
 };
 
-export default RegisterSuccessPage;
+export default InfoPage;

@@ -3,16 +3,16 @@ import HomePage from "./pages/homePage";
 import Login from "./pages/auth/loginPage";
 import Register from "./pages/auth/registerPage";
 import VerifPage from "./pages/auth/verifPage";
-import RegisterSuccessPage from "./pages/auth/registerSuccessPage";
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import ForgotPassPage from "./pages/auth/forgotPassPage";
+import ResetPassPage from "./pages/auth/resetPassPage";
 
-import { keepLogin } from "./redux/actions";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
+import { keepLogin, logout } from "./redux/actions";
 import { connect } from "react-redux";
 
 class App extends React.Component {
   componentDidMount() {
-    let userid = localStorage.getItem("token");
-    this.props.keepLogin(userid);
+    this.props.keepLogin();
   }
   render() {
     return (
@@ -29,12 +29,13 @@ class App extends React.Component {
               <Register />
             </Route>
             <Route
-              path="/auth/register_success/:verifEmail"
-              component={RegisterSuccessPage}
-            ></Route>
-            <Route
               path="/auth/verification/:email"
               component={VerifPage}
+            ></Route>
+            <Route path="/auth/forgot" component={ForgotPassPage}></Route>
+            <Route
+              path="/auth/reset/:emailToken"
+              component={ResetPassPage}
             ></Route>
           </Switch>
         </Router>
@@ -49,4 +50,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { keepLogin })(App);
+export default connect(mapStateToProps, { keepLogin, logout })(App);
