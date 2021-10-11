@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./assets/styles/index.css";
 import App from "./App";
+import { BrowserRouter } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 // state management
@@ -14,9 +15,9 @@ const globalState = createStore(allReducer, applyMiddleware(ReduxThunk));
 
 ReactDOM.render(
   <Provider store={globalState}>
-    <div>
+    <BrowserRouter>
       <App />
-    </div>
+    </BrowserRouter>
   </Provider>,
   document.getElementById("root")
 );

@@ -49,8 +49,8 @@ class NavigationBar extends React.Component {
                 <Nav.Link href="#" style={style.navbarLink}>
                   Home
                 </Nav.Link>
-                <Nav.Link href="#" style={style.navbarLink} className="ml-5">
-                  Categories
+                <Nav.Link href="/product" style={style.navbarLink} className="ml-5">
+                  Products
                 </Nav.Link>
                 <Form.Control
                   type="text"
@@ -116,8 +116,12 @@ class NavigationBar extends React.Component {
                         className="mt-2"
                         style={style.dropdownMenu}
                       >
-                        <Dropdown.Item style={style.dropdownItem} href="#">
+                        <Dropdown.Item style={style.dropdownItem} as={Link}
+                        to={"/profile"}>
                           <i className="fas fa-user mr-2"></i> profile
+                        </Dropdown.Item>
+                        <Dropdown.Item style={style.dropdownItem} href="#">
+                          <i className="fas fa-user-lock"></i> change password
                         </Dropdown.Item>
                         <Dropdown.Item style={style.dropdownItem} href="#">
                           <i className="fas fa-heart mr-2"></i> wishlists

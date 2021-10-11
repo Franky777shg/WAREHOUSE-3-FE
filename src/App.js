@@ -5,6 +5,10 @@ import Register from "./pages/auth/registerPage";
 import VerifPage from "./pages/auth/verifPage";
 import ForgotPassPage from "./pages/auth/forgotPassPage";
 import ResetPassPage from "./pages/auth/resetPassPage";
+import RegisterSuccessPage from "./pages/auth/registerSuccessPage";
+import ChangePassPage from "./pages/changePass";
+import ProductPage from "./pages/products";
+import ProfilePage from "./pages/ProfilePage";
 
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import { keepLogin, logout } from "./redux/actions";
@@ -37,6 +41,9 @@ class App extends React.Component {
               path="/auth/reset/:emailToken"
               component={ResetPassPage}
             ></Route>
+            <Route path= "/change-password/:id" component={ ChangePassPage }></Route>
+            <Route path="/product" component={ProductPage} />
+            <Route path="/profile" component={ProfilePage} />
           </Switch>
         </Router>
       </div>
