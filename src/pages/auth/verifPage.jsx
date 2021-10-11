@@ -1,17 +1,10 @@
 import React from "react";
-import { Link, Redirect } from "react-router-dom";
-import {
-  Form,
-  Button,
-  Container,
-  Row,
-  Col,
-  Stack,
-  Image,
-  Card,
-} from "react-bootstrap";
-import heroImage from "../../assets/img/login hero/loginhero5.png";
-import axios from "axios";
+import { Container } from "react-bootstrap";
+import Axios from "axios";
+import Success from "../../components/Success";
+
+import activationSuccessHero from "../../assets/img/info/accountactive.png";
+
 const API_URL = "http://localhost:2000";
 
 class VerifPage extends React.Component {
@@ -22,47 +15,34 @@ class VerifPage extends React.Component {
     };
   }
   componentDidMount() {
-    let email = this.props.match.params.email;
-    const activateAccount = axios.get(
-      `${API_URL}/user/auth/verification/${email}`,
-      (err, res) => {
-        if (err) console.log(err);
+    let emailToken = this.props.match.params.email;
+    Axios.post(
+      `${API_URL}/user/auth/verification`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${emailToken}`,
+        },
       }
-    );
-    if (activateAccount) {
-      this.setState({ isActivated: true });
-      if (this.state.isActivated == true) {
-        setTimeout(function () {
-          window.location.href = "/auth/login";
-        }, 1000);
-      }
-    }
+    )
+      .then((res) => {
+        if (res.data.message) this.setState({ isActivated: true });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
   render() {
     return (
       <div>
         <Container style={style.verifContainer}>
           <div>
-            <Stack
-              gap={2}
-              style={style.verifWrapper}
-              className="col-md-5 mx-auto my-auto"
-            >
-              <Image
-                style={style.verifHeroImage}
-                src={heroImage}
-                className="animate__fadeInDown"
-              ></Image>
-              <div className="mt-4 text-center">
-                <h2>Welcome to Ukea</h2>
-                <p className="mt-2 text-secondary">
-                  Your account is now Active <br />
-                </p>
-                <Button className="my-2" as={Link} to="/auth/login">
-                  Go to login page
-                </Button>
-              </div>
-            </Stack>
+            <Success
+              title="Welcome to Ukea"
+              body={`Your account is now active, please login`}
+              img={activationSuccessHero}
+              backTo={{ title: "login", to: "/auth/login" }}
+            />
           </div>
         </Container>
       </div>

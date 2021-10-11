@@ -8,7 +8,7 @@ export const userLogin = (email, password) => {
     Axios
       .post(`${BASE_URL}/user/auth/login`, { email, password })
       .then((res) => {
-        if (res.data.status == "failed") {
+        if (res.data.status === "failed") {
           dispatch({
             type: "LOGIN_FAILED",
             payload: "Login failed, check your account",
@@ -24,7 +24,7 @@ export const userLogin = (email, password) => {
   };
 };
 
-export const keepLogin = (userIDToken) => {
+export const keepLogin = () => {
   return (dispatch) => {
     const token = localStorage.getItem("token");
 
@@ -44,8 +44,23 @@ export const keepLogin = (userIDToken) => {
             type: "LOGIN",
             payload: res.data[0],
           });
+        })
+        .catch((err) => {
+          localStorage.removeItem("token");
+          dispatch({
+            type: "LOGOUT",
+          });
         });
-    } else console.log("no token");
+    }
+  };
+};
+
+export const logout = () => {
+  return (dispatch) => {
+    localStorage.removeItem("token");
+    dispatch({
+      type: "LOGOUT",
+    });
   };
 };
 

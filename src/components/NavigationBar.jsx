@@ -8,13 +8,19 @@ import {
   Form,
   Badge,
   Image,
+  DropdownButton,
 } from "react-bootstrap";
 
 import logo from "../assets/img/logo.svg";
 import avatar from "../assets/img/avatar/avatar2.png";
 
+import utils from "./../assets/styles/utils.module.css";
+
 import { connect } from "react-redux";
+import { logout } from "../redux/actions";
 import { Link } from "react-router-dom";
+
+import CartList from "./transaction/CartList";
 
 class NavigationBar extends React.Component {
   constructor(props) {
@@ -34,54 +40,75 @@ class NavigationBar extends React.Component {
           fixed="top"
         >
           <Container>
-            <Navbar.Brand href="#home">
+            <Navbar.Brand href="/">
               <img src={logo} style={style.navbarLogo} />
             </Navbar.Brand>
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
-              <Nav className="me-auto">
-                <Nav.Link href="/" style={style.navbarLink}>
+              <Nav className="mx-4" style={{ width: "80%" }}>
+                <Nav.Link href="#" style={style.navbarLink}>
                   Home
                 </Nav.Link>
                 <Nav.Link href="/product" style={style.navbarLink} className="ml-5">
                   Products
                 </Nav.Link>
+                <Form.Control
+                  type="text"
+                  size="sm"
+                  placeholder="Searching for..."
+                  className={`mx-2 ${utils.myInput}`}
+                  style={style.searchForm}
+                />
+
+                <span style={style.searchIcon}>
+                  <i class="fas fa-search" style={{ color: "#9CA3AF" }}></i>
+                </span>
               </Nav>
               <Form inline className="d-flex">
                 {this.props.username ? (
                   <>
+                    <Dropdown className="cart-dropdown">
+                      <Dropdown.Toggle
+                        variant="default"
+                        className={`m-1 mx-2 ${utils.myButton}`}
+                      >
+                        <i
+                          className="fas fa-shopping-cart"
+                          style={style.navIcon}
+                        ></i>
+                        <Badge bg="danger" style={style.badgeCart}>
+                          5
+                        </Badge>
+                      </Dropdown.Toggle>
+
+                      <Dropdown.Menu
+                        className="mt-2 px-2"
+                        style={style.dropdownMenu}
+                      >
+                        <CartList />
+                      </Dropdown.Menu>
+                    </Dropdown>
+
                     <Button
                       variant="default"
-                      className="m-1"
-                      // as={Link}
-                      // to={"/cart"}
+                      className={`m-1 mx-1 ${utils.myButton}`}
+                      style={style.actionBtn}
                     >
-                      <i
-                        className="fas fa-shopping-cart"
-                        style={style.navIcon}
-                      ></i>
-                      <Badge bg="danger" style={style.badgeCart}>
-                        5
-                      </Badge>
-                    </Button>
-
-                    <Button variant="default" className="m-1">
                       <i className="fas fa-bell" style={style.navIcon}></i>
                     </Button>
-                    <Button variant="default" className="m-1">
-                      <i className="fas fa-heart" style={style.navIcon}></i>
-                      <Badge variant="danger" style={style.badgeCart}></Badge>
-                    </Button>
+
+                    {/* user menu */}
                     <Dropdown>
                       <Dropdown.Toggle
                         variant="default"
+                        className={utils.myButton}
                         style={style.navUserButton}
                         id="dropdown-basic"
+                        align="end"
                       >
                         <Image src={avatar} width="35"></Image>
                         <span style={style.navUserName}>
-                          {" "}
-                          {this.props.username}{" "}
+                          {this.props.username}
                         </span>
                       </Dropdown.Toggle>
 
@@ -108,7 +135,7 @@ class NavigationBar extends React.Component {
                             <Button
                               variant="danger"
                               size="sm"
-                              onClick={this.props.logoutAction}
+                              onClick={this.props.logout}
                               block
                             >
                               Logout
@@ -173,7 +200,7 @@ const style = {
     marginRight: "5px",
   },
   badgeCart: {
-    borderRadius: "5px",
+    borderRadius: "50px",
     border: "2px solid #fff",
     position: "absolute",
     marginTop: "10px",
@@ -191,7 +218,14 @@ const style = {
     height: "30px",
   },
   searchForm: {
-    padding: "10px",
+    padding: "5px 15px",
+    borderRadius: "7px",
+  },
+  searchIcon: {
+    position: "relative",
+    right: 0,
+    marginLeft: "-40px",
+    marginTop: "7px",
   },
   navbarLink: {
     fontSize: "16px",
@@ -206,7 +240,7 @@ const style = {
     fontSize: "13px",
     fontWeight: "500",
     color: "#fff",
-    backgroundColor: "#0275d8",
+    backgroundColor: "#3554d1",
     border: "none",
     padding: "10px 15px",
   },
@@ -241,14 +275,8 @@ const style = {
     padding: "5px 15px",
   },
   dropdownMenu: {
-    border: "none",
-    position: "absolute",
-    marginTop: "50px",
+    border: "1px solid #eaeaea",
     boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
-  },
-
-  navAuthButton: {
-    margin: "5px",
   },
 
   // cart
@@ -264,6 +292,8 @@ const style = {
     backgroundColor: "#fff",
     boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.25)",
   },
+
+  actionBtn: {},
 };
 
 const mapStateToProps = (state) => {
@@ -272,4 +302,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(NavigationBar);
+export default connect(mapStateToProps, { logout })(NavigationBar);

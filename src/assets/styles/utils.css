@@ -1,7 +1,18 @@
-.card {
-  background-color: coral;
-  asd
-  asdasd
-  asdasdasd
-  asdasd
+.myButton {
+  background-color: #2337cc;
+  border: none;
+  padding: 10px;
+  font-weight: 500;
+  background-color: #3554d1;
+  border-radius: 8px;
+}
+
+.myLabel {
+  font-size: 15px;
+  font-weight: 500;
+  color: #475569;
+}
+
+.primaryColor {
+  color: #334155;
 }

@@ -22,6 +22,8 @@ const userReducer = (state = INITIAL_STATE, action) => {
         login_failed: true,
         msgFailedLogin: action.payload,
       };
+    case "LOGOUT":
+      return INITIAL_STATE;
     case 'SUCCESS_CHANGE_PASSWORD':
       return {
         ...state,
