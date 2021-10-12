@@ -9,6 +9,7 @@ import ChangePassPage from "./pages/changePass";
 import ProductPage from "./pages/products";
 import ProfilePage from "./pages/ProfilePage";
 import DetailPage from "./pages/productDetail";
+import ProductAdmin from "./pages/productAdmin";
 
 import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import { keepLogin, logout } from "./redux/actions";
@@ -44,6 +45,7 @@ class App extends React.Component {
             <Route path= "/change-password" component={ ChangePassPage }></Route>
             <Route path="/product" component={ProductPage} />
             <Route path="/detail-product/:id" component={DetailPage}/>
+            <Route path="/product-admin" component={ProductAdmin}/>
             <Route path="/profile" component={ProfilePage} />
           </Switch>
         </Router>
