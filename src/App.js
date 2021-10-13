@@ -47,10 +47,10 @@ class App extends React.Component {
               path="/auth/reset/:emailToken"
               component={ResetPassPage}
             ></Route>
-            <Route path= "/change-password" component={ ChangePassPage }></Route>
+            <Route path="/change-password" component={ChangePassPage}></Route>
             <Route path="/product" component={ProductPage} />
-            <Route path="/detail-product/:id" component={DetailPage}/>
-            <Route path="/product-admin" component={ProductAdmin}/>
+            <Route path="/detail-product/:id" component={DetailPage} />
+            <Route path="/product-admin" component={ProductAdmin} />
             <Route path="/profile" component={ProfilePage} />
 
             {/* ADMIN ROUTING */}
