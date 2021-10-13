@@ -36,7 +36,7 @@ class LoginPage extends React.Component {
 
   render() {
     if (this.props.adminUsername) {
-      return <Redirect to="/admin" />;
+      return <Redirect to="/admin/home" />;
     }
     return (
       <Container style={style.container}>
