@@ -11,13 +11,18 @@ import ProfilePage from "./pages/ProfilePage";
 import DetailPage from "./pages/productDetail";
 import ProductAdmin from "./pages/productAdmin";
 
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
-import { keepLogin, logout } from "./redux/actions";
+// ADMIN
+import adminHomePage from "./pages/__admin/homePage";
+import adminLoginPage from "./pages/__admin/loginPage";
+
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { keepLogin, logout, keepAdminLogin } from "./redux/actions";
 import { connect } from "react-redux";
 
 class App extends React.Component {
   componentDidMount() {
     this.props.keepLogin();
+    this.props.keepAdminLogin();
   }
   render() {
     return (
@@ -47,6 +52,10 @@ class App extends React.Component {
             <Route path="/detail-product/:id" component={DetailPage}/>
             <Route path="/product-admin" component={ProductAdmin}/>
             <Route path="/profile" component={ProfilePage} />
+
+            {/* ADMIN ROUTING */}
+            <Route path="/admin" component={adminHomePage} />
+            <Route path="/auth/admin/login" component={adminLoginPage} />
           </Switch>
         </Router>
       </div>
@@ -60,4 +69,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { keepLogin, logout })(App);
+export default connect(mapStateToProps, { keepLogin, logout, keepAdminLogin })(
+  App
+);
