@@ -66,13 +66,19 @@ export const logout = () => {
 
 export const changepassword = (body)=> {
     return(dispatch) => {
-        //const idpass = localStorage.getItem('idUser')
-        Axios.put(`${URL_API}/change-password/1`, body)
+        const token = localStorage.getItem('token')
+        Axios.post(`${URL_API}/change-password`, 
+        body,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        })
         .then(res => {
-            console.log("result",res.data)
             dispatch({
                 type: 'SUCCESS_CHANGE_PASSWORD',
-                payload: res.data
+                payload: res.data,
+                
             })
         })
         .catch(err => {

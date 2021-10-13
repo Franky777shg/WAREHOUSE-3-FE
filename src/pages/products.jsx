@@ -3,6 +3,7 @@ import Axios from "axios"
 
 import { Button, Card, Stack, Pagination, Row, Col, Form, Dropdown, DropdownButton } from "react-bootstrap"
 import NavigationBar from "../components/NavigationBar"
+import { Link } from "react-router-dom"
 
 class ProductPage extends React.Component {
     constructor(props) {
@@ -312,7 +313,8 @@ class ProductPage extends React.Component {
                                                 <i class="far fa-heart" style={{ marginRight: '10px' }}></i>
                                                 Wishlist
                                             </Button>
-                                            <Button variant="outline-info" style={{ margin: "20px 10px" }}>
+                                            <Button variant="outline-info" style={{ margin: "20px 10px" }}
+                                            as={Link} to={`/detail-product/${item.id_product}`}>
                                                 <i class="fas fa-info" style={{ marginRight: '10px' }}></i>
                                                 Get Detail
                                             </Button>

@@ -8,6 +8,8 @@ import ResetPassPage from "./pages/auth/resetPassPage";
 import ChangePassPage from "./pages/changePass";
 import ProductPage from "./pages/products";
 import ProfilePage from "./pages/ProfilePage";
+import DetailPage from "./pages/productDetail";
+import ProductAdmin from "./pages/productAdmin";
 
 // ADMIN
 import adminHomePage from "./pages/__admin/homePage";
@@ -45,11 +47,10 @@ class App extends React.Component {
               path="/auth/reset/:emailToken"
               component={ResetPassPage}
             ></Route>
-            <Route
-              path="/change-password/:id"
-              component={ChangePassPage}
-            ></Route>
+            <Route path= "/change-password" component={ ChangePassPage }></Route>
             <Route path="/product" component={ProductPage} />
+            <Route path="/detail-product/:id" component={DetailPage}/>
+            <Route path="/product-admin" component={ProductAdmin}/>
             <Route path="/profile" component={ProfilePage} />
 
             {/* ADMIN ROUTING */}
