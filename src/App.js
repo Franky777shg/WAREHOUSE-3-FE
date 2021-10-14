@@ -12,13 +12,18 @@ import DetailPage from "./pages/productDetail";
 import ProductAdmin from "./pages/productAdmin";
 import ProdAdminEditPage from "./pages/productEditAdmin";
 
-import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
-import { keepLogin, logout } from "./redux/actions";
+// ADMIN
+import adminHomePage from "./pages/__admin/homePage";
+import adminLoginPage from "./pages/__admin/loginPage";
+import superAdminPage from "./pages/__admin/superAdminPage";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { keepLogin, logout, keepAdminLogin } from "./redux/actions";
 import { connect } from "react-redux";
 
 class App extends React.Component {
   componentDidMount() {
     this.props.keepLogin();
+    this.props.keepAdminLogin();
   }
   render() {
     return (
@@ -43,12 +48,17 @@ class App extends React.Component {
               path="/auth/reset/:emailToken"
               component={ResetPassPage}
             ></Route>
-            <Route path= "/change-password" component={ ChangePassPage }></Route>
+            <Route path="/change-password" component={ChangePassPage}></Route>
             <Route path="/product" component={ProductPage} />
             <Route path="/detail-product/:id" component={DetailPage}/>
             <Route path="/admin/product-admin" component={ProductAdmin}/>
             <Route path="/admin/product-admin-edit/:id" component={ProdAdminEditPage}/>
             <Route path="/profile" component={ProfilePage} />
+
+            {/* ADMIN ROUTING */}
+            <Route path="/admin/home" component={adminHomePage} />
+            <Route path="/admin/superadmin-page" component={superAdminPage} />
+            <Route path="/auth/admin/login" component={adminLoginPage} />
           </Switch>
         </Router>
       </div>
@@ -62,4 +72,6 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { keepLogin, logout })(App);
+export default connect(mapStateToProps, { keepLogin, logout, keepAdminLogin })(
+  App
+);

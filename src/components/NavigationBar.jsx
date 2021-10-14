@@ -49,7 +49,11 @@ class NavigationBar extends React.Component {
                 <Nav.Link href="#" style={style.navbarLink}>
                   Home
                 </Nav.Link>
-                <Nav.Link href="/product" style={style.navbarLink} className="ml-5">
+                <Nav.Link
+                  href="/product"
+                  style={style.navbarLink}
+                  className="ml-5"
+                >
                   Products
                 </Nav.Link>
                 <Form.Control
@@ -77,7 +81,7 @@ class NavigationBar extends React.Component {
                           style={style.navIcon}
                         ></i>
                         <Badge bg="danger" style={style.badgeCart}>
-                          5
+                          0
                         </Badge>
                       </Dropdown.Toggle>
 
@@ -116,12 +120,18 @@ class NavigationBar extends React.Component {
                         className="mt-2"
                         style={style.dropdownMenu}
                       >
-                        <Dropdown.Item style={style.dropdownItem} as={Link}
-                        to={"/profile"}>
+                        <Dropdown.Item
+                          style={style.dropdownItem}
+                          as={Link}
+                          to={"/profile"}
+                        >
                           <i className="fas fa-user mr-2"></i> profile
                         </Dropdown.Item>
-                        <Dropdown.Item style={style.dropdownItem} as={Link}
-                        to={"/change-password"}>
+                        <Dropdown.Item
+                          style={style.dropdownItem}
+                          as={Link}
+                          to={"/change-password"}
+                        >
                           <i className="fas fa-user-lock"></i> change password
                         </Dropdown.Item>
                         <Dropdown.Item style={style.dropdownItem} href="#">
