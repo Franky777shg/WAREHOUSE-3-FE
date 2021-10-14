@@ -1,7 +1,7 @@
 import React from "react"
 import Axios from "axios"
 
-import { Button, Card, Stack, Pagination, Row, Col, Form, Dropdown, DropdownButton } from "react-bootstrap"
+import { Button, Card, Stack, Pagination, Row, Col, Form} from "react-bootstrap"
 import NavigationBar from "../components/NavigationBar"
 import { Link } from "react-router-dom"
 
@@ -14,7 +14,8 @@ class ProductPage extends React.Component {
             pageNext: "",
             pagePrev: "",
             total_page: null,
-            notFound: false
+            notFound: false,
+            isLoading: false
 
         }
     }
@@ -38,6 +39,7 @@ class ProductPage extends React.Component {
         let name = this.refs.name.value
         let category = this.refs.category.value
 
+        this.setState({isLoading: true})
         let obj = {
             name,
             category
@@ -55,7 +57,8 @@ class ProductPage extends React.Component {
                         total_page: (Math.ceil(res.data[3].totalItems / res.data[2].per_page)),
                         currentPage: 1,
                         pageNext: "onFilter",
-                        pagePrev: "onFilter"
+                        pagePrev: "onFilter",
+                        isLoading: false
 
                     })
                 })
@@ -251,6 +254,7 @@ class ProductPage extends React.Component {
 
     render() {
 
+
         const { dataProd, total_page } = this.state
         console.log(dataProd)
         return (
@@ -260,7 +264,7 @@ class ProductPage extends React.Component {
                     <div className="Filter" style={{ margin: '5%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: '60px 0 30px' }}>
                         <Row className="g-2" style={{ margin: '10px', width: '60vw' }}>
                             <Col md>
-                                {/* <p style={{ margin: '5px' }}>Filter search :</p> */}
+                               {this.state.isLoading && <p> Loading... </p> }
                             </Col>
                             <Col md>
                                 <Form.Control type="text" placeholder="Product Name" style={{ width: '20vw' }} ref="name" />

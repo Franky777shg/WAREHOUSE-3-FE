@@ -1,7 +1,7 @@
 import React from 'react'
 import Axios from "axios"
 import NavigationBar from '../components/NavigationBar'
-import { Button, Card, Stack, Pagination, Row, Col, Form, Dropdown, DropdownButton } from "react-bootstrap"
+import { Button, Card, Stack, Pagination} from "react-bootstrap"
 // import NavigationBar from "../components/NavigationBar"
 import { Link } from "react-router-dom"
 
@@ -63,7 +63,7 @@ class ProductAdmin extends React.Component {
             <div>
                 <NavigationBar/>
                 <div style={{marginTop: '60px'}}>
-                    Space untuk add product
+                    Space untuk Filter product
                 </div>
                 <div style={{ backgroundImage: 'linear-gradient(to right, #a8edea, #fed6e3)' }}>
 
@@ -76,7 +76,7 @@ class ProductAdmin extends React.Component {
                                         <Card.Body>
                                             <Card.Title>{item.product_name}</Card.Title>
                                             <Card.Text>
-                                            {item.product_price.toLocaleString('id', { style: 'currency', currency: 'IDR' })}
+                                            Price : {item.product_price.toLocaleString('id', { style: 'currency', currency: 'IDR' })}
                                             </Card.Text>
                                             {/* <Button variant="success" style={{ margin: "20px 10px" }}>
                                                 <i class="fas fa-shopping-cart" style={{ marginRight: '10px' }}></i>
@@ -86,9 +86,10 @@ class ProductAdmin extends React.Component {
                                                 <i class="far fa-heart" style={{ marginRight: '10px' }}></i>
                                                 Wishlist
                                             </Button> */}
-                                            <Button variant="outline-info" style={{ margin: "20px 10px" }}>
+                                            <Button variant="outline-info" style={{ margin: "20px 10px" }}
+                                            as={Link} to={`/admin/product-admin-edit/${item.id_product}`}>
                                                 <i class="fas fa-info" style={{ marginRight: '10px' }}></i>
-                                                Get Detail
+                                                Edit This Product
                                             </Button>
                                         </Card.Body>
                                     </Card>
