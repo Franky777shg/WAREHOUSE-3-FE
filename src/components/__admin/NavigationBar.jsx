@@ -2,6 +2,7 @@ import React from "react";
 import { Navbar, Nav, Dropdown, Button } from "react-bootstrap";
 import { connect } from "react-redux";
 import { adminLogout } from "../../redux/actions";
+import { Link } from "react-router-dom";
 
 class NavigationBar extends React.Component {
   render() {
@@ -23,7 +24,8 @@ class NavigationBar extends React.Component {
             <Nav.Link href="#pricing" style={style.navLink}>
               <i class="fas fa-dice-d6"></i> Product
             </Nav.Link>
-            <Nav.Link href="#as" style={style.navLink}>
+            <Nav.Link href="#as" style={style.navLink} as={Link}
+                        to="/admin/superadmin-page">
               <i class="fab fa-houzz"></i> Warehouse
             </Nav.Link>
             <Nav.Link href="#asc" style={style.navLink}>

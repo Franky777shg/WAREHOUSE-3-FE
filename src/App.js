@@ -14,7 +14,7 @@ import ProductAdmin from "./pages/productAdmin";
 // ADMIN
 import adminHomePage from "./pages/__admin/homePage";
 import adminLoginPage from "./pages/__admin/loginPage";
-
+import superAdminPage from "./pages/__admin/superAdminPage";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { keepLogin, logout, keepAdminLogin } from "./redux/actions";
 import { connect } from "react-redux";
@@ -54,7 +54,8 @@ class App extends React.Component {
             <Route path="/profile" component={ProfilePage} />
 
             {/* ADMIN ROUTING */}
-            <Route path="/admin" component={adminHomePage} />
+            <Route path="/admin/home" component={adminHomePage} />
+            <Route path="/admin/superadmin-page" component={superAdminPage} />
             <Route path="/auth/admin/login" component={adminLoginPage} />
           </Switch>
         </Router>
