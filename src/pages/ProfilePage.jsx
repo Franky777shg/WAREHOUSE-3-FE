@@ -56,7 +56,7 @@ class ProfilePage extends React.Component{
         .then(res => {
             console.log(res.data)
             this.setState({ datauser: res.data})
-            this.setState({images : res.data[0].profile_picture})
+            this.setState({ images : res.data[0].profile_picture})
 
           })
           .catch(err => {
