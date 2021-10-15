@@ -18,7 +18,8 @@ class NavigationBar extends React.Component {
             <Nav.Link href="#home" style={style.navLink}>
               <i class="fas fa-home"></i> Home
             </Nav.Link>
-            <Nav.Link href="#features" style={style.navLink}>
+            <Nav.Link href="#features" style={style.navLink} as={Link} 
+            to="/admin/transactionlist-page">
               <i class="fas fa-shopping-cart"></i> Transaction
             </Nav.Link>
             <Nav.Link href="#pricing" style={style.navLink}>
