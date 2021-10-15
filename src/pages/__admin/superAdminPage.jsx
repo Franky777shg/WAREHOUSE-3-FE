@@ -156,14 +156,10 @@ class SuperAdminPage extends React.Component {
                                                             <tr key={index}>
                                                             <td>{index + 1}</td>
                                                             <td>
-                                                            <FloatingLabel controlId="floatingPassword"  label="Warehouse Name">
                                                                 <Form.Control ref="warehouse_nameEdit" type="text" defaultValue={item.warehouse_name} placeholder="Enter Warehouse Name " />
-                                                            </FloatingLabel>
                                                             </td>
                                                             <td>
-                                                            <FloatingLabel controlId="floatingPassword"  label="Address">
                                                                 <Form.Control ref="waddressaddEdit" defaultValue={item.warehouse_address} type="text" placeholder="Enter Address " />
-                                                            </FloatingLabel>
                                                             </td>
                                                             <td>
                                                             <FloatingLabel controlId="floatingPassword"   label="Kecamatan">
@@ -171,14 +167,10 @@ class SuperAdminPage extends React.Component {
                                                             </FloatingLabel>
                                                             </td>
                                                             <td>
-                                                            <FloatingLabel controlId="floatingPassword"   label="Kabupaten">
                                                                 <Form.Control ref="wkabupatenaddEdit" defaultValue={item.warehouse_kabupaten} type="text" placeholder="Enter Kabupaten " />
-                                                            </FloatingLabel>
                                                             </td>
                                                             <td>
-                                                            <FloatingLabel controlId="floatingPassword"  label="Provinsi">
                                                                 <Form.Control ref="wprovinsiaddEdit" defaultValue={item.warehouse_provinsi} type="text" placeholder="Enter Provinsi " />               
-                                                            </FloatingLabel>    
                                                             </td>
                                                             <td>
                                                             <Form.Select ref="adminnameEdit" type="text"  size="md">
@@ -223,29 +215,26 @@ class SuperAdminPage extends React.Component {
           </div>
         
           
-            <Modal show={this.state.modalShow}>
+            <Modal show={this.state.modalShow} >
                     <Modal.Header>
                         <Modal.Title>Add New Warehouse</Modal.Title>
                     </Modal.Header>
                     <Modal.Body style={styles.inputAdd}>
-                    <FloatingLabel controlId="floatingPassword" label="Warehouse Name">
+                    <Form.Label>Warehouse Name</Form.Label>
                         <Form.Control ref="warehouse_name" type="text" placeholder="Enter Warehouse Name " />
-                    </FloatingLabel>
-                    <FloatingLabel controlId="floatingPassword" label="Address">
+                    <Form.Label>Address</Form.Label>
                         <Form.Control ref="waddressadd" type="text" placeholder="Enter Address " />
-                    </FloatingLabel>
-                    <FloatingLabel controlId="floatingPassword" label="Kecamatan">
+                    <Form.Label>Kecamatan</Form.Label>
                         <Form.Control ref="wkecamatanadd" type="text" placeholder="Enter Kecamatan " />
-                    </FloatingLabel>
-                    <FloatingLabel controlId="floatingPassword" label="Kabupaten">
+                    <Form.Label>Kabupaten</Form.Label>
                         <Form.Control ref="wkabupatenadd" type="text" placeholder="Enter Kabupaten " />
-                    </FloatingLabel>
-                    <FloatingLabel controlId="floatingPassword" label="Provinsi">
+                    <Form.Label>Provinsi</Form.Label>
                         <Form.Control ref="wprovinsiadd" type="text" placeholder="Enter Provinsi " />               
-                    </FloatingLabel>    
                     {/* <FloatingLabel controlId="floatingPassword" label="admin">
                         <Form.Control ref="idadmin" type="text" placeholder="Enter idadmin " />               
-                    </FloatingLabel>                                                             */}
+                    </FloatingLabel>  
+                                                                               */}
+                     <Form.Label>Admin</Form.Label>
                     <Form.Select ref="adminname" type="text"  size="md">
                         {this.state.admin_name.map((item, index) => {
                               return(
@@ -277,7 +266,9 @@ const styles= {
   inputAdd:{
       display: 'flex',
       flexDirection: 'column',
-      justifyContent: 'space-between'
+      justifyContent: 'space-between',
+      margin: '1vh'
+
   }
 }
 
