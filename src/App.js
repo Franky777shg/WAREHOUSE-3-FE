@@ -18,6 +18,7 @@ import superAdminPage from "./pages/__admin/superAdminPage";
 import ProductAdmin from "./pages/__admin/productAdmin";
 import ProdAdminEditPage from "./pages/__admin/productEditAdmin";
 import AddProductAdmin from "./pages/__admin/addProdAdmin";
+import listTransactionPage from "./pages/__admin/listTransactionPage";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { keepLogin, logout, keepAdminLogin } from "./redux/actions";
@@ -60,6 +61,8 @@ class App extends React.Component {
             {/* ADMIN ROUTING */}
             <Route path="/admin/home" component={adminHomePage} />
             <Route path="/admin/superadmin-page" component={superAdminPage} />
+            <Route path="/admin/transactionlist-page" component={listTransactionPage} />
+
             <Route path="/auth/admin/login" component={adminLoginPage} />
             <Route path="/admin/product-admin" component={ProductAdmin} />
             <Route path="/admin/product-admin-edit/:id" component={ProdAdminEditPage} />
