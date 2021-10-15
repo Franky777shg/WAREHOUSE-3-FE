@@ -9,13 +9,16 @@ import ChangePassPage from "./pages/changePass";
 import ProductPage from "./pages/products";
 import ProfilePage from "./pages/ProfilePage";
 import DetailPage from "./pages/productDetail";
-import ProductAdmin from "./pages/productAdmin";
-import ProdAdminEditPage from "./pages/productEditAdmin";
+
 
 // ADMIN
 import adminHomePage from "./pages/__admin/homePage";
 import adminLoginPage from "./pages/__admin/loginPage";
 import superAdminPage from "./pages/__admin/superAdminPage";
+import ProductAdmin from "./pages/__admin/productAdmin";
+import ProdAdminEditPage from "./pages/__admin/productEditAdmin";
+import AddProductAdmin from "./pages/__admin/addProdAdmin";
+
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { keepLogin, logout, keepAdminLogin } from "./redux/actions";
 import { connect } from "react-redux";
@@ -50,15 +53,17 @@ class App extends React.Component {
             ></Route>
             <Route path="/change-password" component={ChangePassPage}></Route>
             <Route path="/product" component={ProductPage} />
-            <Route path="/detail-product/:id" component={DetailPage}/>
-            <Route path="/admin/product-admin" component={ProductAdmin}/>
-            <Route path="/admin/product-admin-edit/:id" component={ProdAdminEditPage}/>
+            <Route path="/detail-product/:id" component={DetailPage} />
+
             <Route path="/profile" component={ProfilePage} />
 
             {/* ADMIN ROUTING */}
             <Route path="/admin/home" component={adminHomePage} />
             <Route path="/admin/superadmin-page" component={superAdminPage} />
             <Route path="/auth/admin/login" component={adminLoginPage} />
+            <Route path="/admin/product-admin" component={ProductAdmin} />
+            <Route path="/admin/product-admin-edit/:id" component={ProdAdminEditPage} />
+            <Route path="/admin/add-product" component={AddProductAdmin} />
           </Switch>
         </Router>
       </div>

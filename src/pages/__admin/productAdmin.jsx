@@ -1,6 +1,6 @@
 import React from 'react'
 import Axios from "axios"
-import NavigationBar from '../components/NavigationBar'
+import NavigationBar from '../../components/__admin/NavigationBar'
 import { Button, Card, Stack, Pagination} from "react-bootstrap"
 // import NavigationBar from "../components/NavigationBar"
 import { Link } from "react-router-dom"
@@ -63,7 +63,7 @@ class ProductAdmin extends React.Component {
             <div>
                 <NavigationBar/>
                 <div style={{marginTop: '60px'}}>
-                    Space untuk Filter product
+                    Space untuk Filter product<Button variant="success" as={Link} to={`/admin/add-product`}>Add Product</Button>
                 </div>
                 <div style={{ backgroundImage: 'linear-gradient(to right, #a8edea, #fed6e3)' }}>
 
