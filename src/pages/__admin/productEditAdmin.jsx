@@ -1,7 +1,7 @@
 import React from 'react'
 import Axios from 'axios'
 import { Image, Button, Modal, Form, Row, Col, Alert } from 'react-bootstrap'
-import NavigationBar from '../components/NavigationBar'
+import NavigationBar from '../../components/__admin/NavigationBar'
 import { Link, Redirect } from 'react-router-dom'
 import { findAllByDisplayValue } from '@testing-library/dom'
 
