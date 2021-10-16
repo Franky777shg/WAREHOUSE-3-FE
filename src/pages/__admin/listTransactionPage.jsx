@@ -19,12 +19,18 @@ class ListTransactionPage extends React.Component {
             dataTransaction: [],
         }
     }
-
+    
+        
+    
     fecthDataTransaction = () => {
         Axios.get(`${URL_API}/get-transactionlist`)
         .then(res => {
-            console.log(res.data)
-            this.setState({dataTransaction: res.data})
+            if(!res.data){
+                console.log('NOT FOUND')
+            }else{
+                console.log(res.data)
+                this.setState({dataTransaction: res.data})
+            }
         })
         .catch(err => {
             console.log(err)
