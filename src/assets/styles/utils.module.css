@@ -20,3 +20,11 @@
   -webkit-box-shadow: none !important;
   box-shadow: none !important;
 }
+
+/* address */
+.addressCard {
+  border: 1px solid #eaeaea;
+}
+.addressCard:hover {
+  cursor: pointer;
+}

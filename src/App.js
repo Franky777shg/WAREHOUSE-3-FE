@@ -10,6 +10,8 @@ import ProductPage from "./pages/products";
 import ProfilePage from "./pages/ProfilePage";
 import DetailPage from "./pages/productDetail";
 import ProductAdmin from "./pages/productAdmin";
+import cartPage from "./pages/transaction/cartPage";
+import CheckoutPage from "./pages/transaction/checkoutPage";
 
 // ADMIN
 import adminHomePage from "./pages/__admin/homePage";
@@ -54,8 +56,11 @@ class App extends React.Component {
             <Route path="/profile" component={ProfilePage} />
 
             {/* ADMIN ROUTING */}
-            <Route path="/admin" component={adminHomePage} />
+            <Route path="/admin/home" component={adminHomePage} />
             <Route path="/auth/admin/login" component={adminLoginPage} />
+
+            {/* TRANSACTION ROUTING */}
+            <Route path="/cart" component={cartPage} />
           </Switch>
         </Router>
       </div>
