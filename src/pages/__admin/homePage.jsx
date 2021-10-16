@@ -21,7 +21,9 @@ class HomePage extends React.Component {
     return (
       <React.Fragment>
         <NavigationBar />
-        <Container></Container>
+        <Container>
+          HOME
+        </Container>
       </React.Fragment>
     );
   }
