@@ -19,16 +19,49 @@ class ListTransactionPage extends React.Component {
             dataTransaction: [],
         }
     }
-
+    
+        
+    
     fecthDataTransaction = () => {
         Axios.get(`${URL_API}/get-transactionlist`)
         .then(res => {
-            console.log(res.data)
-            this.setState({dataTransaction: res.data})
+            if(!res.data){
+                console.log('NOT FOUND')
+            }else{
+                console.log(res.data)
+                this.setState({dataTransaction: res.data})
+            }
         })
         .catch(err => {
             console.log(err)
         })
+    }
+
+    filterDataTransaction = () => {
+        let full_name = this.refs.fullname.value
+        console.log(full_name)
+
+        let obj = {
+            full_name
+        
+        }
+        console.log(obj)
+        if (this.refs.fullname.value == null) {
+            return (null)
+        } else {
+        
+            Axios.post(`${URL_API}/filter-transactionlist`, obj)
+            .then(res => {
+                console.log(res.data)
+                this.setState({dataTransaction: res.data})
+    
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        }
+
+        
     }
 
     componentDidMount(){
@@ -47,7 +80,12 @@ class ListTransactionPage extends React.Component {
       <React.Fragment>
         <NavigationBar />
         <Container>
-                        
+            <div style={styles.filterCont}>
+            <Form.Control type="text" placeholder="Search"
+             ref="fullname" />
+            <Button onClick={() => this.filterDataTransaction()}>Search</Button>
+                </div>
+       
                             <Table striped bordered hover style={styles.contTransations}>
                                 <thead>
                                     <tr>
@@ -65,7 +103,7 @@ class ListTransactionPage extends React.Component {
                                 <tbody>
                                 {this.state.dataTransaction.map((item,index) => {
                                         return(
-                                            <tr ket={index}>
+                                            <tr key={index}>
                                             <td>{index + 1}</td>
                                             <td>{item.full_name}</td>
                                             <td>{item.address}</td>
@@ -91,6 +129,10 @@ const styles= {
      marginTop: '3vh',
   
     },
+    filterCont: {
+        display: 'flex',
+        flexDirection: 'row'
+    }
     
   }
 

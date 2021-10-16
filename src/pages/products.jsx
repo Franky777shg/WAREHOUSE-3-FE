@@ -267,7 +267,11 @@ class ProductPage extends React.Component {
                                {this.state.isLoading && <p> Loading... </p> }
                             </Col>
                             <Col md>
-                                <Form.Control type="text" placeholder="Product Name" style={{ width: '20vw' }} ref="name" />
+                                <Form.Control 
+                                type="text" 
+                                placeholder="Product Name"
+                                 style={{ width: '20vw' }} 
+                                 ref="name" />
                             </Col>
                             <Col md>
                                 <Form.Select aria-label="Floating label select example" style={{ width: '15vw' }} ref="category">
