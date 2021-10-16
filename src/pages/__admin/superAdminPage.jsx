@@ -182,7 +182,7 @@ class SuperAdminPage extends React.Component {
                                                             </Form.Select>
                                                             </td>
                                                             <td>
-                                                                <Button variant="outline-success" onClick={() => this.onUpdateWarehouse(item.id_warehouse)}>Save</Button>
+                                                                <Button variant="outline-success" onClick={() => this.oUpdateWarehouse(item.id_warehouse)}>Savne</Button>
                                                                 <Button variant="outline-danger" onClick={() => this.setState({ idEdit: null })}>Cancel</Button>
                                                                 <Button variant="outline-danger" >Delete</Button>
 
