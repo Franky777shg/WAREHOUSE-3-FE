@@ -9,7 +9,11 @@ import ChangePassPage from "./pages/changePass";
 import ProductPage from "./pages/products";
 import ProfilePage from "./pages/ProfilePage";
 import DetailPage from "./pages/productDetail";
-
+ 
+import ProductAdmin from "./pages/productAdmin";
+import cartPage from "./pages/transaction/cartPage";
+import CheckoutPage from "./pages/transaction/checkoutPage";
+ 
 
 // ADMIN
 import adminHomePage from "./pages/__admin/homePage";
@@ -60,6 +64,10 @@ class App extends React.Component {
 
             {/* ADMIN ROUTING */}
             <Route path="/admin/home" component={adminHomePage} />
+            <Route path="/auth/admin/login" component={adminLoginPage} />
+
+            {/* TRANSACTION ROUTING */}
+            <Route path="/cart" component={cartPage} />
             <Route path="/admin/superadmin-page" component={superAdminPage} />
             <Route path="/admin/transactionlist-page" component={listTransactionPage} />
 
@@ -67,6 +75,7 @@ class App extends React.Component {
             <Route path="/admin/product-admin" component={ProductAdmin} />
             <Route path="/admin/product-admin-edit/:id" component={ProdAdminEditPage} />
             <Route path="/admin/add-product" component={AddProductAdmin} />
+ 
           </Switch>
         </Router>
       </div>

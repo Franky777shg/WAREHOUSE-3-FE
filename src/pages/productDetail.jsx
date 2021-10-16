@@ -7,6 +7,8 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { addToCart } from "../redux/actions";
 
+const BASE_URL = "http://localhost:2000";
+
 class DetailPage extends React.Component {
   constructor(props) {
     super(props);
@@ -14,12 +16,14 @@ class DetailPage extends React.Component {
       qty: 1,
       detailProd: null,
       maxStock: null,
+      currentQty: 0,
+      updateQty: 0,
     };
   }
 
   componentDidMount() {
     let idProd = this.props.match.params.id;
-    Axios.get(`http://localhost:2000/product/detail-product/${idProd}`)
+    Axios.get(`${BASE_URL}/product/detail-product/${idProd}`)
       .then((res) => {
         this.setState({
           detailProd: res.data,
@@ -35,11 +39,9 @@ class DetailPage extends React.Component {
   onMinus = () => {
     this.setState({ qty: this.state.qty - 1 });
   };
-
   onPlus = () => {
     this.setState({ qty: this.state.qty + 1 });
   };
-
   onChangeQty = (e) => {
     let value = +e.target.value;
     let maxQty = this.state.detailProd.TotalStockAvail;
@@ -54,10 +56,79 @@ class DetailPage extends React.Component {
   };
 
   onAddToCart = () => {
+    const token = localStorage.getItem("token");
+    let totalPrice = this.state.qty * this.state.detailProd.product_price;
+
+    let cartData = {
+      id_product: this.state.detailProd.id_product,
+      id_user: token,
+      product_name: this.state.detailProd.product_name,
+      product_price: totalPrice,
+      quantity: this.state.qty,
+    };
+
+    let checkData = {
+      id_product: this.state.detailProd.id_product,
+      id_user: token,
+    };
+
     if (!this.props.username) {
       alert("please login");
     } else {
-      alert("bisa");
+      Axios.post(`${BASE_URL}/transaction/checkCart`, checkData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          console.log(res);
+          if (res.data.message === "cart_empty") {
+            this.addToCartHandler(cartData, "add");
+          } else {
+            let currentQty = res.data.data[0].quantity;
+            let updateStock = this.state.qty + currentQty;
+            let cartUpdateData = {
+              id_user: token,
+              id_product: this.state.detailProd.id_product,
+              currentQuantity: updateStock,
+            };
+
+            this.addToCartHandler(cartUpdateData, "update");
+          }
+        })
+        .catch((err) => console.log(err));
+    }
+  };
+
+  addToCartHandler = (cartData, type) => {
+    const token = localStorage.getItem("token");
+
+    switch (type) {
+      case "add":
+        Axios.post(`${BASE_URL}/transaction/addToCart`, cartData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => console.log(err));
+        break;
+      case "update":
+        Axios.post(`${BASE_URL}/transaction/addToExistingCart`, cartData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((err) => console.log(err));
+        break;
+
+      default:
+        break;
     }
   };
 
@@ -158,7 +229,7 @@ const styles = {
     marginBottom: "200px",
     marginTop: "100px",
     padding: "20px",
-    border: "1px solid #eaeaea",
+    border: "1px solid #F3F4F6",
     borderRadius: "4px",
     boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
   },

@@ -160,7 +160,7 @@ class NavigationBar extends React.Component {
                   <div style={style.navAuthButton} className="nav-auth-button">
                     <Button
                       as={Link}
-                      to={"auth/login"}
+                      to={"/auth/login"}
                       variant="primary"
                       className="mx-2"
                       style={style.navLoginButton}
@@ -170,7 +170,7 @@ class NavigationBar extends React.Component {
 
                     <Button
                       as={Link}
-                      to={"auth/register"}
+                      to={"/auth/register"}
                       variant="primary"
                       className="mr-1"
                       style={style.navRegButton}
