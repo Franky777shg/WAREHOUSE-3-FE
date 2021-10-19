@@ -46,11 +46,12 @@ class NavigationBar extends React.Component {
             <Navbar.Toggle aria-controls="basic-navbar-nav" />
             <Navbar.Collapse id="basic-navbar-nav">
               <Nav className="mx-4" style={{ width: "80%" }}>
-                <Nav.Link href="#" style={style.navbarLink}>
+                <Nav.Link as={Link} to="/" style={style.navbarLink}>
                   Home
                 </Nav.Link>
                 <Nav.Link
-                  href="/product"
+                  as={Link}
+                  to="/product"
                   style={style.navbarLink}
                   className="ml-5"
                 >
