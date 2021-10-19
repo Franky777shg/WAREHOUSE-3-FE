@@ -46,14 +46,6 @@ class CheckoutPage extends React.Component {
       .catch((err) => console.log(err));
   }
 
-  qtyOnChange = (e, currentProductQty, currentProductStock) => {
-    e.target.value = this.state.productQty;
-    console.log(e.target.value);
-  };
-  onDeleteCart = (userID, productID) => {
-    this.props.deleteCart(userID, productID);
-  };
-
   fetchCartData = () => {
     return this.state.cartData.map((item, index) => {
       return (

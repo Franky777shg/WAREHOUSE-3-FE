@@ -36,7 +36,7 @@ class Success extends React.Component {
                 size="md"
                 className="mt-3"
               >
-                Back to {this.props.backTo.title}
+                Go to {this.props.backTo.title}
               </Button>
             </Stack>
           </div>

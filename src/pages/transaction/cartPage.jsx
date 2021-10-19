@@ -11,13 +11,19 @@ import {
   Table,
   Figure,
   Alert,
+  Badge,
 } from "react-bootstrap";
 import Axios from "axios";
 import NavigationBar from "../../components/NavigationBar";
 
 import PageTitle from "../../components/pageTitle";
 import Checkout from "../../components/transaction/Checkout";
+import Success from "../../components/Success";
+
+import buySuccess from "../../assets/img/info/cart.png";
+
 import { Redirect } from "react-router";
+import utils from "../../assets/styles/utils.module.css";
 
 const BASE_URL = "http://localhost:2000";
 
@@ -26,14 +32,30 @@ class CartPage extends React.Component {
     super(props);
     this.state = {
       cartData: [],
+      checkoutData: [],
+      userAddress: [],
       totalPrice: 0,
       totalQty: 0,
       isCheckout: false,
-      checkoutData: [],
+      totalPricePerProduct: 0,
+      isUpdated: false,
+
+      selectedAddress: 0,
+      userFullName: "",
+      userEmail: "",
+      addAddress: false,
+
+      buySuccess: false,
     };
   }
 
   componentDidMount() {
+    this.getCart();
+    this.getUserData();
+    this.getUserAddress();
+  }
+
+  getCart() {
     let token = localStorage.getItem("token");
     let getCartData = {
       id_user: token,
@@ -45,8 +67,94 @@ class CartPage extends React.Component {
     })
       .then((res) => {
         this.setState({ cartData: res.data });
-        console.log(this.state.cartData);
         this.getCount();
+        console.log(this.state.cartData);
+      })
+      .catch((err) => console.log(err));
+  }
+  getUserAddress() {
+    let token = localStorage.getItem("token");
+    let getCartData = {
+      id_user: token,
+    };
+    Axios.post(`${BASE_URL}/transaction/getAddress`, getCartData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        this.setState({ userAddress: res.data });
+        if (res.data.length < 3) this.setState({ addAddress: true });
+      })
+      .catch((err) => console.log(err));
+  }
+  getUserData() {
+    let token = localStorage.getItem("token");
+    let getCartData = {
+      id_user: token,
+    };
+    Axios.post(`${BASE_URL}/transaction/getUserData`, getCartData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        this.setState({
+          userFullName: res.data[0].full_name,
+          userEmail: res.data[0].email,
+        });
+      })
+      .catch((err) => console.log(err));
+  }
+
+  onDeleteCart = (cartID) => {
+    const token = localStorage.getItem("token");
+    Axios.post(
+      `${BASE_URL}/transaction/deleteCart`,
+      { cartID: cartID },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+      .then((res) => {
+        this.setState({ cartData: res.data });
+        this.getUpdatedCount();
+      })
+      .catch((err) => console.log(err));
+  };
+  onDecreaseQty(qty, productID) {
+    const token = localStorage.getItem("token");
+    Axios.post(
+      `${BASE_URL}/transaction/changeQty`,
+      { updateQty: qty - 1, id_product: productID },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+      .then((res) => {
+        this.setState({ cartData: res.data });
+        this.getUpdatedCount();
+      })
+      .catch((err) => console.log(err));
+  }
+  onIncreaseQty(qty, productID) {
+    const token = localStorage.getItem("token");
+    Axios.post(
+      `${BASE_URL}/transaction/changeQty`,
+      { updateQty: qty + 1, id_product: productID },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+      .then((res) => {
+        this.setState({ cartData: res.data });
+        this.getUpdatedCount();
       })
       .catch((err) => console.log(err));
   }
@@ -60,15 +168,15 @@ class CartPage extends React.Component {
       });
     });
   }
-
-  qtyOnChange = (e, currentProductQty, currentProductStock) => {
-    e.target.value = this.state.productQty;
-    console.log(e.target.value);
-  };
-  onDeleteCart = (userID, productID) => {
-    this.props.deleteCart(userID, productID);
-  };
-
+  getUpdatedCount() {
+    return this.state.cartData.map((item, index) => {
+      this.setState({
+        totalQty: parseInt(item.quantity),
+        totalPrice: parseInt(item.product_price * item.quantity),
+      });
+      window.location.href = "/cart";
+    });
+  }
   fetchCartData = () => {
     return this.state.cartData.map((item, index) => {
       return (
@@ -95,13 +203,34 @@ class CartPage extends React.Component {
               </Figure>
             </td>
             <td>
-              <Form.Control
-                type="number"
-                className="mr-1"
-                value={item.quantity}
-                style={style.productQty}
-                onChange={(e) => this.qtyOnChange(e, item.qty, item.stock)}
-              />
+              <div style={style.productActionBtn}>
+                <Button
+                  variant="light"
+                  style={style.productQtyBtn}
+                  disabled={item.quantity === 1 ? true : false}
+                  onClick={() =>
+                    this.onDecreaseQty(item.quantity, item.id_product)
+                  }
+                >
+                  -
+                </Button>
+                <Form.Control
+                  type="text"
+                  className="mr-1"
+                  value={item.quantity}
+                  style={style.productQty}
+                />
+                <Button
+                  variant="light"
+                  style={style.productQtyBtn}
+                  disabled={item.quantity === 5 ? true : false}
+                  onClick={() =>
+                    this.onIncreaseQty(item.quantity, item.id_product)
+                  }
+                >
+                  +
+                </Button>
+              </div>
             </td>
             <td>
               <p style={style.productPrice}>
@@ -122,7 +251,7 @@ class CartPage extends React.Component {
                 size="md"
                 style={style.btnCardActionBtn}
                 onClick={() => {
-                  this.onDeleteCart(this.props.userID, index);
+                  this.onDeleteCart(item.id_cart);
                 }}
               >
                 <i class="fas fa-trash"></i>
@@ -138,6 +267,31 @@ class CartPage extends React.Component {
     this.setState({ isCheckout: true });
   };
 
+  addTransaction() {
+    const token = localStorage.getItem("token");
+    let transactionData;
+    this.state.cartData.map((item) => {
+      transactionData = {
+        id_product: item.id_product,
+        id_address: this.state.selectedAddress,
+        quantity: item.quantity,
+        total_price: item.quantity * item.product_price,
+      };
+
+      Axios.post(`${BASE_URL}/transaction/addTransaction`, transactionData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((res) => {
+          if (res.data.message === "transaction_success") {
+            this.setState({ buySuccess: true });
+          }
+        })
+        .catch((err) => console.log(err));
+    });
+  }
+
   render() {
     if (!localStorage.getItem("token")) {
       return <Redirect to="/" />;
@@ -145,78 +299,215 @@ class CartPage extends React.Component {
     return (
       <React.Fragment>
         <NavigationBar />
-        <PageTitle pageTitle="Shopping Cart" />
+        {!this.state.buySuccess && <PageTitle pageTitle="Shopping Cart" />}
         <div className="container p-0">
-          <div className="cart-wrapper" style={style.cartWrapper}>
-            <Row>
-              <Col sm={8}>
-                {this.state.isCheckout && <Checkout />}
-                {!this.state.isCheckout && (
+          {this.state.buySuccess && (
+            <Success
+              title="Order success"
+              body={`Your order success, please complete payment`}
+              img={buySuccess}
+              backTo={{ title: "payment page", to: "/profile/transaction" }}
+            />
+          )}
+
+          {!this.state.buySuccess && (
+            <div className="cart-wrapper" style={style.cartWrapper}>
+              <Row>
+                <Col sm={8}>
+                  <Card style={style.checkoutWrapper}>
+                    {!this.state.isCheckout && (
+                      <div>
+                        <Card.Header className="bg-white border-0 p-3">
+                          <span style={style.cartHeading}>Your cart</span>
+                        </Card.Header>
+                        <div className="m-2">
+                          <Table borderless>
+                            <thead>
+                              <tr>
+                                <th style={style.tableHeading}>Product</th>
+                                <th style={style.tableHeading}>Quantity</th>
+                                <th style={style.tableHeading}>Price</th>
+                              </tr>
+                            </thead>
+                            {this.fetchCartData()}
+                          </Table>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* checkout is true */}
+                    {this.state.isCheckout && (
+                      <div className="m-4">
+                        <Form>
+                          <span style={style.cartHeading}>Contact Info</span>
+                          <Row className="mb-3 mt-2">
+                            <Form.Group as={Col}>
+                              <Form.Label className="myLabel">
+                                Fullname
+                              </Form.Label>
+                              <Form.Control
+                                type="text"
+                                value={this.state.userFullName}
+                                placeholder="Enter fullname"
+                              />
+                            </Form.Group>
+
+                            <Form.Group as={Col}>
+                              <Form.Label>Phone</Form.Label>
+                              <Form.Control
+                                type="text"
+                                placeholder="Enter your phone number"
+                              />
+                            </Form.Group>
+
+                            <Form.Group as={Col}>
+                              <Form.Label>Email</Form.Label>
+                              <Form.Control
+                                type="email"
+                                value={this.state.userEmail}
+                                placeholder="Enter your email"
+                              />
+                            </Form.Group>
+                          </Row>
+                        </Form>
+
+                        <Form>
+                          <span style={style.cartHeading}>
+                            Delivery Details
+                          </span>
+                          <Row className="mb-3 mt-2">
+                            {this.state.userAddress.map((item) => {
+                              console.log(this.state.selectedAddress);
+                              return (
+                                <Form.Group as={Col}>
+                                  <Card
+                                    onClick={() => {
+                                      this.setState({
+                                        selectedAddress: item.id_address,
+                                      });
+                                    }}
+                                    className={
+                                      this.state.selectedAddress ===
+                                      item.id_address
+                                        ? utils.selectedUserAddress
+                                        : utils.addressCard
+                                    }
+                                  >
+                                    <span>
+                                      <i className="fas fa-home"></i>
+                                      <span className="addressType">
+                                        {item.address_type}
+                                      </span>
+                                      {item.status_aktif === "default" && (
+                                        <Badge
+                                          bg="success"
+                                          style={{
+                                            position: "relative",
+                                            marginLeft: "5px",
+                                          }}
+                                        >
+                                          Default
+                                        </Badge>
+                                      )}
+                                    </span>
+                                    <span className="mt-2">
+                                      <p className="addressName">
+                                        {item.package_recipient}, <br />
+                                        {item.address}
+                                      </p>
+                                    </span>
+                                  </Card>
+                                </Form.Group>
+                              );
+                            })}
+
+                            {this.state.addAddress && (
+                              <Form.Group as={Col}>
+                                <Card
+                                  style={style.addNewAddress}
+                                  className={utils.addressCard}
+                                >
+                                  <i className="fas fa-plus-square "></i>{" "}
+                                  <span style={{ marginLeft: "8px" }}>
+                                    Add new address
+                                  </span>
+                                </Card>
+                              </Form.Group>
+                            )}
+                          </Row>
+                        </Form>
+
+                        <Form>
+                          <span style={style.cartHeading}>Payment Method</span>
+                          <Row className="mb-3 mt-2">
+                            <Form.Group as={Col}>
+                              <Form.Select>
+                                <option>Select method</option>
+                                <option>Bank Transfer</option>
+                              </Form.Select>
+                            </Form.Group>
+                          </Row>
+                        </Form>
+                      </div>
+                    )}
+                  </Card>
+                </Col>
+
+                {/* Order Summary */}
+                <Col sm={4}>
                   <Card style={style.checkoutWrapper}>
                     <Card.Header className="bg-white border-0 p-3">
-                      <span style={style.cartHeading}>Your cart</span>
+                      <span style={style.cartHeading}> Order Summary </span>
                     </Card.Header>
-                    <div className="m-2">
-                      <Table borderless>
-                        <thead>
-                          <tr>
-                            <th style={style.tableHeading}>Product</th>
-                            <th style={style.tableHeading}>Quantity</th>
-                            <th style={style.tableHeading}>Price</th>
-                          </tr>
-                        </thead>
-                        {this.fetchCartData()}
-                      </Table>
-                    </div>
-                  </Card>
-                )}
-              </Col>
-              <Col sm={4}>
-                <Card style={style.checkoutWrapper}>
-                  <Card.Header className="bg-white border-0 p-3">
-                    <span style={style.cartHeading}> Order Summary </span>
-                  </Card.Header>
-                  <Card.Body style={style.cartTotalBody}>
-                    <p className="mb-0">
-                      Total price:{" "}
-                      <span className="float-right">
-                        Rp {this.state.totalPrice.toLocaleString()}
-                      </span>
-                    </p>
-                    <p>
-                      Discount: <span className="float-right">0%</span>
-                    </p>
-
-                    <hr />
-                    <p>
-                      <strong>Total:</strong>
-                      <span
-                        className="float-right"
-                        style={style.totalPaymentText}
-                      >
-                        <strong>
+                    <Card.Body style={style.cartTotalBody}>
+                      <p className="mb-0">
+                        Total price :{" "}
+                        <span className="float-right">
                           Rp {this.state.totalPrice.toLocaleString()}
-                        </strong>
-                      </span>
-                    </p>
+                        </span>
+                      </p>
 
-                    <div className="d-grid gap-2">
-                      <Button
-                        block
-                        variant="primary"
-                        style={style.btnCheckOut}
-                        onClick={() => {
-                          this.checkoutHandler();
-                        }}
-                      >
-                        {this.state.isCheckout ? "Place my order" : "Checkout"}
-                      </Button>
-                    </div>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
-          </div>
+                      <p>
+                        Shipping fee : <span className="float-right">Rp 0</span>
+                      </p>
+
+                      <hr />
+                      <p>
+                        <strong>Total:</strong>
+                        <span
+                          className="float-right"
+                          style={style.totalPaymentText}
+                        >
+                          <strong>
+                            Rp {this.state.totalPrice.toLocaleString()}
+                          </strong>
+                        </span>
+                      </p>
+
+                      <div className="d-grid gap-2">
+                        <Button
+                          block
+                          variant="primary"
+                          style={style.btnCheckOut}
+                          onClick={() => {
+                            {
+                              this.state.isCheckout
+                                ? this.addTransaction()
+                                : this.checkoutHandler();
+                            }
+                          }}
+                        >
+                          {this.state.isCheckout
+                            ? "Place my order"
+                            : "Checkout"}
+                        </Button>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              </Row>
+            </div>
+          )}
         </div>
       </React.Fragment>
     );
@@ -291,15 +582,6 @@ const style = {
     paddingLeft: "10px",
     borderRadius: "6px",
   },
-  productQtyBtn: {
-    border: "1px solid #eaeaea",
-    backgroundColor: "#fff",
-    padding: "0 7px",
-  },
-  addToCartBtn: {
-    fontSize: "14px",
-    fontWeight: "500",
-  },
   btnCardActionBtn: {
     backgroundColor: "#fff",
     border: "1px solid #eaeaea",
@@ -341,6 +623,23 @@ const style = {
   cartHeading: {
     fontWeight: "600",
     fontSize: "18px",
+  },
+
+  // action button
+  productActionBtn: {
+    display: "flex",
+    bottom: "0",
+    width: "100%",
+  },
+  productQty: {
+    width: "50px",
+    margin: "0 7px",
+    border: "1px solid #eaeaea",
+  },
+  productQtyBtn: {
+    border: "1px solid #eaeaea",
+    backgroundColor: "#fff",
+    padding: "4px 4px",
   },
 };
 
