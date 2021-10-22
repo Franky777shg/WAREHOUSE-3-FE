@@ -106,23 +106,39 @@ class CartPage extends React.Component {
       })
       .catch((err) => console.log(err));
   }
-
-  onDeleteCart = (cartID) => {
+  onDeleteCart = (type, cartID) => {
     const token = localStorage.getItem("token");
-    Axios.post(
-      `${BASE_URL}/transaction/deleteCart`,
-      { cartID: cartID },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
-      .then((res) => {
-        this.setState({ cartData: res.data });
-        this.getUpdatedCount();
-      })
-      .catch((err) => console.log(err));
+    if (type === "partial") {
+      Axios.post(
+        `${BASE_URL}/transaction/deleteCart/partial`,
+        { cartID: cartID },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+        .then((res) => {
+          this.setState({ cartData: res.data });
+          this.getCount();
+        })
+        .catch((err) => console.log(err));
+    }
+    if (type === "full") {
+      Axios.post(
+        `${BASE_URL}/transaction/deleteCart/full`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+        .then((res) => {
+          this.setState({ cartData: res.data });
+        })
+        .catch((err) => console.log(err));
+    }
   };
   onDecreaseQty(qty, productID) {
     const token = localStorage.getItem("token");
@@ -137,7 +153,7 @@ class CartPage extends React.Component {
     )
       .then((res) => {
         this.setState({ cartData: res.data });
-        this.getUpdatedCount();
+        this.getCount();
       })
       .catch((err) => console.log(err));
   }
@@ -154,27 +170,22 @@ class CartPage extends React.Component {
     )
       .then((res) => {
         this.setState({ cartData: res.data });
-        this.getUpdatedCount();
+        this.getCount();
       })
       .catch((err) => console.log(err));
   }
-
   getCount() {
-    return this.state.cartData.map((item, index) => {
-      this.setState({
-        totalQty: this.state.totalQty + parseInt(item.quantity),
-        totalPrice:
-          this.state.totalPrice + parseInt(item.product_price * item.quantity),
-      });
+    let qtyTemp = 0;
+    let totalPriceTemp = 0;
+
+    this.state.cartData.map((item, index) => {
+      qtyTemp += +item.quantity;
+      totalPriceTemp += item.quantity * item.product_price;
     });
-  }
-  getUpdatedCount() {
-    return this.state.cartData.map((item, index) => {
-      this.setState({
-        totalQty: parseInt(item.quantity),
-        totalPrice: parseInt(item.product_price * item.quantity),
-      });
-      window.location.href = "/cart";
+
+    this.setState({
+      totalQty: qtyTemp,
+      totalPrice: totalPriceTemp,
     });
   }
   fetchCartData = () => {
@@ -251,7 +262,7 @@ class CartPage extends React.Component {
                 size="md"
                 style={style.btnCardActionBtn}
                 onClick={() => {
-                  this.onDeleteCart(item.id_cart);
+                  this.onDeleteCart("partial", item.id_cart);
                 }}
               >
                 <i class="fas fa-trash"></i>
@@ -262,34 +273,67 @@ class CartPage extends React.Component {
       );
     });
   };
-
   checkoutHandler = () => {
     this.setState({ isCheckout: true });
   };
-
   addTransaction() {
     const token = localStorage.getItem("token");
-    let transactionData;
-    this.state.cartData.map((item) => {
-      transactionData = {
-        id_product: item.id_product,
-        id_address: this.state.selectedAddress,
-        quantity: item.quantity,
-        total_price: item.quantity * item.product_price,
-      };
+    let date = new Date();
+    let fullTime =
+      date.getFullYear() +
+      "-" +
+      date.getMonth() +
+      "-" +
+      date.getDay() +
+      " " +
+      date.getHours() +
+      ":" +
+      date.getMinutes();
 
-      Axios.post(`${BASE_URL}/transaction/addTransaction`, transactionData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+    let unique =
+      "ORD" + "-" + date.getMonth() + "" + Math.floor(Math.random() * 9999);
+
+    let orderData = {
+      id_address: this.state.selectedAddress,
+      order_number: unique,
+    };
+
+    Axios.post(`${BASE_URL}/transaction/addTransaction/order`, orderData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        if (res.data.message === "order_added") {
+          let transactionData;
+          this.state.cartData.map((item) => {
+            transactionData = {
+              order_number: unique,
+              id_product: item.id_product,
+              quantity: item.quantity,
+              total_price: item.quantity * item.product_price,
+            };
+
+            Axios.post(
+              `${BASE_URL}/transaction/addTransaction/detail`,
+              transactionData,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            )
+              .then((res) => {
+                if (res.data.message === "transaction_success") {
+                  this.setState({ buySuccess: true });
+                  this.onDeleteCart("full", 0);
+                }
+              })
+              .catch((err) => console.log(err));
+          });
+        }
       })
-        .then((res) => {
-          if (res.data.message === "transaction_success") {
-            this.setState({ buySuccess: true });
-          }
-        })
-        .catch((err) => console.log(err));
-    });
+      .catch((err) => console.log(err));
   }
 
   render() {

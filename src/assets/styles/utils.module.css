@@ -44,7 +44,18 @@
 .selectedUserAddress {
   width: 100%;
   height: 100%;
-  border: 1px solid #1e88e5;
+  border: 1px solid #1e88e5 !important;
   padding: 12px;
-  background-color: #e3f2fd;
+  background-color: #e3f2fd !important;
+}
+
+/* CARD */
+
+.myCard {
+  border-radius: 8px;
+}
+
+.cardHeader {
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
 }
