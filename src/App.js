@@ -12,6 +12,7 @@ import DetailPage from "./pages/productDetail";
 
 import cartPage from "./pages/transaction/cartPage";
 import CheckoutPage from "./pages/transaction/checkoutPage";
+import PaymentPage from "./pages/transaction/paymentPage";
 
 // ADMIN
 import adminHomePage from "./pages/__admin/homePage";
@@ -60,12 +61,12 @@ class App extends React.Component {
 
             <Route path="/profile" component={ProfilePage} />
 
-            {/* ADMIN ROUTING */}
             <Route path="/admin/home" component={adminHomePage} />
             <Route path="/auth/admin/login" component={adminLoginPage} />
 
-            {/* TRANSACTION ROUTING */}
             <Route path="/cart" component={cartPage} />
+            <Route path="/payment/:payToken" component={PaymentPage} />
+
             <Route path="/admin/superadmin-page" component={superAdminPage} />
             <Route
               path="/admin/transactionlist-page"

@@ -5,7 +5,7 @@ import Profile from "../components/profile/profile";
 import Transaction from "../components/profile/transaction";
 import History from "../components/profile/history";
 
-import { Link } from "react-router-dom";
+import { Link, Switch, Route } from "react-router-dom";
 
 import {
   Container,
@@ -50,7 +50,6 @@ class ProfilePage extends React.Component {
       }
     )
       .then((res) => {
-        console.log(res.data);
         this.setState({ dataaddress: res.data });
       })
       .catch((err) => {
@@ -99,6 +98,7 @@ class ProfilePage extends React.Component {
   componentDidMount() {
     this.fectDataUser();
     this.fectDataAddress();
+    console.log();
     // this.getUserProfile()
   }
 
@@ -317,9 +317,6 @@ class ProfilePage extends React.Component {
                     style={styles.noBorder}
                     as={Link}
                     to="/profile/"
-                    onClick={() => {
-                      this.setState({ activeTab: "profile" });
-                    }}
                   >
                     <i className="fas fa-id-badge"></i>
                     <span style={{ marginLeft: "10px" }}>Profile</span>
@@ -328,9 +325,6 @@ class ProfilePage extends React.Component {
                     style={styles.noBorder}
                     as={Link}
                     to="/profile/transaction"
-                    onClick={() => {
-                      this.setState({ activeTab: "transaction" });
-                    }}
                   >
                     <i className="fas fa-shopping-bag"></i>{" "}
                     <span style={{ marginLeft: "10px" }}>Transaction</span>
@@ -339,9 +333,6 @@ class ProfilePage extends React.Component {
                     style={styles.noBorder}
                     as={Link}
                     to="/profile/history"
-                    onClick={() => {
-                      this.setState({ activeTab: "history" });
-                    }}
                   >
                     <i className="fas fa-history"></i>
                     <span style={{ marginLeft: "10px" }}>Order History</span>
@@ -350,9 +341,6 @@ class ProfilePage extends React.Component {
                     style={styles.noBorder}
                     as={Link}
                     to="/profile/address"
-                    onClick={() => {
-                      this.setState({ activeTab: "address" });
-                    }}
                   >
                     <i className="fas fa-truck"></i>
                     <span style={{ marginLeft: "10px" }}>Address</span>
@@ -361,9 +349,6 @@ class ProfilePage extends React.Component {
                     style={styles.noBorder}
                     as={Link}
                     to="/profile/settings"
-                    onClick={() => {
-                      this.setState({ activeTab: "setting" });
-                    }}
                   >
                     <i className="fas fa-cog"></i>
                     <span style={{ marginLeft: "10px" }}>Settings</span>
@@ -371,11 +356,19 @@ class ProfilePage extends React.Component {
                 </ListGroup>
               </Card>
             </Col>
-            <Col sm={8}>
+            <Col sm={9}>
               <Card className="p-2" style={styles.profileCard}>
-                {this.state.activeTab === "profile" && <Profile />}
-                {this.state.activeTab === "transaction" && <Transaction />}
-                {this.state.activeTab === "history" && <History />}
+                <Switch>
+                  <Route exact path="/profile/">
+                    <Profile />
+                  </Route>
+                  <Route path="/profile/transaction">
+                    <Transaction />
+                  </Route>
+                  <Route path="/profile/history">
+                    <History />
+                  </Route>
+                </Switch>
               </Card>
             </Col>
           </Row>
