@@ -58,12 +58,12 @@ class AddProductAdmin extends React.Component {
 
         
 
-        if (!name || !category || !description || !price) {
+        if (!name || !category || !description || !price || this.state.images ==="") {
             return this.setState({ inputEmpty: [true, "Cannot be empty, Please input all of data !"] })
         } else {
             Axios.post(`http://localhost:2000/prod-admin/add-product`, obj)
                 .then((res) => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     this.setState({ id_product: res.data.id_product })
                     Axios.post(`http://localhost:2000/prod-admin/edit-detailfoto/${this.state.id_product}`, data,
                         { headers: { 'Content-type': 'multipart/form-data' } })
@@ -71,6 +71,11 @@ class AddProductAdmin extends React.Component {
                             this.setState({
                                 successAdd: [true, "New Product Successfully added !"],
                             })
+                            Axios.post(`http://localhost:2000/prod-admin/add-stock-default/${this.state.id_product}`)
+                            .then((res)=>{
+                                console.log("Add stock-op default")
+                            })
+                            .catch((err)=>console.log(err))
                         })
                         .catch((err) => console.log(err))
                 })
@@ -80,7 +85,7 @@ class AddProductAdmin extends React.Component {
 
     render() {
         // console.log(this.state.cate, "cate")
-        // console.log("images",this.state.images)
+        console.log("images",this.state.images)
         console.log("idprod", this.state.id_product)
         return (
             <div>
