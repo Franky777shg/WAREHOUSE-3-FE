@@ -59,6 +59,11 @@ class ProductAdmin extends React.Component {
                     total_pageAdmin: (Math.ceil(res.data[3].totalItemAdmin / res.data[2].per_page)),
                     modalSuccess: [true, res.data[4].message]
                 })
+                Axios.post(`http://localhost:2000/prod-admin/delete-stock/${this.state.idProd}`)
+                .then((res)=>{
+                    console.log("delete stock this product")
+                })
+                .catch((err)=>console.log(err))
             })
             .catch((err) => console.log(err))
         this.setState({ modalDel: false })
@@ -188,7 +193,9 @@ class ProductAdmin extends React.Component {
                     </Modal.Header>
                     <Modal.Body>{this.state.modalSuccess[1]}</Modal.Body>
                     <Modal.Footer>
-                        <Button variant="success" onClick={() => this.setState({ modalSuccess: [false, ""] })}>
+                        <Button variant="success" 
+                        onClick={() => this.setState({ modalSuccess: [false, ""] })}
+                        as={Link} to={`/admin/product-admin`}>
                             OK
                         </Button>
                     </Modal.Footer>
