@@ -154,7 +154,7 @@ class ProdAdminEditPage extends React.Component {
         // console.log("prod", this.state.prodDetail) 
         // console.log("opt",this.state.cateOption)
         // console.log("IMG",this.state.images)
-        // console.log("Stock All WH", this.state.stockWH)
+        console.log("Stock All WH", this.state.stockWH)
         // console.log("OP",this.state.maxStockOp)
 
         // if(this.state.successModalChanges===true)
