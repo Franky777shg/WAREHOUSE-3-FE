@@ -76,6 +76,7 @@ class SuperAdminPage extends React.Component {
             Axios.post(`${URL_API}/add-warehousedata`, warehouseinput,)
             .then(res => {
                 this.setState({ dataWarehouse: res.data })
+                this.onStockdefaultinput()
                 this.fectDataWarehouse()
                 this.setState({modalShow: false})
             })
@@ -115,6 +116,26 @@ class SuperAdminPage extends React.Component {
               console.log(err)
           })
 
+        }
+
+        onStockdefaultinput = () => {
+          const idwarehouse = this.refs.idwarehouse.value
+      
+      
+          const stockdefaultinput = {
+            id_warehouse : idwarehouse,
+             
+          }
+          console.log(stockdefaultinput)
+      
+          // let token = localStorage.getItem("token")
+          Axios.post(`${URL_API}/add-stock-default`, stockdefaultinput)
+          .then(res => {
+              console.log(res)
+          })
+          .catch(err => {
+              console.log(err)
+          })
         }
 
 
@@ -182,16 +203,18 @@ class SuperAdminPage extends React.Component {
                                                             </Form.Select>
                                                             </td>
                                                             <td>
-                                                                <Button variant="outline-success" onClick={() => this.oUpdateWarehouse(item.id_warehouse)}>Savne</Button>
+                                                                <Button variant="outline-success" onClick={() => this.onUpdateWarehouse(item.id_warehouse)}>Save</Button>
                                                                 <Button variant="outline-danger" onClick={() => this.setState({ idEdit: null })}>Cancel</Button>
-                                                                <Button variant="outline-danger" >Delete</Button>
-
                                                             </td>
                                                         </tr>
                                                               )
                                                           }return(
                                                               <tr key={index}>
-                                                                  <td>{index + 1}</td>
+                                                                  <td>
+                                                                    {/* {item.id_warehouse} */}
+                                                                    <Form.Control plaintext ref="idwarehouse" defaultValue={item.id_warehouse} disabled/>
+
+                                                                    </td>
                                                                   <td>{item.warehouse_name}</td>
                                                                   <td>{item.warehouse_address}</td>
                                                                   <td>{item.warehouse_kecamatan}</td>
