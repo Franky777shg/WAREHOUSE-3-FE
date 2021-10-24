@@ -72,28 +72,21 @@ class NavigationBar extends React.Component {
               <Form inline className="d-flex">
                 {this.props.username ? (
                   <>
-                    <Dropdown className="cart-dropdown">
-                      <Dropdown.Toggle
-                        variant="default"
-                        className={`m-1 mx-2 ${utils.myButton}`}
-                      >
-                        <i
-                          className="fas fa-shopping-cart"
-                          style={style.navIcon}
-                        ></i>
-                        <Badge bg="danger" style={style.badgeCart}>
-                          0
-                        </Badge>
-                      </Dropdown.Toggle>
-
-                      <Dropdown.Menu
-                        className="mt-2 px-2"
-                        style={style.dropdownMenu}
-                      >
-                        <CartList />
-                      </Dropdown.Menu>
-                    </Dropdown>
-
+                    <Button
+                      variant="default"
+                      className={`m-1 mx-1 ${utils.myButton}`}
+                      style={style.actionBtn}
+                      as={Link}
+                      to="/cart"
+                    >
+                      <i
+                        className="fas fa-shopping-cart"
+                        style={style.navIcon}
+                      ></i>
+                      <Badge bg="danger" style={style.badgeCart}>
+                        0
+                      </Badge>
+                    </Button>
                     <Button
                       variant="default"
                       className={`m-1 mx-1 ${utils.myButton}`}
