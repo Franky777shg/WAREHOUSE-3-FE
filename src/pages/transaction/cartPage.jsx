@@ -443,7 +443,6 @@ class CartPage extends React.Component {
                             </span>
                             <Row className="mb-3 mt-2">
                               {this.state.userAddress.map((item) => {
-                                console.log(this.state.selectedAddress);
                                 return (
                                   <Form.Group as={Col}>
                                     <Card
