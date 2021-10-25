@@ -325,8 +325,22 @@ class CartPage extends React.Component {
             )
               .then((res) => {
                 if (res.data.message === "transaction_success") {
-                  this.setState({ buySuccess: true });
-                  this.onDeleteCart("full", 0);
+                  Axios.post(
+                    `${BASE_URL}/transaction/addTransaction/add_default_payment`,
+                    transactionData,
+                    {
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                      },
+                    }
+                  )
+                    .then((res) => {
+                      if (res.data.message === "add_default_payment_success") {
+                        this.setState({ buySuccess: true });
+                        this.onDeleteCart("full", 0);
+                      }
+                    })
+                    .catch((err) => console.log(err));
                 }
               })
               .catch((err) => console.log(err));
@@ -344,215 +358,226 @@ class CartPage extends React.Component {
       <React.Fragment>
         <NavigationBar />
         {!this.state.buySuccess && <PageTitle pageTitle="Shopping Cart" />}
-        <div className="container p-0">
-          {this.state.buySuccess && (
-            <Success
-              title="Order success"
-              body={`Your order success, please complete payment`}
-              img={buySuccess}
-              backTo={{ title: "payment page", to: "/profile/transaction" }}
-            />
-          )}
+        {this.state.cartData.length < 1 ? (
+          <Success
+            title="Cart Empty"
+            body={`Your cart is empty`}
+            img={buySuccess}
+            backTo={{ title: "browse product", to: "/product" }}
+          />
+        ) : (
+          <div className="container p-0">
+            {this.state.buySuccess && (
+              <Success
+                title="Order success"
+                body={`Your order success, please complete payment`}
+                img={buySuccess}
+                backTo={{ title: "payment page", to: "/profile/transaction" }}
+              />
+            )}
 
-          {!this.state.buySuccess && (
-            <div className="cart-wrapper" style={style.cartWrapper}>
-              <Row>
-                <Col sm={8}>
-                  <Card style={style.checkoutWrapper}>
-                    {!this.state.isCheckout && (
-                      <div>
-                        <Card.Header className="bg-white border-0 p-3">
-                          <span style={style.cartHeading}>Your cart</span>
-                        </Card.Header>
-                        <div className="m-2">
-                          <Table borderless>
-                            <thead>
-                              <tr>
-                                <th style={style.tableHeading}>Product</th>
-                                <th style={style.tableHeading}>Quantity</th>
-                                <th style={style.tableHeading}>Price</th>
-                              </tr>
-                            </thead>
-                            {this.fetchCartData()}
-                          </Table>
+            {!this.state.buySuccess && (
+              <div className="cart-wrapper" style={style.cartWrapper}>
+                <Row>
+                  <Col sm={8}>
+                    <Card style={style.checkoutWrapper}>
+                      {!this.state.isCheckout && (
+                        <div>
+                          <Card.Header className="bg-white border-0 p-3">
+                            <span style={style.cartHeading}>Your cart</span>
+                          </Card.Header>
+                          <div className="m-2">
+                            <Table borderless>
+                              <thead>
+                                <tr>
+                                  <th style={style.tableHeading}>Product</th>
+                                  <th style={style.tableHeading}>Quantity</th>
+                                  <th style={style.tableHeading}>Price</th>
+                                </tr>
+                              </thead>
+                              {this.fetchCartData()}
+                            </Table>
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
 
-                    {/* checkout is true */}
-                    {this.state.isCheckout && (
-                      <div className="m-4">
-                        <Form>
-                          <span style={style.cartHeading}>Contact Info</span>
-                          <Row className="mb-3 mt-2">
-                            <Form.Group as={Col}>
-                              <Form.Label className="myLabel">
-                                Fullname
-                              </Form.Label>
-                              <Form.Control
-                                type="text"
-                                value={this.state.userFullName}
-                                placeholder="Enter fullname"
-                              />
-                            </Form.Group>
+                      {/* checkout is true */}
+                      {this.state.isCheckout && (
+                        <div className="m-4">
+                          <Form>
+                            <span style={style.cartHeading}>Contact Info</span>
+                            <Row className="mb-3 mt-2">
+                              <Form.Group as={Col}>
+                                <Form.Label className="myLabel">
+                                  Fullname
+                                </Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  value={this.state.userFullName}
+                                  placeholder="Enter fullname"
+                                />
+                              </Form.Group>
 
-                            <Form.Group as={Col}>
-                              <Form.Label>Phone</Form.Label>
-                              <Form.Control
-                                type="text"
-                                placeholder="Enter your phone number"
-                              />
-                            </Form.Group>
+                              <Form.Group as={Col}>
+                                <Form.Label>Phone</Form.Label>
+                                <Form.Control
+                                  type="text"
+                                  placeholder="Enter your phone number"
+                                />
+                              </Form.Group>
 
-                            <Form.Group as={Col}>
-                              <Form.Label>Email</Form.Label>
-                              <Form.Control
-                                type="email"
-                                value={this.state.userEmail}
-                                placeholder="Enter your email"
-                              />
-                            </Form.Group>
-                          </Row>
-                        </Form>
+                              <Form.Group as={Col}>
+                                <Form.Label>Email</Form.Label>
+                                <Form.Control
+                                  type="email"
+                                  value={this.state.userEmail}
+                                  placeholder="Enter your email"
+                                />
+                              </Form.Group>
+                            </Row>
+                          </Form>
 
-                        <Form>
-                          <span style={style.cartHeading}>
-                            Delivery Details
-                          </span>
-                          <Row className="mb-3 mt-2">
-                            {this.state.userAddress.map((item) => {
-                              console.log(this.state.selectedAddress);
-                              return (
+                          <Form>
+                            <span style={style.cartHeading}>
+                              Delivery Details
+                            </span>
+                            <Row className="mb-3 mt-2">
+                              {this.state.userAddress.map((item) => {
+                                return (
+                                  <Form.Group as={Col}>
+                                    <Card
+                                      onClick={() => {
+                                        this.setState({
+                                          selectedAddress: item.id_address,
+                                        });
+                                      }}
+                                      className={
+                                        this.state.selectedAddress ===
+                                        item.id_address
+                                          ? utils.selectedUserAddress
+                                          : utils.addressCard
+                                      }
+                                    >
+                                      <span>
+                                        <i className="fas fa-home"></i>
+                                        <span className="addressType">
+                                          {item.address_type}
+                                        </span>
+                                        {item.status_aktif === "default" && (
+                                          <Badge
+                                            bg="success"
+                                            style={{
+                                              position: "relative",
+                                              marginLeft: "5px",
+                                            }}
+                                          >
+                                            Default
+                                          </Badge>
+                                        )}
+                                      </span>
+                                      <span className="mt-2">
+                                        <p className="addressName">
+                                          {item.package_recipient}, <br />
+                                          {item.address}
+                                        </p>
+                                      </span>
+                                    </Card>
+                                  </Form.Group>
+                                );
+                              })}
+
+                              {this.state.addAddress && (
                                 <Form.Group as={Col}>
                                   <Card
-                                    onClick={() => {
-                                      this.setState({
-                                        selectedAddress: item.id_address,
-                                      });
-                                    }}
-                                    className={
-                                      this.state.selectedAddress ===
-                                      item.id_address
-                                        ? utils.selectedUserAddress
-                                        : utils.addressCard
-                                    }
+                                    style={style.addNewAddress}
+                                    className={utils.addressCard}
                                   >
-                                    <span>
-                                      <i className="fas fa-home"></i>
-                                      <span className="addressType">
-                                        {item.address_type}
-                                      </span>
-                                      {item.status_aktif === "default" && (
-                                        <Badge
-                                          bg="success"
-                                          style={{
-                                            position: "relative",
-                                            marginLeft: "5px",
-                                          }}
-                                        >
-                                          Default
-                                        </Badge>
-                                      )}
-                                    </span>
-                                    <span className="mt-2">
-                                      <p className="addressName">
-                                        {item.package_recipient}, <br />
-                                        {item.address}
-                                      </p>
+                                    <i className="fas fa-plus-square "></i>{" "}
+                                    <span style={{ marginLeft: "8px" }}>
+                                      Add new address
                                     </span>
                                   </Card>
                                 </Form.Group>
-                              );
-                            })}
+                              )}
+                            </Row>
+                          </Form>
 
-                            {this.state.addAddress && (
+                          <Form>
+                            <span style={style.cartHeading}>
+                              Payment Method
+                            </span>
+                            <Row className="mb-3 mt-2">
                               <Form.Group as={Col}>
-                                <Card
-                                  style={style.addNewAddress}
-                                  className={utils.addressCard}
-                                >
-                                  <i className="fas fa-plus-square "></i>{" "}
-                                  <span style={{ marginLeft: "8px" }}>
-                                    Add new address
-                                  </span>
-                                </Card>
+                                <Form.Select>
+                                  <option>Select method</option>
+                                  <option>Bank Transfer</option>
+                                </Form.Select>
                               </Form.Group>
-                            )}
-                          </Row>
-                        </Form>
+                            </Row>
+                          </Form>
+                        </div>
+                      )}
+                    </Card>
+                  </Col>
 
-                        <Form>
-                          <span style={style.cartHeading}>Payment Method</span>
-                          <Row className="mb-3 mt-2">
-                            <Form.Group as={Col}>
-                              <Form.Select>
-                                <option>Select method</option>
-                                <option>Bank Transfer</option>
-                              </Form.Select>
-                            </Form.Group>
-                          </Row>
-                        </Form>
-                      </div>
-                    )}
-                  </Card>
-                </Col>
-
-                {/* Order Summary */}
-                <Col sm={4}>
-                  <Card style={style.checkoutWrapper}>
-                    <Card.Header className="bg-white border-0 p-3">
-                      <span style={style.cartHeading}> Order Summary </span>
-                    </Card.Header>
-                    <Card.Body style={style.cartTotalBody}>
-                      <p className="mb-0">
-                        Total price :{" "}
-                        <span className="float-right">
-                          Rp {this.state.totalPrice.toLocaleString()}
-                        </span>
-                      </p>
-
-                      <p>
-                        Shipping fee : <span className="float-right">Rp 0</span>
-                      </p>
-
-                      <hr />
-                      <p>
-                        <strong>Total:</strong>
-                        <span
-                          className="float-right"
-                          style={style.totalPaymentText}
-                        >
-                          <strong>
+                  {/* Order Summary */}
+                  <Col sm={4}>
+                    <Card style={style.checkoutWrapper}>
+                      <Card.Header className="bg-white border-0 p-3">
+                        <span style={style.cartHeading}> Order Summary </span>
+                      </Card.Header>
+                      <Card.Body style={style.cartTotalBody}>
+                        <p className="mb-0">
+                          Total price :{" "}
+                          <span className="float-right">
                             Rp {this.state.totalPrice.toLocaleString()}
-                          </strong>
-                        </span>
-                      </p>
+                          </span>
+                        </p>
 
-                      <div className="d-grid gap-2">
-                        <Button
-                          block
-                          variant="primary"
-                          style={style.btnCheckOut}
-                          onClick={() => {
-                            {
-                              this.state.isCheckout
-                                ? this.addTransaction()
-                                : this.checkoutHandler();
-                            }
-                          }}
-                        >
-                          {this.state.isCheckout
-                            ? "Place my order"
-                            : "Checkout"}
-                        </Button>
-                      </div>
-                    </Card.Body>
-                  </Card>
-                </Col>
-              </Row>
-            </div>
-          )}
-        </div>
+                        <p>
+                          Shipping fee :{" "}
+                          <span className="float-right">Rp 0</span>
+                        </p>
+
+                        <hr />
+                        <p>
+                          <strong>Total:</strong>
+                          <span
+                            className="float-right"
+                            style={style.totalPaymentText}
+                          >
+                            <strong>
+                              Rp {this.state.totalPrice.toLocaleString()}
+                            </strong>
+                          </span>
+                        </p>
+
+                        <div className="d-grid gap-2">
+                          <Button
+                            block
+                            variant="primary"
+                            style={style.btnCheckOut}
+                            onClick={() => {
+                              {
+                                this.state.isCheckout
+                                  ? this.addTransaction()
+                                  : this.checkoutHandler();
+                              }
+                            }}
+                          >
+                            {this.state.isCheckout
+                              ? "Place my order"
+                              : "Checkout"}
+                          </Button>
+                        </div>
+                      </Card.Body>
+                    </Card>
+                  </Col>
+                </Row>
+              </div>
+            )}
+          </div>
+        )}
       </React.Fragment>
     );
   }

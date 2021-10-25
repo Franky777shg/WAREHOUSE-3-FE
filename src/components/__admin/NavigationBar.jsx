@@ -27,13 +27,29 @@ class NavigationBar extends React.Component {
             to="/admin/product-admin">
               <i class="fas fa-dice-d6"></i> Product
             </Nav.Link>
-            <Nav.Link href="#as" style={style.navLink} as={Link}
-                        to="/admin/superadmin-page">
-              <i class="fab fa-houzz"></i> Warehouse
-            </Nav.Link>
-            <Nav.Link href="#asc" style={style.navLink}>
-              <i class="far fa-credit-card"></i> Payment
-            </Nav.Link>
+            { this.props.adminRole === "Super_Admin"
+            ?
+            <>
+              <Nav.Link href="#as" style={style.navLink} as={Link}
+                          to="/admin/superadmin-page">
+                <i class="fab fa-houzz"></i> Warehouse
+              </Nav.Link>
+              <Nav.Link href="#asc" style={style.navLink}>
+                <i class="far fa-credit-card"></i> Payment
+              </Nav.Link>
+            </>
+            :
+            <>
+              <Nav.Link href="#as" style={style.navLink} as={Link}
+                          to="/admin/adminwarehouse-page">
+                <i class="fab fa-houzz"></i> Warehouse
+              </Nav.Link>
+              <Nav.Link href="#asc" style={style.navLink}>
+                <i class="far fa-credit-card"></i> Payment
+              </Nav.Link>
+            </>
+            }
+            
           </Nav>
           <Navbar.Collapse className="justify-content-end">
             <Dropdown align="end">

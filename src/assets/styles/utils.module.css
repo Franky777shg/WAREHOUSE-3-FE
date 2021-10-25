@@ -59,3 +59,37 @@
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
 }
+
+/* PAYMENT */
+.customFileInput {
+  color: transparent;
+  width: 100%;
+  height: 100%;
+}
+.customFileInput::-webkit-file-upload-button {
+  visibility: hidden;
+}
+.customFileInput::before {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background: linear-gradient(top, #f9f9f9, #e3e3e3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  content: "Select some files";
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  text-shadow: 1px 1px #fff;
+  font-weight: 700;
+  font-size: 10pt;
+  color: black;
+}
+.customFileInput:hover::before {
+  border-color: black;
+}
+.customFileInput:active::before {
+  background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}

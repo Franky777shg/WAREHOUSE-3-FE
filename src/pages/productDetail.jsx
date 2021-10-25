@@ -18,6 +18,7 @@ class DetailPage extends React.Component {
       maxStock: null,
       currentQty: 0,
       updateQty: 0,
+      isAdded: false,
     };
   }
 
@@ -81,7 +82,6 @@ class DetailPage extends React.Component {
         },
       })
         .then((res) => {
-          console.log(res);
           if (res.data.message === "cart_empty") {
             this.addToCartHandler(cartData, "add");
           } else {
@@ -111,7 +111,8 @@ class DetailPage extends React.Component {
           },
         })
           .then((res) => {
-            console.log(res);
+            this.setState({ isAdded: true });
+            alert("Product added to cart");
           })
           .catch((err) => console.log(err));
         break;
@@ -122,7 +123,8 @@ class DetailPage extends React.Component {
           },
         })
           .then((res) => {
-            console.log(res);
+            this.setState({ isAdded: true });
+            alert("Product added to cart");
           })
           .catch((err) => console.log(err));
         break;
