@@ -190,12 +190,12 @@ class ProductAdmin extends React.Component {
                 return
             } console.log("Hasil klik Sort", obj)
 
-            Axios.post(`http://localhost:2000/prod-admin/sort-product?page=${this.state.currentPageAdmin}`, obj)
+            Axios.post(`http://localhost:2000/prod-admin/sort-product?page=${this.state.currentPageAdmin + 1}`, obj)
                 .then(res => {
                     this.setState({
                         prodAdmin: res.data[0],
                         total_pageAdmin: (Math.ceil(res.data[3].totalItemAdmin / res.data[2].per_page)),
-                        currentPageAdmin: 1,
+                        currentPageAdmin: this.state.currentPageAdmin + 1,
                         pageNext: "onSort",
                         pagePrev: "onSort"
 
@@ -256,12 +256,12 @@ class ProductAdmin extends React.Component {
                 return
             } console.log("Hasil klik Sort", obj)
 
-            Axios.post(`http://localhost:2000/prod-admin/sort-product?page=${this.state.currentPageAdmin}`, obj)
+            Axios.post(`http://localhost:2000/prod-admin/sort-product?page=${this.state.currentPageAdmin - 1}`, obj)
                 .then(res => {
                     this.setState({
                         prodAdmin: res.data[0],
                         total_pageAdmin: (Math.ceil(res.data[3].totalItemAdmin / res.data[2].per_page)),
-                        currentPageAdmin: 1,
+                        currentPageAdmin: this.state.currentPageAdmin - 1,
                         pageNext: "onSort",
                         pagePrev: "onSort"
                     })

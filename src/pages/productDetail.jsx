@@ -228,6 +228,7 @@ class DetailPage extends React.Component {
 const styles = {
   productDetailWrapper: {
     backgroundColor: "#fff",
+    backgroundImage: "linear-gradient(to bottom, #e7e2e5, #e5dfe5, #e2dce6, #dddae7, #d7d8e8, #d7daea, #d6dceb, #d6deed, #dde4f0, #e5eaf3, #ecf0f6, #f4f6f9)",
     marginBottom: "200px",
     marginTop: "100px",
     padding: "20px",
@@ -245,7 +246,7 @@ const styles = {
     marginTop: "10px",
   },
   contImg: {
-    backgroundImage: "linear-gradient(to right, #fda085, #f6d365)",
+    // backgroundImage: "linear-gradient(to right, #fda085, #f6d365)",
     flexBasis: "25%",
     borderRadius: "10px",
   },
