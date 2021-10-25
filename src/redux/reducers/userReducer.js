@@ -3,9 +3,6 @@ const INITIAL_STATE = {
   username: "",
   login_failed: false,
   login_failed_message: "",
-  successChangePass: false,
-  failedChangePass: false,
-  msgFailedChangePass: '',
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -24,23 +21,6 @@ const userReducer = (state = INITIAL_STATE, action) => {
       };
     case "LOGOUT":
       return INITIAL_STATE;
-    case 'SUCCESS_CHANGE_PASSWORD':
-      return {
-        ...state,
-        successChangePass: true
-      };
-    case 'FAILED_CHANGE_PASSWORD':
-      return {
-        ...state,
-        failedChangePass: true,
-        msgFailedChangePass: action.payload
-      };
-    case 'CLOSE_MODAL_FAILED_CHANGE_PASSSWORD':
-      return {
-        ...state,
-        failedChangePass: false,
-        msgFailedChangePass: ''
-      };
     default:
       return state;
   }

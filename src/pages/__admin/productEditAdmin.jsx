@@ -3,7 +3,9 @@ import Axios from 'axios'
 import { Image, Button, Modal, Form, Row, Col, Alert } from 'react-bootstrap'
 import NavigationBar from '../../components/__admin/NavigationBar'
 import { Link, Redirect } from 'react-router-dom'
-import { findAllByDisplayValue } from '@testing-library/dom'
+
+import { connect } from "react-redux";
+import { keepAdminLogin } from "../../redux/actions";
 
 class ProdAdminEditPage extends React.Component {
     constructor(props) {
@@ -158,6 +160,12 @@ class ProdAdminEditPage extends React.Component {
         // console.log("OP",this.state.maxStockOp)
 
         // if(this.state.successModalChanges===true)
+        if (localStorage.getItem("admin_token")) {
+            this.props.keepAdminLogin();
+          }
+          if (!this.props.adminUsername) {
+            return <Redirect to="/auth/admin/login" />;
+          }
 
         return (
             <div style={{ backgroundColor: "rgba(189, 195, 199, 1)", height: '100vh', paddingTop: '5vh' }}>
@@ -368,4 +376,11 @@ const styles = {
     }
 }
 
-export default ProdAdminEditPage
+const mapStateToProps = (state) => {
+    return {
+      adminUsername: state.adminReducer.adminUsername,
+    };
+  };
+  
+  export default connect(mapStateToProps, { keepAdminLogin })(ProdAdminEditPage);
+// export default ProdAdminEditPage
