@@ -10,7 +10,8 @@ import {
   Col,
 } from "react-bootstrap";
 import Axios from "axios";
-import defaultImage from "../../assets/img/avatar/default.png";
+import Skeleton from "react-loading-skeleton";
+import { Link } from "react-router-dom";
 
 const URL_API = "http://localhost:2000/user";
 
@@ -27,11 +28,13 @@ export default class Profile extends React.Component {
       images: "",
       activeTab: "",
       isAddAddress: false,
+      isLoading: false,
     };
   }
 
   componentDidMount() {
     this.fectDataAddress();
+    this.fectDataUser();
   }
 
   fectDataAddress = () => {
@@ -48,6 +51,28 @@ export default class Profile extends React.Component {
       .then((res) => {
         console.log(res.data);
         this.setState({ dataaddress: res.data });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  fectDataUser = () => {
+    let token = localStorage.getItem("token");
+    this.setState({ isLoading: true });
+    Axios.post(
+      `${URL_API}/get-user/`,
+      {},
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+      .then((res) => {
+        this.setState({ datauser: res.data, isLoading: false });
+        this.setState({ images: res.data[0].profile_picture });
       })
       .catch((err) => {
         console.log(err);
@@ -97,20 +122,35 @@ export default class Profile extends React.Component {
             <span style={style.cardHeading}>Profile</span>
           </Card.Header>
           <div className="profile m-2">
-            <Alert
-              style={style.profileWrapper}
-              className="p-2 bg-white text-secondary"
-            >
-              <Image src={defaultImage} width="50" roundedCircle />
-              <div className="mx-2" style={{ marginTop: "5px" }}>
-                <h1 style={{ margin: "0px", fontSize: "18px" }}>
-                  <strong>Ade Mahendra</strong>
-                </h1>
-                <p style={{ margin: "0px", fontSize: "14px" }}>
-                  Email : hendraadem@gmail.com
-                </p>
-              </div>
-            </Alert>
+            {this.state.datauser.map((item) => {
+              return (
+                <Alert
+                  style={style.profileWrapper}
+                  className="p-2 bg-white text-secondary"
+                >
+                  {this.state.isLoading ? (
+                    <Skeleton height={45} width={50} />
+                  ) : (
+                    <Image src={item.profile_picture} width="50" rounded />
+                  )}
+
+                  <div className="mx-2" style={{ marginTop: "5px" }}>
+                    <h1
+                      style={{
+                        margin: "0px",
+                        fontSize: "18px",
+                        color: "#525252",
+                      }}
+                    >
+                      <strong>{item.full_name}</strong>
+                    </h1>
+                    <p style={{ margin: "0px", fontSize: "14px" }}>
+                      Email : {item.email}
+                    </p>
+                  </div>
+                </Alert>
+              );
+            })}
             <label className="myLabel"> Delivery addresses </label>{" "}
             <div style={style.addressWrapper} className="mt-2">
               {this.state.dataaddress.map((item) => {
@@ -135,11 +175,7 @@ export default class Profile extends React.Component {
                 );
               })}
             </div>
-            <Button
-              size="sm"
-              style={style.btnOutline}
-              onClick={this.handleAddAddress}
-            >
+            <Button size="sm" onClick={this.handleAddAddress}>
               <i className="fas fa-plus"></i> Add new address
             </Button>
           </div>
