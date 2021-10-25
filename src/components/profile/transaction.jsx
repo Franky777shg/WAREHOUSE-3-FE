@@ -11,29 +11,33 @@ import {
   ListGroupItem,
   Image,
   Button,
+  Alert,
 } from "react-bootstrap";
 
 import { Link } from "react-router-dom";
 
 const BASE_URL = "http://localhost:2000";
+const token = localStorage.getItem("token");
 
 export default class Transaction extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      transactionData: [],
-      transactionInfo: [],
+      order: [],
+      orderDetail: [],
       totalPrice: 0,
+      shippingFee: 0,
+      grandTotal: 0,
+      isGetDetail: false,
     };
   }
   componentDidMount() {
-    this.fetchTransaction();
+    this.getOrder();
   }
 
-  fetchTransaction() {
-    const token = localStorage.getItem("token");
+  getOrder() {
     Axios.post(
-      `${BASE_URL}/transaction/getTransaction`,
+      `${BASE_URL}/transaction/getOrder`,
       {},
       {
         headers: {
@@ -42,18 +46,72 @@ export default class Transaction extends React.Component {
       }
     )
       .then((res) => {
-        this.setState({ transactionData: res.data });
-        this.setState({ transactionInfo: res.data[0] });
-        this.getCount();
+        let temp = res.data.map((item) => {
+          const getDetailOrder = async () => {
+            try {
+              const res = await Axios.post(
+                `${BASE_URL}/transaction/getOrderDetail`,
+                { order_number: item.order_number },
+                {
+                  headers: {
+                    Authorization: `Bearer ${token}`,
+                  },
+                }
+              );
+              return res.data;
+            } catch (error) {
+              console.log(error);
+            }
+          };
+
+          getDetailOrder().then((res) => {
+            let tmp = res;
+            item.order_detail = tmp;
+          });
+
+          return item;
+        });
+
+        this.setState({ order: temp });
+        setTimeout(() => {
+          this.cek();
+        }, 1000);
+
+        console.log(this.state.order);
       })
       .catch((err) => console.log(err));
   }
-
   getCount() {
-    return this.state.transactionData.map((item, index) => {
+    this.state.orderDetail.map((item, index) => {
       this.setState({
         totalPrice:
           this.state.totalPrice + parseInt(item.product_price * item.quantity),
+      });
+    });
+  }
+
+  detailHandler(order_number) {
+    // this.fetchTransactionProduct(order_number);
+    this.setState({ isGetDetail: true });
+  }
+
+  cek() {
+    let totalPrice = 0;
+    let data = this.state.order;
+    data.map((item) => {
+      let temp;
+      temp = item.order_detail;
+      temp.map((detail) => {
+        totalPrice += +detail.total_price;
+        this.setState({
+          totalPrice: totalPrice,
+          shippingFee: detail.shipping_fee,
+        });
+
+        localStorage.setItem(
+          "grandtotal",
+          +totalPrice + parseInt(detail.shipping_fee)
+        );
       });
     });
   }
@@ -64,123 +122,80 @@ export default class Transaction extends React.Component {
         <Card className="border-0">
           <Card.Header className="bg-white border-0 p-2">
             <span style={style.cartHeading}>Your Ongoing Transaction</span>
+
+            {this.state.order.map((item) => {
+              return (
+                <Card.Body className="p-2">
+                  <Card>
+                    <Card.Header style={style.cardHeader}>
+                      <div style={style.centered}>
+                        <strong>Transaction ID : {item.order_number}</strong>
+                      </div>
+                      <div>
+                        <Button
+                          size="sm"
+                          variant="primary"
+                          as={Link}
+                          target="_blank"
+                          to={`/payment/${item.order_number}`}
+                        >
+                          <i class="fas fa-wallet"></i> Pay now
+                        </Button>
+                        <Button
+                          size="sm"
+                          className="mx-2"
+                          variant="primary"
+                          onClick={() => {
+                            this.detailHandler(item.order_number);
+                          }}
+                        >
+                          Detail
+                        </Button>
+                      </div>
+                    </Card.Header>
+                    <div>
+                      <Card.Body>
+                        <Row>
+                          <Col sm={4}>
+                            <h6 className="text-muted">Payment</h6>
+
+                            <p className="text-muted small">
+                              <span>Bank Transfer</span> <br />
+                              <span className="text-muted small">
+                                <strong>Subtotal :</strong> Rp
+                                {this.state.totalPrice.toLocaleString()}
+                              </span>
+                              <br />
+                              <span className="text-muted small">
+                                <strong>Shipping :</strong> Rp
+                                {this.state.shippingFee.toLocaleString()}
+                              </span>
+                              <br />
+                              <span className="text-muted small">
+                                <strong>Total :</strong> Rp
+                                {this.state.totalPrice.toLocaleString()}
+                              </span>
+                            </p>
+                          </Col>
+                          <Col sm={4}>
+                            <h6 className="text-muted">Shipping address</h6>
+                            <p className="text-muted small">{item.address}</p>
+                          </Col>
+                          <Col sm={4}>
+                            <h6 className="text-muted">Contact</h6>
+                            <p className="text-muted small">
+                              {item.package_recipient} <br />
+                              {item.address_phone}
+                            </p>
+                          </Col>
+                        </Row>
+                      </Card.Body>
+                    </div>
+                  </Card>
+                </Card.Body>
+              );
+            })}
           </Card.Header>
-          <Card.Body className="p-2">
-            <Card>
-              <Card.Header style={style.cardHeader}>
-                <div style={style.centered}>
-                  <strong>
-                    Transaction ID : {this.state.transactionInfo.order_number}
-                  </strong>
-                  {this.state.transactionInfo.payment_status === "unpaid" && (
-                    <Badge bg="danger" className="mx-2">
-                      <i className="far fa-credit-card mr-3"></i>
-                      <span className="mx-2">
-                        {this.state.transactionInfo.payment_status === "unpaid"
-                          ? "Waiting for payment"
-                          : null}
-                      </span>
-                    </Badge>
-                  )}
-                  {this.state.transactionInfo.payment_status === "paid" && (
-                    <Badge bg="success" className="mx-2">
-                      <i className="far fa-credit-card mr-3"></i>
-                      {this.state.transactionInfo.payment_status === "paid"
-                        ? "Processed"
-                        : null}
-                    </Badge>
-                  )}
-                </div>
-                <div>
-                  <Button size="sm" variant="primary">
-                    <i class="fas fa-wallet"></i> Pay now
-                  </Button>
-                </div>
-              </Card.Header>
-              <Card.Body>
-                <Row>
-                  <Col sm={4}>
-                    <h6 className="text-muted">Payment</h6>
-                    <p className="text-muted small">
-                      <span>Bank Transfer</span> <br />
-                      <span className="text-muted small">
-                        <strong>Subtotal :</strong> Rp
-                        {this.state.totalPrice.toLocaleString()}
-                      </span>
-                      <br />
-                      <span className="text-muted small">
-                        <strong>Shipping :</strong> Rp 210.000
-                      </span>
-                      <br />
-                      <span className="text-muted small">
-                        <strong>Total :</strong> Rp
-                        {this.state.totalPrice.toLocaleString()}
-                      </span>
-                    </p>
-                  </Col>
-                  <Col sm={4}>
-                    <h6 className="text-muted">Shipping address</h6>
-                    <p className="text-muted small">
-                      {this.state.transactionInfo.address}
-                    </p>
-                  </Col>
-                  <Col sm={4}>
-                    <h6 className="text-muted">Contact</h6>
-                    <p className="text-muted small">
-                      {this.state.transactionInfo.package_recipient} <br />
-                      {this.state.transactionInfo.address_phone}
-                    </p>
-                  </Col>
-                </Row>
-              </Card.Body>
-              <ListGroup className="list-group-flush">
-                {this.state.transactionData.map((item) => {
-                  return (
-                    <ListGroupItem style={{ padding: 0 }}>
-                      <Table borderless responsive style={{ margin: 0 }}>
-                        <tbody>
-                          <tr style={{ margin: 0 }}>
-                            <td width="30">
-                              <Image
-                                as={Link}
-                                to="/"
-                                width={30}
-                                height={30}
-                                style={{
-                                  border: "1px solid #eaeaea",
-                                  borderRadius: "5px",
-                                }}
-                                src={`http://localhost:2000/products/${item.productimg}`}
-                              />
-                            </td>
-                            <td width="300">
-                              <p style={style.productTitle}>
-                                {item.product_name}
-                              </p>
-                              <p
-                                className="text-muted"
-                                style={style.productPrice}
-                              >
-                                Rp
-                                {(
-                                  +item.quantity * +item.product_price
-                                ).toLocaleString()}
-                              </p>
-                            </td>
-                            <td style={style.pushRight}>
-                              {/* <Button size="sm" style={style.btnDetail}>
-                                Detail
-                              </Button> */}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </Table>
-                    </ListGroupItem>
-                  );
-                })}
-              </ListGroup>
-            </Card>
-          </Card.Body>
         </Card>
       </div>
     );

@@ -22,6 +22,7 @@ import ProductAdmin from "./pages/__admin/productAdmin";
 import ProdAdminEditPage from "./pages/__admin/productEditAdmin";
 import AddProductAdmin from "./pages/__admin/addProdAdmin";
 import listTransactionPage from "./pages/__admin/listTransactionPage";
+import adminWarehousepage from "./pages/__admin/adminWarehousePage";
 
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { keepLogin, logout, keepAdminLogin } from "./redux/actions";
@@ -68,6 +69,8 @@ class App extends React.Component {
             <Route path="/payment/:payToken" component={PaymentPage} />
 
             <Route path="/admin/superadmin-page" component={superAdminPage} />
+            <Route path="/admin/adminwarehouse-page" component={adminWarehousepage} />
+
             <Route
               path="/admin/transactionlist-page"
               component={listTransactionPage}

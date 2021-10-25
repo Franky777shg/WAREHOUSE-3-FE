@@ -4,6 +4,7 @@ import NavigationBar from "../components/NavigationBar";
 import Profile from "../components/profile/profile";
 import Transaction from "../components/profile/transaction";
 import History from "../components/profile/history";
+import Cek from "../components/profile/cek";
 
 import { Link, Switch, Route } from "react-router-dom";
 
@@ -348,7 +349,7 @@ class ProfilePage extends React.Component {
                   <ListGroup.Item
                     style={styles.noBorder}
                     as={Link}
-                    to="/profile/settings"
+                    to="/profile/cek"
                   >
                     <i className="fas fa-cog"></i>
                     <span style={{ marginLeft: "10px" }}>Settings</span>
@@ -367,6 +368,9 @@ class ProfilePage extends React.Component {
                   </Route>
                   <Route path="/profile/history">
                     <History />
+                  </Route>
+                  <Route path="/profile/cek">
+                    <Cek />
                   </Route>
                 </Switch>
               </Card>
