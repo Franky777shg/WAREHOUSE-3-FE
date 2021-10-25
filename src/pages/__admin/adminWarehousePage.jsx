@@ -24,7 +24,13 @@ class AdminWarehousePage extends React.Component {
             requestStockList: [],
             requestedStock: [],
             modalRequestedStock: false,
-            warehouseName: null
+            warehouseName: null,
+            IdReqEdit: null,
+            stockReq: null,
+            requestedStock1: [],
+            idproductUpdate: null,
+            prodqty: null
+
           }
          }
 
@@ -35,11 +41,11 @@ class AdminWarehousePage extends React.Component {
             id_warehouse : idwarehouse,   
         }
 
-        console.log(obj)
+        // console.log('object',obj)
 
         Axios.post(`${URL_API}/get-wareshousestock`, obj)
         .then(res => {
-            console.log(res.data)
+            // console.log(res.data)
             this.setState({ warehousestock: res.data })
             // console.log(res.data[0].id_warehouse)
             this.setState({ idWarehouseselect: this.state.warehousestock[0].id_warehouse })
@@ -55,7 +61,7 @@ class AdminWarehousePage extends React.Component {
     fectDataWarehouse = () => {
         Axios.get(`${URL_API}/get-warehousedata`)
         .then(res => {
-            console.log(res.data)
+            // console.log(res.data)
             this.setState({ warehouseData: res.data })
             this.allfunction()
         })
@@ -88,7 +94,7 @@ class AdminWarehousePage extends React.Component {
 
         }
 
-        console.log(obj)
+        // console.log(obj)
 
         Axios.post(`${URL_API}/req-wareshousestock/`, obj)
           .then(res => {
@@ -106,13 +112,13 @@ class AdminWarehousePage extends React.Component {
             id_warehouse_origin : idwarehouse   
         }
 
-        console.log(obj)
+        // console.log(obj)
 
         Axios.post(`${URL_API}/get-stockrequestlist`, obj)
         .then(res => {
-            console.log(res.data)
+            // console.log(res.data)
             this.setState({ requestStockList: res.data })
-            console.log(this.state.requestStockList)
+            // console.log(this.state.requestStockList)
             // console.log(res.data[0].id_warehouse)
         })
         .catch(err => {
@@ -127,14 +133,110 @@ class AdminWarehousePage extends React.Component {
             id_warehouse_target : idwarehouse   
         }
 
-        console.log(obj)
+        // console.log(obj)
 
         Axios.post(`${URL_API}/get-requestedstock`, obj)
         .then(res => {
-            console.log(res.data)
+            console.log("post",res.data)
             this.setState({ requestedStock: res.data })
-            console.log(this.state.requestedStock)
-            // console.log(res.data[0].id_warehouse)
+            // this.setState({ stockReq: this.state.requestedStock[0].stock_op })
+
+            // console.log(this.state.requestedStock)
+
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
+    updateRequestedStock = (id) => {
+        const ReqStatusUpdate = this.refs.ReqStatusUpdate.value
+        const idwarehouse = this.refs.idwarehouse.value
+
+        let obj = {
+            status : ReqStatusUpdate,
+            id_warehouse_target : idwarehouse
+
+        }
+
+        console.log('obj',obj)
+
+        Axios.post(`${URL_API}/update-requestedstock/${id}`, obj)
+        .then(res => {
+            console.log("patch",res.data)
+            this.setState({ requestedStock1: res.data , IdReqEdit: null})
+            this.allfunction()
+            this.ReduceStock()
+
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
+    updateRequestedList = (id) => {
+        const ReqStatusUpdate = this.refs.ReqStatusUpdate.value
+        const idwarehouse = this.refs.idwarehouse.value
+
+        let obj = {
+            status : ReqStatusUpdate,
+            id_warehouse_target : idwarehouse
+
+        }
+
+        console.log('obj',obj)
+
+        Axios.post(`${URL_API}/update-requestedlist/${id}`, obj)
+        .then(res => {
+            console.log("patch",res.data)
+            this.setState({ requestedStock1: res.data , IdReqEdit: null})
+            this.allfunction()
+            this.IncreaseStock()
+
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+    
+    ReduceStock = () => {
+        const ProdQty = this.state.prodqty
+        const idProd = this.state.idproductUpdate
+        const warehouse = this.refs.idwarehouse.value
+
+        let obj = {
+            quantity : ProdQty,
+            id_product : idProd,
+            id_warehouse : warehouse
+        }
+        
+        console.log(obj)
+        Axios.post(`${URL_API}/update-reducestock`, obj)
+        .then(res => {
+            console.log("reduce",res.data)
+            // this.setState({ requestedStock1: res.data , IdReqEdit: null})
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
+    IncreaseStock = () => {
+        const ProdQty = this.state.prodqty
+        const idProd = this.state.idproductUpdate
+        const warehouse = this.refs.idwarehouse.value
+
+        let obj = {
+            quantity : ProdQty,
+            id_product : idProd,
+            id_warehouse : warehouse
+        }
+        
+        console.log(obj)
+        Axios.post(`${URL_API}/update-increasestock`, obj)
+        .then(res => {
+            console.log("increase",res.data)
+            // this.setState({ requestedStock1: res.data , IdReqEdit: null})
         })
         .catch(err => {
             console.log(err)
@@ -155,8 +257,13 @@ class AdminWarehousePage extends React.Component {
       return <Redirect to="/auth/admin/login" />;
     }
     // console.log(this.state.idProd)
-    console.log(this.state.idWarehouse)
-    console.log(this.state.requestStockList)
+    // console.log(this.state.idWarehouse)
+    // console.log(this.state.requestStockList)
+    // console.log(this.state.IdReqEdit)
+    // console.log(this.state.requestedStock)
+    // console.log(this.state.stockReq)
+    // console.log(this.state.idproductUpdate)
+    // console.log(this.state.prodqty)
 
     return (
       <React.Fragment>
@@ -184,6 +291,8 @@ class AdminWarehousePage extends React.Component {
                                     <th>#</th>
                                     <th>Product Name</th>
                                     <th>Stock OP</th>
+                                    <th>Stock Booked</th>
+
                                     <th>Warehouse Name</th>
                                     <th>Action</th>
                                     </tr>
@@ -195,6 +304,7 @@ class AdminWarehousePage extends React.Component {
                                     <td>{item.id_product}</td>
                                     <td>{item.product_name}</td>
                                     <td>{item.stock_op}</td>
+                                    <td>{item.stock_booked}</td>
                                     <td>{item.warehouse_name}</td>
                                     <td>
                                         <Button variant="success" onClick={() => this.setState({ 
@@ -231,7 +341,7 @@ class AdminWarehousePage extends React.Component {
                         <Form.Control ref="ReqQuantity" type='number' />
                     <Form.Label>Status</Form.Label>
                         {/* <Form.Control ref="ReqStatus" type="text" placeholder="Enter Provinsi " />   */}
-                        <Form.Select ref="ReqStatus" type="text"  size="md">
+                        <Form.Select ref="ReqStatus" type="text" size="md">
                                     <option>Pending</option>
                                     <option>Shipped</option>
                                     <option>Arrived</option>
@@ -244,7 +354,7 @@ class AdminWarehousePage extends React.Component {
             </Modal>
         {/* Request Stock */}
         {/* Request list */}
-            <Modal show={this.state.modalShowReqList} >
+            <Modal size="lg" show={this.state.modalShowReqList} >
                     <Modal.Header>
                         <Modal.Title>Request List</Modal.Title>
                     </Modal.Header>
@@ -253,26 +363,55 @@ class AdminWarehousePage extends React.Component {
                                     <thead>
                                         <tr>
                                         <th>id</th>
+                                        <th>Id Product</th>
                                         <th>Product Name</th>
                                         <th>Warehouse Asal</th>
                                         <th>Warehouse Tujuan</th>
                                         <th>Stock OP</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                     {this.state.requestStockList.map((item, index) => {
-                                        return(
-                                        <tr key={index}>
-                                        <td>{index+1}</td>
-                                        {/* <td>{item.id_product}</td> */}
-                                        <td>{item.product_name}</td>
-                                        <td>{item.warehouse_name_origin}</td>
-                                        <td>{item.id_warehouse_target}</td>
-                                        <td>{item.quantity}</td>
-                                        <td>{item.status}</td>
-                                  </tr>        
+                                        if(this.state.IdReqEdit === item.id_stock){
+                                            return(
+                                            <tr key={index}>
+                                                <td>{index+1}</td>
+                                                <td>{item.id_product}</td>
+                                                <td>{item.product_name}</td>
+                                                <td>{item.warehouse_name_origin}</td>
+                                                <td>{item.id_warehouse_target}</td>
+                                                <td>{item.quantity}</td>
+                                                <td>{item.status}</td>
+                                                <td>
+                                                {/* <Form.Control ref="ReqStatusUpdate" type="text" placeholder="Enter Status " />   */}
+                                                <Form.Select ref="ReqStatusUpdate" type="text" size="md">
+                                                            <option>Pending</option>
+                                                            <option>Shipped</option>
+                                                            <option>Arrived</option>
+                                                </Form.Select>              
+                                                </td>
+                                            <td>
+                                                <Button onClick={() => this.updateRequestedList(item.id_stock)} variant="success">Save</Button> 
+                                                <Button onClick={() => this.setState({ IdReqEdit: null , })}>Cancel</Button>
+                                            </td>
+                                            </tr>        
                                         )
+                                        }return(
+                                            <tr key={index}>
+                                                <td>{index+1}</td>
+                                                <td>{item.id_product}</td>
+                                                <td>{item.product_name}</td>
+                                                <td>{item.warehouse_name_origin}</td>
+                                                <td>{item.id_warehouse_target}</td>
+                                                <td>{item.quantity}</td>
+                                                <td>{item.status}</td>
+                                                <td>
+                                                <Button onClick={() => this.setState({ IdReqEdit: item.id_stock, idproductUpdate: item.id_product, prodqty: item.quantity })}>Update</Button>
+                                                </td>
+                                            </tr>       
+                                            )
                                     })}                     
                                     </tbody>
                             </Table>
@@ -283,7 +422,7 @@ class AdminWarehousePage extends React.Component {
             </Modal>
         {/* Request list */}
         {/* Requested Stock */}
-        <Modal show={this.state.modalRequestedStock} >
+        <Modal  size="lg" show={this.state.modalRequestedStock}  >
                     <Modal.Header>
                         <Modal.Title>Request List</Modal.Title>
                     </Modal.Header>
@@ -292,32 +431,62 @@ class AdminWarehousePage extends React.Component {
                                     <thead>
                                         <tr>
                                         <th>id</th>
+                                        <th>Id Product</th>
                                         <th>Product Name</th>
                                         <th>Warehouse Asal</th>
                                         <th>Warehouse Tujuan</th>
                                         <th>Stock OP</th>
                                         <th>Status</th>
+                                        <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
+
                                     {this.state.requestedStock.map((item, index) => {
+                                       if(this.state.IdReqEdit === item.id_stock){
                                         return(
-                                        <tr key={index}>
-                                        <td>{index+1}</td>
-                                        {/* <td>{item.id_product}</td> */}
-                                        <td>{item.product_name}</td>
-                                        <td>{item.warehouse_name_origin}</td>
-                                        <td>{this.state.warehouseName}</td>
-                                        <td>{item.quantity}</td>
-                                        <td>{item.status}</td>
-                                  </tr>        
+                                            <tr key={index}>
+                                            <td>{index+1}</td>
+                                            <td>{item.id_product}</td>
+                                            <td>{item.product_name}</td>
+                                            <td>{item.warehouse_name_origin}</td>
+                                            <td>{this.state.warehouseName}</td>
+                                            <td>{item.quantity}</td>
+                                            <td>
+                                                {/* <Form.Control ref="ReqStatusUpdate" type="text" placeholder="Enter Status " />   */}
+                                                <Form.Select ref="ReqStatusUpdate" type="text" size="md">
+                                                            <option>Pending</option>
+                                                            <option>Shipped</option>
+                                                            <option>Arrived</option>
+                                                </Form.Select>              
+                                            </td>
+                                            <td>
+                                                <Button onClick={() => this.updateRequestedStock(item.id_stock)} variant="success">Save</Button> 
+                                                <Button onClick={() => this.setState({ IdReqEdit: null })}>Cancel</Button>
+                                            </td>
+                                            </tr>        
+                                                )
+                                        }return(
+                                            <tr key={index}>
+                                            <td>{index+1}</td>
+                                            <td>{item.id_product}</td>
+                                            <td>{item.product_name}</td>
+                                            <td>{item.warehouse_name_origin}</td>
+                                            <td>{this.state.warehouseName}</td>
+                                            <td>{item.quantity}</td>
+                                            <td>{item.status}</td>
+                                            <td>
+                                                <Button onClick={() => this.setState({ IdReqEdit: item.id_stock, idproductUpdate: item.id_product, prodqty: item.quantity })}>Update</Button>
+                                            </td>
+
+                                            </tr> 
                                         )
-                                    })}                     
+                                      })}              
                                     </tbody>
                             </Table>
                         </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="secondary" onClick={() => this.setState({ modalRequestedStock: false })} >Close</Button>
+                        <Button variant="secondary" onClick={() => this.setState({ modalRequestedStock: false, IdReqEdit: null })} >Close</Button>
                     </Modal.Footer>
             </Modal>
 
@@ -328,6 +497,14 @@ class AdminWarehousePage extends React.Component {
       
     );
   }
+}
+
+const styles= {
+    modalsize:{
+        width: "1%",
+        height: "100%"
+  
+    },
 }
 
 const mapStateToProps = (state) => {

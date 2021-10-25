@@ -1,7 +1,7 @@
 import Axios from 'axios'
 
 const BASE_URL = "http://localhost:2000";
-const URL_API = 'http://localhost:2000/user'
+// const URL_API = 'http://localhost:2000/user'
 
 export const userLogin = (email, password) => {
   return (dispatch) => {
@@ -63,39 +63,4 @@ export const logout = () => {
     });
   };
 };
-
-export const changepassword = (body)=> {
-    return(dispatch) => {
-        const token = localStorage.getItem('token')
-        Axios.post(`${URL_API}/change-password`, 
-        body,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          }
-        })
-        .then(res => {
-            dispatch({
-                type: 'SUCCESS_CHANGE_PASSWORD',
-                payload: res.data,
-                
-            })
-        })
-        .catch(err => {
-            console.log(err)
-            dispatch({
-                type: 'FAILED_CHANGE_PASSWORD',
-                payload: err.response.data
-            })
-        })
-    }
-}
-
-export const closeModalFailedChangePass = () => {
-    return(dispatch) => {
-        dispatch({
-            type: 'CLOSE_MODAL_FAILED_CHANGE_PASSSWORD'
-        })
-    }
-}
 

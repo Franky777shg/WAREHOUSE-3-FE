@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Button, Container, Table } from "react-bootstrap";
+import { Form, Button, Container, Table, Modal } from "react-bootstrap";
 import { Redirect, Link } from "react-router-dom";
 import Axios from "axios";
 
@@ -17,6 +17,11 @@ class ListTransactionPage extends React.Component {
         super(props)
         this.state = {
             dataTransaction: [],
+            dataTransactiondetail: [],
+            showImage: false,
+            showDetail: false,
+            idOrder: null,
+            idEdit: null
         }
     }
     
@@ -30,6 +35,56 @@ class ListTransactionPage extends React.Component {
             }else{
                 console.log(res.data)
                 this.setState({dataTransaction: res.data})
+                console.log(this.state.dataTransaction)
+            }
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
+    fecthDataTransactionDetail = () => {
+        const idOrder = this.state.idOrder
+
+        let obj = {
+            order_number : idOrder,
+     
+        }
+        
+        console.log("hello",obj)
+        Axios.post(`${URL_API}/get-transactionlistdetail`, obj)
+        .then(res => {
+            if(!res.data){
+                console.log('NOT FOUND')
+            }else{
+                console.log(res.data)
+                this.setState({dataTransactiondetail: res.data})
+                console.log(this.state.dataTransactiondetail)
+                // this.fecthDataTransactionDetail()
+            }
+        })
+        .catch(err => {
+            console.log(err)
+        })
+    }
+
+    updateStatus = () => {
+        const statuspay = this.refs.statuspay.value
+        const idOrder = this.state.idOrder
+        let obj = {
+            ordernumber : idOrder,
+            paymentstatus : statuspay
+        }
+        
+        console.log("updateStatus",obj)
+        Axios.post(`${URL_API}/get-updatePayment`, obj)
+        .then(res => {
+            if(!res.data){
+                console.log('NOT FOUND')
+            }else{
+                console.log(res.data)
+                this.setState({dataTransaction: res.data, idEdit: null})
+                // this.fecthDataTransactionDetail()
             }
         })
         .catch(err => {
@@ -38,15 +93,15 @@ class ListTransactionPage extends React.Component {
     }
 
     filterDataTransaction = () => {
-        let full_name = this.refs.fullname.value
-        console.log(full_name)
+        let filter = this.refs.filter.value
+        console.log(filter)
 
         let obj = {
-            full_name
+            filter
         
         }
         console.log(obj)
-        if (this.refs.fullname.value == null) {
+        if (this.refs.filter.value == null) {
             return (null)
         } else {
         
@@ -64,8 +119,15 @@ class ListTransactionPage extends React.Component {
         
     }
 
+    detail(id){
+        this.fecthDataTransactionDetail()
+        this.setState({showDetail : true, idOrder : id})
+
+    }
+
     componentDidMount(){
         this.fecthDataTransaction()
+
     }
 
 
@@ -76,50 +138,154 @@ class ListTransactionPage extends React.Component {
     if (!this.props.adminUsername) {
       return <Redirect to="/auth/admin/login" />;
     }
+    console.log(this.state.idOrder)
     return (
       <React.Fragment>
         <NavigationBar />
         <Container>
             <div style={styles.filterCont}>
             <Form.Control type="text" placeholder="Search"
-             ref="fullname" />
+             ref="filter" />
             <Button onClick={() => this.filterDataTransaction()}>Search</Button>
                 </div>
-       
+                               {/* <Button onClick={() => this.fecthDataTransactionDetail()}> Get </Button> */}
+
                             <Table striped bordered hover style={styles.contTransations}>
                                 <thead>
                                     <tr>
                                     <th>#</th>
-                                    <th>Full Name</th>
-                                    <th>Address</th>
-                                    <th>Kecamatan</th>
-                                    <th>Kabupaten</th>
-                                    <th>Total Price</th>
-                                    <th>Quantity</th>
-                                    <th>Product Name</th>
-
+                                    <td>Order Number</td>
+                                    <td>Bukti Pembayaran</td>
+                                    <td>Tanggal Pemesanan</td>
+                                    <td>Tanggal Pembayaran</td>
+                                    <td>Nama Pemilik Rekening</td>
+                                    <td>User</td>
+                                    <td>Nominal</td>
+                                    <td>Status Pembayaran</td>
+                                    <td> Detail </td>
                                     </tr>
                                 </thead>
                                 <tbody>
                                 {this.state.dataTransaction.map((item,index) => {
+                                    if(this.state.idEdit === item.order_number){
                                         return(
                                             <tr key={index}>
                                             <td>{index + 1}</td>
-                                            <td>{item.full_name}</td>
-                                            <td>{item.address}</td>
-                                            <td>{item.kecamatan}</td>
-                                            <td>{item.kabupaten}</td>
-                                            <td>{item.total_price}</td>
-                                            <td>{item.quantity}</td>
+                                            <td>{item.order_number}</td>
+                                            <td>
+                                                <Button onClick={() => this.setState({showImage : true})} disabled >Show Image</Button>
+                                            </td>
+                                            <td>{item.order_date}</td>
+                                            <td>{item.date}</td>
+                                            <td>{item.nama_pemilik_rekening}</td>
+                                            <td>{item.username}</td>
+                                            <td>{item.nominal}</td>
+                                            <td>
+                                            <Form.Select ref="statuspay" type="text"  size="md" defaultValue={item.payment_status}> 
+                                                                 <option > Pending</option>
+                                                                 <option > Processed</option>
+                                                                 <option > Shipped</option>
+                                                                 <option > Arrived</option>
+
+                                            </Form.Select>
+                                            </td>
+                                            <td>
+                                            <Button  onClick={() =>this.updateStatus()} variant="success">Save</Button>
+                                            <Button  onClick={() => this.setState({ idEdit: null })} variant="success">Cancel</Button>
+
+                                            {/* onClick={() => this.setState({showDetail : true , idOrder : item.order_number})} */}
+                                            </td>
+
+                                            </tr>         
+                                        )
+                                    } return(
+                                        <tr key={index}>
+                                        <td>{index + 1}</td>
+                                        <td>{item.order_number}</td>
+                                        <td>
+                                            <Button onClick={() => this.setState({showImage : true})} >Show Image</Button>
+                                        </td>
+                                        <td>{item.order_date}</td>
+                                        <td>{item.date}</td>
+                                        <td>{item.nama_pemilik_rekening}</td>
+                                        <td>{item.username}</td>
+                                        <td>{item.nominal}</td>
+                                        <td>{item.payment_status}</td>
+                                        <td>
+                                        <Button  onClick={() => this.setState({ idEdit: item.order_number,  idOrder : item.order_number})} variant="success">Edit</Button>
+                                        <Button  onClick={() =>this.detail(item.order_number)} variant="success">Show Detail</Button>
+                                        {/* onClick={() => this.setState({showDetail : true , idOrder : item.order_number})} */}
+                                        </td>
+
+                                        </tr> 
+                                    )
+                                })}
+                                                  
+                                </tbody>
+                            </Table>
+        </Container>
+        <Modal size="lg" show={this.state.showImage} >
+                    <Modal.Header>
+                        <Modal.Title>Request Stock</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body >
+                    {this.state.dataTransaction.map((item,index) => {
+                        return(
+                            <img src={item.payment_image} alt="" style={styles.imagesize}/>
+                        )
+                    })}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={() => this.setState({showImage : false})}> Close</Button>
+
+                    </Modal.Footer>
+        </Modal>
+
+        <Modal size="lg" show={this.state.showDetail} >
+                    <Modal.Header>
+                        <Modal.Title>Request Stock</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body >
+                    <Table striped bordered hover style={styles.contTransations}>
+                                <thead>
+                                    <tr>
+                                    <th>#</th>
+                                    <td>Order Number</td>
+                                    <td>Tanggal Pemesanan</td>
+                                    <td>Product Name</td>
+                                    <td>Quantity</td>
+                                    <td>Status Pembayaran</td> 
+                                    <td>Harga</td>    
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                {this.state.dataTransactiondetail.map((item,index) => {
+                                        return(
+                                            <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{item.order_number}</td>
+                                            <td>{item.order_date}</td>
                                             <td>{item.product_name}</td>
+                                            <td>{item.quantity}</td>
+                                            <td>{item.payment_status}</td>
+                                            <td>{item.product_price}</td>
+
                                             </tr>         
                                         )
                                 })}
                                                   
                                 </tbody>
                             </Table>
-        </Container>
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={() => this.setState({showDetail : false})}> Close</Button>
+
+                    </Modal.Footer>
+        </Modal>
       </React.Fragment>
+
+
+
     );
   }
 }
@@ -132,6 +298,16 @@ const styles= {
     filterCont: {
         display: 'flex',
         flexDirection: 'row'
+    },
+    imagesize: {
+            height: "100%",
+            width: "100%",
+            backgroundPosition: "center",
+            backgroundSize: "contain",
+            backgroundRepeat: "no-repeat",
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
     }
     
   }
