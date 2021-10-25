@@ -15,9 +15,11 @@ import {
 } from "react-bootstrap";
 
 import { Link } from "react-router-dom";
-
+import Info from "../Info";
 const BASE_URL = "http://localhost:2000";
 const token = localStorage.getItem("token");
+const Error =
+  "https://firebasestorage.googleapis.com/v0/b/e-commerce-f95d6.appspot.com/o/info%2Ferror.png?alt=media&token=cb31b07e-6bc7-4fb8-aa56-41ac6a50bb0c";
 
 export default class Transaction extends React.Component {
   constructor(props) {
@@ -29,6 +31,9 @@ export default class Transaction extends React.Component {
       shippingFee: 0,
       grandTotal: 0,
       isGetDetail: false,
+      orderNumber: null,
+      isPaymentProcessed: false,
+      orderStatus: null,
     };
   }
   componentDidMount() {
@@ -47,6 +52,9 @@ export default class Transaction extends React.Component {
     )
       .then((res) => {
         let temp = res.data.map((item) => {
+          this.setState({ orderNumber: item.order_number });
+          this.getPaymentStatus();
+          this.getOrderStatus();
           const getDetailOrder = async () => {
             try {
               const res = await Axios.post(
@@ -74,7 +82,7 @@ export default class Transaction extends React.Component {
 
         this.setState({ order: temp });
         setTimeout(() => {
-          this.cek();
+          this.setPayInfo();
         }, 1000);
 
         console.log(this.state.order);
@@ -91,11 +99,55 @@ export default class Transaction extends React.Component {
   }
 
   detailHandler(order_number) {
-    // this.fetchTransactionProduct(order_number);
     this.setState({ isGetDetail: true });
   }
 
-  cek() {
+  getPaymentStatus() {
+    let order_number = this.state.orderNumber;
+    Axios.post(`${BASE_URL}/transaction/getPaymentStatus`, {
+      order_number: order_number,
+    })
+      .then((res) => {
+        console.log(res.data);
+        if (res) {
+          if (res.data[0].status === "processed") {
+            this.setState({ isPaymentProcessed: true });
+          } else {
+            this.setState({ isPaymentProcessed: false });
+          }
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+  getOrderStatus() {
+    let order_number = this.state.orderNumber;
+    Axios.post(`${BASE_URL}/transaction/getOrderStatus`, {
+      order_number: order_number,
+    })
+      .then((res) => {
+        console.log(res.data);
+        if (res) {
+          this.setState({ orderStatus: res.data[0].status });
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+  acceptMyOrder() {
+    let order_number = this.state.orderNumber;
+    Axios.post(`${BASE_URL}/transaction/orderArrived`, {
+      order_number: order_number,
+    })
+      .then((res) => {
+        if (res.data.message === "update_success") {
+          this.getOrder();
+        }
+      })
+      .catch((err) => console.log(err));
+  }
+
+  setPayInfo() {
     let totalPrice = 0;
     let data = this.state.order;
     data.map((item) => {
@@ -123,34 +175,62 @@ export default class Transaction extends React.Component {
           <Card.Header className="bg-white border-0 p-2">
             <span style={style.cartHeading}>Your Ongoing Transaction</span>
 
+            {this.state.order.length < 1 && <Info img={Error} />}
+
             {this.state.order.map((item) => {
               return (
-                <Card.Body className="p-2">
+                <Card.Body className="p-2 mt-2">
                   <Card>
                     <Card.Header style={style.cardHeader}>
                       <div style={style.centered}>
                         <strong>Transaction ID : {item.order_number}</strong>
+                        {this.state.isPaymentProcessed ? (
+                          <Badge bg="primary" className="mx-2">
+                            Pembayaran diterima
+                          </Badge>
+                        ) : (
+                          <Badge bg="warning" className="mx-2 text-black">
+                            Menunggu pembayaran
+                          </Badge>
+                        )}
+                        <Badge bg="primary">
+                          order {this.state.orderStatus}
+                        </Badge>
                       </div>
                       <div>
-                        <Button
+                        {this.state.isPaymentProcessed ? null : (
+                          <Button
+                            size="sm"
+                            variant="primary"
+                            as={Link}
+                            target="_blank"
+                            to={`/payment/${item.order_number}`}
+                          >
+                            <i class="fas fa-wallet"></i> Pay now
+                          </Button>
+                        )}
+                        {/* <Button
                           size="sm"
-                          variant="primary"
-                          as={Link}
-                          target="_blank"
-                          to={`/payment/${item.order_number}`}
-                        >
-                          <i class="fas fa-wallet"></i> Pay now
-                        </Button>
-                        <Button
-                          size="sm"
-                          className="mx-2"
+                          className="mx-1"
                           variant="primary"
                           onClick={() => {
                             this.detailHandler(item.order_number);
                           }}
                         >
                           Detail
-                        </Button>
+                        </Button> */}
+                        {this.state.isPaymentProcessed ? (
+                          <Button
+                            size="sm"
+                            className="mx-2"
+                            variant="primary"
+                            onClick={() => {
+                              this.acceptMyOrder();
+                            }}
+                          >
+                            Receive my order
+                          </Button>
+                        ) : null}
                       </div>
                     </Card.Header>
                     <div>

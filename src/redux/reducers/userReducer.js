@@ -3,6 +3,7 @@ const INITIAL_STATE = {
   username: "",
   login_failed: false,
   login_failed_message: "",
+  profile_image: "",
 };
 
 const userReducer = (state = INITIAL_STATE, action) => {
@@ -12,6 +13,7 @@ const userReducer = (state = INITIAL_STATE, action) => {
         ...state,
         userID: action.payload.token,
         username: action.payload.username,
+        profile_image: action.payload.profile_picture,
       };
     case "LOGIN_FAILED":
       return {

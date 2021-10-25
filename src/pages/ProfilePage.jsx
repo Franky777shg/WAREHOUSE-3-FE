@@ -6,7 +6,7 @@ import Transaction from "../components/profile/transaction";
 import History from "../components/profile/history";
 import Setting from "../components/profile/setting";
 
-import { Link, Switch, Route } from "react-router-dom";
+import { Link, Switch, Route, Redirect } from "react-router-dom";
 
 import utils from "../assets/styles/utils.module.css";
 
@@ -291,6 +291,9 @@ class ProfilePage extends React.Component {
     );
   };
   render() {
+    if (!localStorage.getItem("token")) {
+      return <Redirect to="/" />;
+    }
     const { successUpdate, warningvisible, warning, images } = this.state;
     return (
       <div>

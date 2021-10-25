@@ -1,3 +1,3 @@
 import Axios from "axios";
 
-export const addToCart = () => {};
+export const addToCart = (cardData) => {};
