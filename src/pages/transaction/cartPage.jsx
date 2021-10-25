@@ -26,6 +26,26 @@ import { Redirect } from "react-router";
 import utils from "../../assets/styles/utils.module.css";
 
 const BASE_URL = "http://localhost:2000";
+const paymentMethod = [
+  {
+    bank: "Bank Negara Indonesia",
+    method: "Konfirmasi Manual",
+    image:
+      "https://firebasestorage.googleapis.com/v0/b/e-commerce-f95d6.appspot.com/o/paymethods%2F1200px-BNI_logo.svg.png?alt=media&token=e4791da1-312c-458a-a39b-e2508ccd95af",
+  },
+  {
+    bank: "Bank Mandiri",
+    method: "Konfirmasi Manual",
+    image:
+      "https://firebasestorage.googleapis.com/v0/b/e-commerce-f95d6.appspot.com/o/paymethods%2Fmandiri.png?alt=media&token=cb738bd8-e547-4737-9c41-ca99dca3df1f",
+  },
+  {
+    bank: "Bank Syariah Indonesia",
+    method: "Konfirmasi Manual",
+    image:
+      "https://firebasestorage.googleapis.com/v0/b/e-commerce-f95d6.appspot.com/o/paymethods%2FBank_Syariah_Indonesia.svg.png?alt=media&token=35372c22-fe15-42b3-a83b-f659a845870c",
+  },
+];
 
 class CartPage extends React.Component {
   constructor(props) {
@@ -36,7 +56,7 @@ class CartPage extends React.Component {
       userAddress: [],
       totalPrice: 0,
       totalQty: 0,
-      isCheckout: false,
+      isCheckout: true,
       totalPricePerProduct: 0,
       isUpdated: false,
 
@@ -44,8 +64,8 @@ class CartPage extends React.Component {
       userFullName: "",
       userEmail: "",
       addAddress: false,
-
       buySuccess: false,
+      selectedBank: null,
     };
   }
 
@@ -405,39 +425,6 @@ class CartPage extends React.Component {
                       {this.state.isCheckout && (
                         <div className="m-4">
                           <Form>
-                            <span style={style.cartHeading}>Contact Info</span>
-                            <Row className="mb-3 mt-2">
-                              <Form.Group as={Col}>
-                                <Form.Label className="myLabel">
-                                  Fullname
-                                </Form.Label>
-                                <Form.Control
-                                  type="text"
-                                  value={this.state.userFullName}
-                                  placeholder="Enter fullname"
-                                />
-                              </Form.Group>
-
-                              <Form.Group as={Col}>
-                                <Form.Label>Phone</Form.Label>
-                                <Form.Control
-                                  type="text"
-                                  placeholder="Enter your phone number"
-                                />
-                              </Form.Group>
-
-                              <Form.Group as={Col}>
-                                <Form.Label>Email</Form.Label>
-                                <Form.Control
-                                  type="email"
-                                  value={this.state.userEmail}
-                                  placeholder="Enter your email"
-                                />
-                              </Form.Group>
-                            </Row>
-                          </Form>
-
-                          <Form>
                             <span style={style.cartHeading}>
                               Delivery Details
                             </span>
@@ -506,13 +493,46 @@ class CartPage extends React.Component {
                             <span style={style.cartHeading}>
                               Payment Method
                             </span>
-                            <Row className="mb-3 mt-2">
-                              <Form.Group as={Col}>
-                                <Form.Select>
-                                  <option>Select method</option>
-                                  <option>Bank Transfer</option>
-                                </Form.Select>
-                              </Form.Group>
+                            <Row className="mb-3 mt-2 ">
+                              <div className="d-flex">
+                                {paymentMethod.map((item) => {
+                                  console.log(this.state.selectedBank);
+                                  return (
+                                    <Card
+                                      style={style.profileWrapper}
+                                      // className={`p-2 bg-white text-secondary ${utils.cardPayMethod}`}
+                                      onClick={() => {
+                                        this.setState({
+                                          selectedBank: item.bank,
+                                        });
+                                      }}
+                                      className={`p-2 bg-white text-secondary ${
+                                        this.state.selectedBank === item.bank
+                                          ? utils.selectedCardPayMethod
+                                          : utils.cardPayMethod
+                                      }`}
+                                    >
+                                      <div style={{ width: "50px" }}>
+                                        <Image
+                                          src={item.image}
+                                          style={{ width: "100%" }}
+                                        ></Image>
+                                      </div>
+                                      <div
+                                        className="mx-2"
+                                        style={{ marginLeft: "20px" }}
+                                      >
+                                        <h1 style={style.bankName}>
+                                          <strong>{item.bank}</strong>
+                                        </h1>
+                                        <p style={style.payInfo}>
+                                          {item.payInfo}
+                                        </p>
+                                      </div>
+                                    </Card>
+                                  );
+                                })}
+                              </div>
                             </Row>
                           </Form>
                         </div>
@@ -589,6 +609,14 @@ const style = {
     marginBottom: "200px",
     marginTop: "20px",
     padding: "20px",
+  },
+  profileWrapper: {
+    width: "auto",
+    display: "flex",
+    flexDirection: "row",
+    boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+    border: "1px solid #eaeaea",
+    alignItems: "center",
   },
   productCard: {
     padding: "7px",
@@ -709,6 +737,17 @@ const style = {
     border: "1px solid #eaeaea",
     backgroundColor: "#fff",
     padding: "4px 4px",
+  },
+
+  // payment method
+  bankName: {
+    margin: "0px",
+    fontSize: "14px",
+    color: "#525252",
+  },
+  payInfo: {
+    margin: "0px",
+    fontSize: "12px",
   },
 };
 

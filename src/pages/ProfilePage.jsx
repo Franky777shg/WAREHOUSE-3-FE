@@ -4,9 +4,11 @@ import NavigationBar from "../components/NavigationBar";
 import Profile from "../components/profile/profile";
 import Transaction from "../components/profile/transaction";
 import History from "../components/profile/history";
-import Cek from "../components/profile/cek";
+import Setting from "../components/profile/setting";
 
 import { Link, Switch, Route } from "react-router-dom";
+
+import utils from "../assets/styles/utils.module.css";
 
 import {
   Container,
@@ -22,6 +24,7 @@ import {
   ListGroup,
   Card,
 } from "react-bootstrap";
+
 const URL_API = "http://localhost:2000/user";
 
 class ProfilePage extends React.Component {
@@ -79,23 +82,6 @@ class ProfilePage extends React.Component {
         console.log(err);
       });
   };
-  // getUserProfile = () => {
-  //     let token = localStorage.getItem("token")
-  //     Axios.post(`${URL_API}/get-user/`,
-  //     {},
-  //       {
-  //         headers: {
-  //         'Content-Type': 'multipart/form-data',
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       })
-  //     .then(res => {
-  //         // console.log("dataget", res.data[0].profile_picture)
-  //     })
-  //     .catch(err => {
-  //         console.log("error get", err)
-  //     })
-  // }
   componentDidMount() {
     this.fectDataUser();
     this.fectDataAddress();
@@ -315,6 +301,7 @@ class ProfilePage extends React.Component {
               <Card className="p-2" style={styles.profileCard}>
                 <ListGroup>
                   <ListGroup.Item
+                    className={utils.leftMenu}
                     style={styles.noBorder}
                     as={Link}
                     to="/profile/"
@@ -323,6 +310,7 @@ class ProfilePage extends React.Component {
                     <span style={{ marginLeft: "10px" }}>Profile</span>
                   </ListGroup.Item>
                   <ListGroup.Item
+                    className={utils.leftMenu}
                     style={styles.noBorder}
                     as={Link}
                     to="/profile/transaction"
@@ -331,6 +319,7 @@ class ProfilePage extends React.Component {
                     <span style={{ marginLeft: "10px" }}>Transaction</span>
                   </ListGroup.Item>
                   <ListGroup.Item
+                    className={utils.leftMenu}
                     style={styles.noBorder}
                     as={Link}
                     to="/profile/history"
@@ -338,18 +327,12 @@ class ProfilePage extends React.Component {
                     <i className="fas fa-history"></i>
                     <span style={{ marginLeft: "10px" }}>Order History</span>
                   </ListGroup.Item>
+
                   <ListGroup.Item
+                    className={utils.leftMenu}
                     style={styles.noBorder}
                     as={Link}
-                    to="/profile/address"
-                  >
-                    <i className="fas fa-truck"></i>
-                    <span style={{ marginLeft: "10px" }}>Address</span>
-                  </ListGroup.Item>
-                  <ListGroup.Item
-                    style={styles.noBorder}
-                    as={Link}
-                    to="/profile/cek"
+                    to="/profile/setting"
                   >
                     <i className="fas fa-cog"></i>
                     <span style={{ marginLeft: "10px" }}>Settings</span>
@@ -369,8 +352,8 @@ class ProfilePage extends React.Component {
                   <Route path="/profile/history">
                     <History />
                   </Route>
-                  <Route path="/profile/cek">
-                    <Cek />
+                  <Route path="/profile/setting">
+                    <Setting />
                   </Route>
                 </Switch>
               </Card>
@@ -388,8 +371,8 @@ const styles = {
   profileCard: {
     border: "none",
     border: "1px solid #F3F4F6",
-    borderRadius: "8px",
-    boxShadow: "0 1px 3px 0px rgba(0, 0, 0, 0.05)",
+    borderRadius: "5px",
+    boxShadow: "0 1px 2px 0px rgba(0, 0, 0, 0.05)",
   },
   noBorder: {
     border: "none",
