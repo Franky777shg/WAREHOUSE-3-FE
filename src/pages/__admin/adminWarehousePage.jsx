@@ -233,9 +233,9 @@ class AdminWarehousePage extends React.Component {
         }
         
         console.log(obj)
-        Axios.post(`${URL_API}/update-reducestock`, obj)
+        Axios.post(`${URL_API}/update-increasestock`, obj)
         .then(res => {
-            console.log("reduce",res.data)
+            console.log("increase",res.data)
             // this.setState({ requestedStock1: res.data , IdReqEdit: null})
         })
         .catch(err => {
@@ -291,6 +291,8 @@ class AdminWarehousePage extends React.Component {
                                     <th>#</th>
                                     <th>Product Name</th>
                                     <th>Stock OP</th>
+                                    <th>Stock Booked</th>
+
                                     <th>Warehouse Name</th>
                                     <th>Action</th>
                                     </tr>
@@ -302,6 +304,7 @@ class AdminWarehousePage extends React.Component {
                                     <td>{item.id_product}</td>
                                     <td>{item.product_name}</td>
                                     <td>{item.stock_op}</td>
+                                    <td>{item.stock_booked}</td>
                                     <td>{item.warehouse_name}</td>
                                     <td>
                                         <Button variant="success" onClick={() => this.setState({ 
