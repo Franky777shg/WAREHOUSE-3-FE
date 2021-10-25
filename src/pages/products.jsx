@@ -1,7 +1,7 @@
 import React from "react"
 import Axios from "axios"
 
-import { Button, Card, Stack, Pagination, Row, Col, Form} from "react-bootstrap"
+import { Button, Card, Stack, Pagination, Row, Col, Form } from "react-bootstrap"
 import NavigationBar from "../components/NavigationBar"
 import { Link } from "react-router-dom"
 
@@ -39,7 +39,7 @@ class ProductPage extends React.Component {
         let name = this.refs.name.value
         let category = this.refs.category.value
 
-        this.setState({isLoading: true})
+        this.setState({ isLoading: true })
         let obj = {
             name,
             category
@@ -256,7 +256,7 @@ class ProductPage extends React.Component {
 
 
         const { dataProd, total_page } = this.state
-        console.log(dataProd)
+        // console.log(dataProd)
         return (
             <div>
                 <NavigationBar />
@@ -264,20 +264,20 @@ class ProductPage extends React.Component {
                     <div className="Filter" style={{ margin: '5%', display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', margin: '60px 0 30px' }}>
                         <Row className="g-2" style={{ margin: '10px', width: '60vw' }}>
                             <Col md>
-                               {this.state.isLoading && <p> Loading... </p> }
+                                {this.state.isLoading && <p> Loading... </p>}
                             </Col>
                             <Col md>
-                                <Form.Control 
-                                type="text" 
-                                placeholder="Product Name"
-                                 style={{ width: '20vw' }} 
-                                 ref="name" />
+                                <Form.Control
+                                    type="text"
+                                    placeholder="Product Name"
+                                    style={{ width: '20vw' }}
+                                    ref="name" />
                             </Col>
                             <Col md>
                                 <Form.Select aria-label="Floating label select example" style={{ width: '15vw' }} ref="category">
                                     <option value="">Categories</option>
                                     <option value="Tables & Desks">Tables & Desks</option>
-                                    <option value="Sofas">Sofas</option>
+                                    <option value="Sofa">Sofa</option>
                                     <option value="Bed">Bed</option>
                                     <option value="Kitchens">Kitchens</option>
                                     <option value="Storages">Storages</option>
@@ -322,7 +322,7 @@ class ProductPage extends React.Component {
                                                 Wishlist
                                             </Button>
                                             <Button variant="outline-info" style={{ margin: "20px 10px" }}
-                                            as={Link} to={`/detail-product/${item.id_product}`}>
+                                                as={Link} to={`/detail-product/${item.id_product}`}>
                                                 <i class="fas fa-info" style={{ marginRight: '10px' }}></i>
                                                 Get Detail
                                             </Button>
