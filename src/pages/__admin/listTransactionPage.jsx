@@ -93,15 +93,15 @@ class ListTransactionPage extends React.Component {
     }
 
     filterDataTransaction = () => {
-        let filter = this.refs.filter.value
-        console.log(filter)
+        let number = this.refs.number.value
+
+        // console.log(filter)
 
         let obj = {
-            filter
-        
+            number
         }
         console.log(obj)
-        if (this.refs.filter.value == null) {
+        if (this.refs.number.value == null ) {
             return (null)
         } else {
         
@@ -144,8 +144,8 @@ class ListTransactionPage extends React.Component {
         <NavigationBar />
         <Container>
             <div style={styles.filterCont}>
-            <Form.Control type="text" placeholder="Search"
-             ref="filter" />
+             <Form.Control type="text" placeholder="Order Number"
+             ref="number" />
             <Button onClick={() => this.filterDataTransaction()}>Search</Button>
                 </div>
                                {/* <Button onClick={() => this.fecthDataTransactionDetail()}> Get </Button> */}
