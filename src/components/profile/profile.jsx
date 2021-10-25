@@ -10,7 +10,8 @@ import {
   Col,
 } from "react-bootstrap";
 import Axios from "axios";
-import defaultImage from "../../assets/img/avatar/default.png";
+import Skeleton from "react-loading-skeleton";
+import { Link } from "react-router-dom";
 
 const URL_API = "http://localhost:2000/user";
 
@@ -27,11 +28,14 @@ export default class Profile extends React.Component {
       images: "",
       activeTab: "",
       isAddAddress: false,
+      isLoading: false,
+      editAddressModal: false
     };
   }
 
   componentDidMount() {
     this.fectDataAddress();
+    this.fectDataUser();
   }
 
   fectDataAddress = () => {
@@ -48,6 +52,29 @@ export default class Profile extends React.Component {
       .then((res) => {
         console.log(res.data);
         this.setState({ dataaddress: res.data });
+        console.log(this.state.dataaddress)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  fectDataUser = () => {
+    let token = localStorage.getItem("token");
+    this.setState({ isLoading: true });
+    Axios.post(
+      `${URL_API}/get-user/`,
+      {},
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
+      .then((res) => {
+        this.setState({ datauser: res.data, isLoading: false });
+        this.setState({ images: res.data[0].profile_picture });
       })
       .catch((err) => {
         console.log(err);
@@ -85,11 +112,47 @@ export default class Profile extends React.Component {
       });
   };
 
+  onEditAddress = () => {
+    let editaddressData = {
+      idaddress: this.state.idEdit,
+      address: this.refs.alamat.value,
+      kecamatan: this.refs.kecamatan.value,
+      kabupaten: this.refs.kabupaten.value,
+      provinsi: this.refs.provinsi.value,
+      hp: this.refs.hp.value,
+      penerima: this.refs.penerima.value,
+      tipe_alamat: this.refs.jenis_alamat.value,
+    };
+    
+    console.log(editaddressData);
+
+    let token = localStorage.getItem("token");
+    Axios.post(`${URL_API}/get-update-user-address/`, editaddressData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((res) => {
+        this.setState({ dataaddress: res.data});
+        this.setState({ editAddressModal: false });
+
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+
   handleCloseAdd = () => {
     this.setState({ isAddAddress: false });
   };
 
+  handleCloseEdit = () => {
+    this.setState({ editAddressModal: false });
+  };
+
   render() {
+    console.log(this.state.idEdit)
     return (
       <div>
         <Card className="border-0">
@@ -97,25 +160,41 @@ export default class Profile extends React.Component {
             <span style={style.cardHeading}>Profile</span>
           </Card.Header>
           <div className="profile m-2">
-            <Alert
-              style={style.profileWrapper}
-              className="p-2 bg-white text-secondary"
-            >
-              <Image src={defaultImage} width="50" roundedCircle />
-              <div className="mx-2" style={{ marginTop: "5px" }}>
-                <h1 style={{ margin: "0px", fontSize: "18px" }}>
-                  <strong>Ade Mahendra</strong>
-                </h1>
-                <p style={{ margin: "0px", fontSize: "14px" }}>
-                  Email : hendraadem@gmail.com
-                </p>
-              </div>
-            </Alert>
+            {this.state.datauser.map((item) => {
+              return (
+                <Alert
+                  style={style.profileWrapper}
+                  className="p-2 bg-white text-secondary"
+                >
+                  {this.state.isLoading ? (
+                    <Skeleton height={45} width={50} />
+                  ) : (
+                    <Image src={item.profile_picture} width="50" rounded />
+                  )}
+
+                  <div className="mx-2" style={{ marginTop: "5px" }}>
+                    <h1
+                      style={{
+                        margin: "0px",
+                        fontSize: "18px",
+                        color: "#525252",
+                      }}
+                    >
+                      <strong>{item.full_name}</strong>
+                    </h1>
+                    <p style={{ margin: "0px", fontSize: "14px" }}>
+                      Email : {item.email}
+                    </p>
+                  </div>
+                </Alert>
+              );
+            })}
             <label className="myLabel"> Delivery addresses </label>{" "}
             <div style={style.addressWrapper} className="mt-2">
               {this.state.dataaddress.map((item) => {
                 return (
-                  <Alert
+                  <Alert 
+                    onClick={() => this.setState({ editAddressModal: true , idEdit : item.id_address})}
                     style={style.addressItem}
                     className="p-2 bg-white text-secondary"
                   >
@@ -135,11 +214,7 @@ export default class Profile extends React.Component {
                 );
               })}
             </div>
-            <Button
-              size="sm"
-              style={style.btnOutline}
-              onClick={this.handleAddAddress}
-            >
+            <Button size="sm" onClick={this.handleAddAddress}>
               <i className="fas fa-plus"></i> Add new address
             </Button>
           </div>
@@ -200,6 +275,74 @@ export default class Profile extends React.Component {
             </Button>
             <Button variant="primary" onClick={this.onAddAddress}>
               Tambah alamat
+            </Button>
+          </Modal.Footer>
+        </Modal>
+
+        {/* Edit address modal */}
+        <Modal show={this.state.editAddressModal} animation={false}>
+          <Modal.Header closeButton>
+            <Modal.Title>Add Address</Modal.Title>
+          </Modal.Header>
+          {this.state.dataaddress.map((item) => {
+          if(this.state.idEdit === item.id_address){
+              return(    
+          <Modal.Body>
+            <Row className="mb-2">
+              <Form.Group as={Col} controlId="formGridEmail">
+                <Form.Label className="myLabel">Nama penerima</Form.Label>
+                <Form.Control size="sm" type="text" ref="penerima" defaultValue={item.package_recipient} />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridPassword">
+                <Form.Label className="myLabel">HP penerima</Form.Label>
+                <Form.Control size="sm" type="text" ref="hp" defaultValue={item.address_phone} />
+              </Form.Group>
+            </Row>
+            <Row className="mb-2">
+              <Form.Group as={Col} controlId="formGridEmail">
+                <Form.Label className="myLabel">Jenis alamat</Form.Label>
+                <Form.Select ref="jenis_alamat" defaultValue={item.address_type}>
+                  <option value="Rumah">Rumah</option>
+                  <option value="Kantor">Kantor</option>
+                </Form.Select>
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridEmail">
+                <Form.Label className="myLabel">Provinsi</Form.Label>
+                <Form.Control size="sm" type="text" ref="provinsi" defaultValue={item.provinsi} />
+              </Form.Group>
+            </Row>
+            <Row className="mb-2">
+              <Form.Group as={Col} controlId="formGridEmail">
+                <Form.Label className="myLabel">Kecamatan</Form.Label>
+                <Form.Control size="sm" type="text" ref="kecamatan" defaultValue={item.kecamatan} />
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridPassword">
+                <Form.Label className="myLabel">Kabupaten</Form.Label>
+                <Form.Control size="sm" type="text" ref="kabupaten" defaultValue={item.kabupaten}/>
+              </Form.Group>
+            </Row>
+            <Row className="mb-2">
+              <Form.Group>
+                <Form.Label className="myLabel">Alamat lengkap</Form.Label>
+                <Form.Control size="sm" type="text" ref="alamat" defaultValue={item.address} />
+              </Form.Group>
+            </Row>
+          </Modal.Body>
+            )
+          }
+            
+          
+             
+          })}
+          <Modal.Footer className="py-1">
+            <Button variant="secondary" onClick={this.handleCloseEdit}>
+              Batal
+            </Button>
+            <Button variant="primary" onClick={this.onEditAddress}>
+            Update            
             </Button>
           </Modal.Footer>
         </Modal>

@@ -70,7 +70,10 @@ class App extends React.Component {
             <Route path="/payment/:payToken" component={PaymentPage} />
 
             <Route path="/admin/superadmin-page" component={superAdminPage} />
-            <Route path="/admin/adminwarehouse-page" component={adminWarehousepage} />
+            <Route
+              path="/admin/adminwarehouse-page"
+              component={adminWarehousepage}
+            />
 
             <Route
               path="/admin/transactionlist-page"

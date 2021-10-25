@@ -44,9 +44,9 @@
 .selectedUserAddress {
   width: 100%;
   height: 100%;
-  border: 1px solid #1e88e5 !important;
   padding: 12px;
-  background-color: #e3f2fd !important;
+  border: 1px solid #86c0f5 !important;
+  background-color: #f4faff !important;
 }
 
 /* CARD */
@@ -92,4 +92,27 @@
 }
 .customFileInput:active::before {
   background: -webkit-linear-gradient(top, #e3e3e3, #f9f9f9);
+}
+
+.cardPayMethod {
+  margin-right: 5px;
+}
+.cardPayMethod:hover {
+  cursor: pointer;
+}
+.selectedCardPayMethod {
+  border: 1px solid #86c0f5 !important;
+  background-color: #f4faff !important;
+  color: #108cff;
+  margin-right: 5px;
+}
+
+/* ADMIN */
+.leftMenu {
+  color: #2c333e;
+}
+
+.leftMenu:hover {
+  background-color: #f3f3f5;
+  color: #2c333e;
 }

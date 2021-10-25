@@ -73,7 +73,7 @@ class ListTransactionPage extends React.Component {
         const idOrder = this.state.idOrder
         let obj = {
             ordernumber : idOrder,
-            paymentstatus : statuspay
+            status : statuspay
         }
         
         console.log("updateStatus",obj)
@@ -181,7 +181,7 @@ class ListTransactionPage extends React.Component {
                                             <td>{item.username}</td>
                                             <td>{item.nominal}</td>
                                             <td>
-                                            <Form.Select ref="statuspay" type="text"  size="md" defaultValue={item.payment_status}> 
+                                            <Form.Select ref="statuspay" type="text"  size="md" defaultValue={item.status}> 
                                                                  <option > Pending</option>
                                                                  <option > Processed</option>
                                                                  <option > Shipped</option>
@@ -210,7 +210,7 @@ class ListTransactionPage extends React.Component {
                                         <td>{item.nama_pemilik_rekening}</td>
                                         <td>{item.username}</td>
                                         <td>{item.nominal}</td>
-                                        <td>{item.payment_status}</td>
+                                        <td>{item.status}</td>
                                         <td>
                                         <Button  onClick={() => this.setState({ idEdit: item.order_number,  idOrder : item.order_number})} variant="success">Edit</Button>
                                         <Button  onClick={() =>this.detail(item.order_number)} variant="success">Show Detail</Button>
@@ -267,8 +267,8 @@ class ListTransactionPage extends React.Component {
                                             <td>{item.order_date}</td>
                                             <td>{item.product_name}</td>
                                             <td>{item.quantity}</td>
-                                            <td>{item.payment_status}</td>
-                                            <td>{item.product_price}</td>
+                                            <td>{item.status}</td>
+                                            <td>{item.product_price * item.quantity}</td>
 
                                             </tr>         
                                         )
