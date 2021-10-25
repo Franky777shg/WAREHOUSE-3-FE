@@ -104,7 +104,12 @@ class NavigationBar extends React.Component {
                         id="dropdown-basic"
                         align="end"
                       >
-                        <Image src={avatar} width="35"></Image>
+                        <Image
+                          src={this.props.profileImage}
+                          width="35"
+                          height="35"
+                          style={{ borderRadius: "100px" }}
+                        ></Image>
                         <span style={style.navUserName}>
                           {this.props.username}
                         </span>
@@ -302,6 +307,7 @@ const style = {
 const mapStateToProps = (state) => {
   return {
     username: state.userReducer.username,
+    profileImage: state.userReducer.profile_image,
   };
 };
 

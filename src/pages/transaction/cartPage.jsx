@@ -56,7 +56,7 @@ class CartPage extends React.Component {
       userAddress: [],
       totalPrice: 0,
       totalQty: 0,
-      isCheckout: true,
+      isCheckout: false,
       totalPricePerProduct: 0,
       isUpdated: false,
 
@@ -300,15 +300,7 @@ class CartPage extends React.Component {
     const token = localStorage.getItem("token");
     let date = new Date();
     let fullTime =
-      date.getFullYear() +
-      "-" +
-      date.getMonth() +
-      "-" +
-      date.getDay() +
-      " " +
-      date.getHours() +
-      ":" +
-      date.getMinutes();
+      date.getFullYear() + "-" + date.getMonth() + "-" + date.getDay();
 
     let unique =
       "ORD" + "-" + date.getMonth() + "" + Math.floor(Math.random() * 9999);
@@ -316,6 +308,7 @@ class CartPage extends React.Component {
     let orderData = {
       id_address: this.state.selectedAddress,
       order_number: unique,
+      datetime: fullTime,
     };
 
     Axios.post(`${BASE_URL}/transaction/addTransaction/order`, orderData, {
@@ -332,6 +325,7 @@ class CartPage extends React.Component {
               id_product: item.id_product,
               quantity: item.quantity,
               total_price: item.quantity * item.product_price,
+              bank: this.state.selectedBank,
             };
 
             Axios.post(

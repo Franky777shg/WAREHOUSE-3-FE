@@ -1,4 +1,3 @@
- 
 import React from "react";
 import Axios from "axios";
 import PageTitle from "../components/pageTitle";
@@ -18,7 +17,7 @@ import NavigationBar from "../components/NavigationBar";
 import { Link } from "react-router-dom";
 
 import Skeleton from "react-loading-skeleton";
-const BASE_URL = "http://localhost:2000"; 
+const BASE_URL = "http://localhost:2000";
 
 class ProductPage extends React.Component {
   constructor(props) {
@@ -74,14 +73,17 @@ class ProductPage extends React.Component {
 
   searchFilter = () => {
     let name = this.refs.name.value;
-    let category = this.state.selectedCategory;
+    let category = this.refs.category.value;
 
     this.setState({ isLoading: true });
     let obj = {
       name,
       category,
     };
-    if (this.refs.name.value == null && category == null) {
+    console.log(obj);
+    // console.log("FilterClick", this.state.currentPage + 1)
+
+    if (this.refs.name.value == null && this.ref.category.value == null) {
       return null;
     } else {
       Axios.post(
@@ -130,7 +132,6 @@ class ProductPage extends React.Component {
     } else {
       return;
     }
- 
     console.log("Hasil klik Sort", obj);
 
     Axios.post(
@@ -153,7 +154,7 @@ class ProductPage extends React.Component {
 
   onNext = () => {
     if (this.state.pageNext === "") {
-      this.setState({ isLoading: true });
+      //paginate biasa
       Axios.post(
         `http://localhost:2000/product/get-product?page=${
           this.state.currentPage + 1
@@ -166,17 +167,18 @@ class ProductPage extends React.Component {
               res.data[3].totalItems / res.data[2].per_page
             ),
             currentPage: this.state.currentPage + 1,
-            isLoading: false,
           });
         })
         .catch((err) => {
           console.log(err);
         });
     } else if (this.state.pageNext === "onFilter") {
+      //paginate hasil filter
       let name = this.refs.name.value;
       let category = this.refs.category.value;
+
       let obj = { name, category };
-      this.setState({ isLoading: true });
+
       Axios.post(
         `http://localhost:2000/product/filter-product?page=${
           this.state.currentPage + 1
@@ -190,7 +192,6 @@ class ProductPage extends React.Component {
               res.data[3].totalItems / res.data[2].per_page
             ),
             currentPage: this.state.currentPage + 1,
-            isLoading: false,
           });
         })
         .catch((err) => {
@@ -217,7 +218,8 @@ class ProductPage extends React.Component {
       } else {
         return;
       }
-      this.setState({ isLoading: true });
+      console.log("Hasil klik Sort", obj);
+
       Axios.post(
         `http://localhost:2000/product/sort-product?page=${this.state.currentPage}`,
         obj
@@ -231,166 +233,17 @@ class ProductPage extends React.Component {
             currentPage: 1,
             pageNext: "onSort",
             pagePrev: "onSort",
-            isLoading: false,
           });
         })
         .catch((err) => {
           console.log(err);
         });
- 
-
-    searchFilter = () => {
-        let name = this.refs.name.value
-        let category = this.refs.category.value
-
-        this.setState({ isLoading: true })
-        let obj = {
-            name,
-            category
-        }
-        console.log(obj)
-        // console.log("FilterClick", this.state.currentPage + 1)
-
-        if (this.refs.name.value == null && this.ref.category.value == null) {
-            return (null)
-        } else {
-            Axios.post(`http://localhost:2000/product/filter-product?page=${this.state.currentPage}`, obj)
-                .then(res => {
-                    this.setState({
-                        dataProd: res.data[0],
-                        total_page: (Math.ceil(res.data[3].totalItems / res.data[2].per_page)),
-                        currentPage: 1,
-                        pageNext: "onFilter",
-                        pagePrev: "onFilter",
-                        isLoading: false
-
-                    })
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-            // if (this.statedataProd.length === 0) {
-            //     this.setState({ notFound : true })
-            // } else { this.setState({ notFound: false})}
-        }
-
-
-    }
-
-    onSorting = () => {
-        let name = this.refs.name.value
-        let category = this.refs.category.value
-        let sort = this.refs.sort.value
-        let obj
-
-        if (sort == "name-asc") {
-            console.log("klik sort name-asc")
-            obj = { name, category, orderBy: "product_name", sortBy: "asc" }
-        } else if (sort === "name-desc") {
-            console.log("klik sort name-desc")
-            obj = { name, category, orderBy: "product_name", sortBy: "desc" }
-        } else if (sort === "price-asc") {
-            console.log("klik sort price-asc")
-            obj = { name, category, orderBy: "product_price", sortBy: "asc" }
-        } else if (sort === "price-desc") {
-            console.log("klik sort price-desc")
-            obj = { name, category, orderBy: "product_price", sortBy: "desc" }
-        } else {
-            return
-        } console.log("Hasil klik Sort", obj)
-
-        Axios.post(`http://localhost:2000/product/sort-product?page=${this.state.currentPage}`, obj)
-            .then(res => {
-                this.setState({
-                    dataProd: res.data[0],
-                    total_page: (Math.ceil(res.data[3].totalItems / res.data[2].per_page)),
-                    currentPage: 1,
-                    pageNext: "onSort",
-                    pagePrev: "onSort"
-                })
-            })
-            .catch(err => {
-                console.log(err)
-            })
-    }
-
-
-
-    onNext = () => {
-        if (this.state.pageNext === "") { //paginate biasa
-            Axios.post(`http://localhost:2000/product/get-product?page=${this.state.currentPage + 1}`)
-                .then(res => {
-                    this.setState({
-                        dataProd: res.data[0],
-                        total_page: (Math.ceil(res.data[3].totalItems / res.data[2].per_page)),
-                        currentPage: this.state.currentPage + 1
-
-                    })
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        } else if (this.state.pageNext === "onFilter") { //paginate hasil filter
-            let name = this.refs.name.value
-            let category = this.refs.category.value
-
-            let obj = { name, category }
-
-            Axios.post(`http://localhost:2000/product/filter-product?page=${this.state.currentPage + 1}`, obj)
-                .then(res => {
-                    this.setState({
-                        dataProd: res.data[0],
-                        total_page: (Math.ceil(res.data[3].totalItems / res.data[2].per_page)),
-                        currentPage: this.state.currentPage + 1
-                    })
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        } else if (this.state.pageNext === "onSort") {
-            let name = this.refs.name.value
-            let category = this.refs.category.value
-            let sort = this.refs.sort.value
-            let obj
-
-            if (sort == "name-asc") {
-                console.log("klik sort name-asc")
-                obj = { name, category, orderBy: "product_name", sortBy: "asc" }
-            } else if (sort === "name-desc") {
-                console.log("klik sort name-desc")
-                obj = { name, category, orderBy: "product_name", sortBy: "desc" }
-            } else if (sort === "price-asc") {
-                console.log("klik sort price-asc")
-                obj = { name, category, orderBy: "product_price", sortBy: "asc" }
-            } else if (sort === "price-desc") {
-                console.log("klik sort price-desc")
-                obj = { name, category, orderBy: "product_price", sortBy: "desc" }
-            } else {
-                return
-            } console.log("Hasil klik Sort", obj)
-
-            Axios.post(`http://localhost:2000/product/sort-product?page=${this.state.currentPage}`, obj)
-                .then(res => {
-                    this.setState({
-                        dataProd: res.data[0],
-                        total_page: (Math.ceil(res.data[3].totalItems / res.data[2].per_page)),
-                        currentPage: 1,
-                        pageNext: "onSort",
-                        pagePrev: "onSort"
-                    })
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        }
- 
     }
   };
 
   onPrevious = () => {
     if (this.state.pagePrev === "") {
       //paginate biasa
-      this.setState({ isLoading: true });
       Axios.post(
         `http://localhost:2000/product/get-product?page=${
           this.state.currentPage - 1
@@ -403,7 +256,6 @@ class ProductPage extends React.Component {
               res.data[3].totalItems / res.data[2].per_page
             ),
             currentPage: this.state.currentPage - 1,
-            isLoading: false,
           });
         })
         .catch((err) => {
@@ -415,7 +267,7 @@ class ProductPage extends React.Component {
       let category = this.refs.category.value;
 
       let obj = { name, category };
-      this.setState({ isLoading: true });
+
       Axios.post(
         `http://localhost:2000/product/filter-product?page=${
           this.state.currentPage - 1
@@ -429,7 +281,6 @@ class ProductPage extends React.Component {
               res.data[3].totalItems / res.data[2].per_page
             ),
             currentPage: this.state.currentPage - 1,
-            isLoading: false,
           });
         })
         .catch((err) => {
@@ -456,8 +307,8 @@ class ProductPage extends React.Component {
       } else {
         return;
       }
+      console.log("Hasil klik Sort", obj);
 
-      this.setState({ isLoading: true });
       Axios.post(
         `http://localhost:2000/product/sort-product?page=${this.state.currentPage}`,
         obj
@@ -471,14 +322,12 @@ class ProductPage extends React.Component {
             currentPage: 1,
             pageNext: "onSort",
             pagePrev: "onSort",
-            isLoading: false,
           });
         })
         .catch((err) => {
           console.log(err);
         });
     }
- 
   };
 
   render() {
@@ -615,7 +464,6 @@ class ProductPage extends React.Component {
                               src={`http://localhost:2000/products/${item.productimg}`}
                             />
                           )}
- 
                         </div>
                         <Button
                           variant="default"
