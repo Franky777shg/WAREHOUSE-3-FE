@@ -9,6 +9,7 @@ import ChangePassPage from "./pages/changePass";
 import ProductPage from "./pages/products";
 import ProfilePage from "./pages/ProfilePage";
 import DetailPage from "./pages/productDetail";
+import NotFound from "./pages/404";
 
 import cartPage from "./pages/transaction/cartPage";
 import CheckoutPage from "./pages/transaction/checkoutPage";
@@ -83,6 +84,7 @@ class App extends React.Component {
               component={ProdAdminEditPage}
             />
             <Route path="/admin/add-product" component={AddProductAdmin} />
+            <Route path="*" component={NotFound} />
           </Switch>
         </Router>
       </div>
