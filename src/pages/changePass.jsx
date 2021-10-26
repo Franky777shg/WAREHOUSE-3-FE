@@ -12,7 +12,7 @@ import {
 import { connect } from 'react-redux'
 import { keepLogin } from '../redux/actions'
 
-// const URL_API = 'http://localhost:2000/user'
+// const URL_API = 'https://api-warehouse-3.purwadhikafs2.com/user'
 
 class ChangePassPage extends React.Component {
     constructor(props) {
@@ -57,7 +57,7 @@ class ChangePassPage extends React.Component {
         //action untuk change password
         let token = localStorage.getItem("token")
         console.log("tok", token)
-        Axios.post(`http://localhost:2000/user/change-password`, body, {
+        Axios.post(`https://api-warehouse-3.purwadhikafs2.com/user/change-password`, body, {
             headers: {
                 Authorization: `Bearer ${token}`,
               }

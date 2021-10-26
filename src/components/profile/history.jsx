@@ -2,7 +2,7 @@ import React from "react";
 import { Card, ListGroup, Image } from "react-bootstrap";
 import Axios from "axios";
 import Info from "../Info";
-const BASE_URL = "http://localhost:2000";
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
 const Error =
   "https://firebasestorage.googleapis.com/v0/b/e-commerce-f95d6.appspot.com/o/info%2Ferror.png?alt=media&token=cb31b07e-6bc7-4fb8-aa56-41ac6a50bb0c";
 export default class History extends React.Component {
@@ -61,7 +61,7 @@ export default class History extends React.Component {
                         width={70}
                         height={70}
                         style={{ border: "1px solid #eaeaea" }}
-                        src={`http://localhost:2000/products/${item.productimg}`}
+                        src={`https://api-warehouse-3.purwadhikafs2.com/products/${item.productimg}`}
                       />
                       <div className="mx-2 my-1">
                         <p style={style.productinfo}>{item.product_name}</p>

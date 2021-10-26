@@ -27,7 +27,7 @@ class ProductAdmin extends React.Component {
     }
 
     componentDidMount() {
-        Axios.post(`http://localhost:2000/prod-admin/get-product-admin`)
+        Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/get-product-admin`)
             .then(res => {
                 console.log('Data Asli', res.data)
                 this.setState({
@@ -55,7 +55,7 @@ class ProductAdmin extends React.Component {
         if (this.refs.name.value == null && this.ref.category.value == null) {
             return (null)
         } else {
-            Axios.post(`http://localhost:2000/prod-admin/filter-product?page=${this.state.currentPageAdmin}`, obj)
+            Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/filter-product?page=${this.state.currentPageAdmin}`, obj)
                 .then(res => {
                     this.setState({
                         prodAdmin: res.data[0],
@@ -93,7 +93,7 @@ class ProductAdmin extends React.Component {
             return
         } console.log("Hasil klik Sort", obj)
 
-        Axios.post(`http://localhost:2000/prod-admin/sort-product?page=${this.state.currentPageAdmin}`, obj)
+        Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/sort-product?page=${this.state.currentPageAdmin}`, obj)
             .then(res => {
                 this.setState({
                     prodAdmin: res.data[0],
@@ -123,7 +123,7 @@ class ProductAdmin extends React.Component {
         //     page: this.state.currentPageAdmin
         // }
         // console.log("obj-del",obj)
-        Axios.get(`http://localhost:2000/prod-admin/delete-product/${this.state.idProd}/${this.state.currentPageAdmin}/${this.state.nameProd}`)
+        Axios.get(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/delete-product/${this.state.idProd}/${this.state.currentPageAdmin}/${this.state.nameProd}`)
             .then((res) => {
                 console.log("res-del", res.data)
                 this.setState({
@@ -131,7 +131,7 @@ class ProductAdmin extends React.Component {
                     total_pageAdmin: (Math.ceil(res.data[3].totalItemAdmin / res.data[2].per_page)),
                     modalSuccess: [true, res.data[4].message]
                 })
-                Axios.post(`http://localhost:2000/prod-admin/delete-stock/${this.state.idProd}`)
+                Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/delete-stock/${this.state.idProd}`)
                     .then((res) => {
                         console.log("delete stock this product")
                     })
@@ -143,7 +143,7 @@ class ProductAdmin extends React.Component {
 
     onNextPage = () => {
         if (this.state.pageNext === "") {
-            Axios.post(`http://localhost:2000/prod-admin/get-product-admin?page=${this.state.currentPageAdmin + 1}`)
+            Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/get-product-admin?page=${this.state.currentPageAdmin + 1}`)
                 .then(res => {
                     this.setState({
                         prodAdmin: res.data[0],
@@ -160,7 +160,7 @@ class ProductAdmin extends React.Component {
 
             let obj = { name, category }
 
-            Axios.post(`http://localhost:2000/prod-admin/filter-product?page=${this.state.currentPageAdmin + 1}`, obj)
+            Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/filter-product?page=${this.state.currentPageAdmin + 1}`, obj)
                 .then(res => {
                     this.setState({
                         prodAdmin: res.data[0],
@@ -190,7 +190,7 @@ class ProductAdmin extends React.Component {
                 return
             } console.log("Hasil klik Sort", obj)
 
-            Axios.post(`http://localhost:2000/prod-admin/sort-product?page=${this.state.currentPageAdmin + 1}`, obj)
+            Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/sort-product?page=${this.state.currentPageAdmin + 1}`, obj)
                 .then(res => {
                     this.setState({
                         prodAdmin: res.data[0],
@@ -208,7 +208,7 @@ class ProductAdmin extends React.Component {
 
     onPrevPage = () => {
         if (this.state.pagePrev === "") {
-            Axios.post(`http://localhost:2000/prod-admin/get-product-admin?page=${this.state.currentPageAdmin - 1}`)
+            Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/get-product-admin?page=${this.state.currentPageAdmin - 1}`)
                 .then(res => {
                     this.setState({
                         prodAdmin: res.data[0],
@@ -225,7 +225,7 @@ class ProductAdmin extends React.Component {
 
             let obj = { name, category }
 
-            Axios.post(`http://localhost:2000/prod-admin/filter-product?page=${this.state.currentPageAdmin - 1}`, obj)
+            Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/filter-product?page=${this.state.currentPageAdmin - 1}`, obj)
                 .then(res => {
                     this.setState({
                         prodAdmin: res.data[0],
@@ -256,7 +256,7 @@ class ProductAdmin extends React.Component {
                 return
             } console.log("Hasil klik Sort", obj)
 
-            Axios.post(`http://localhost:2000/prod-admin/sort-product?page=${this.state.currentPageAdmin - 1}`, obj)
+            Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/sort-product?page=${this.state.currentPageAdmin - 1}`, obj)
                 .then(res => {
                     this.setState({
                         prodAdmin: res.data[0],
@@ -337,7 +337,7 @@ class ProductAdmin extends React.Component {
                                 {prodAdmin.map((item, index) => {
                                     return (
                                         <Card text="dark" bg="light" style={{ width: '100%', margin: '2%', flexBasis: "33%" }} key={index} >
-                                            <Card.Img variant="top" src={`http://localhost:2000/products/${item.productimg}`} />
+                                            <Card.Img variant="top" src={`https://api-warehouse-3.purwadhikafs2.com/products/${item.productimg}`} />
                                             <Card.Body>
                                                 <Card.Title>{item.product_name}</Card.Title>
                                                 <Card.Text>

@@ -8,7 +8,7 @@ import { keepAdminLogin } from "../../redux/actions";
 
 import NavigationBar from "../../components/__admin/NavigationBar";
 
-const URL_API = "http://localhost:2000/admin";
+const URL_API = "https://api-warehouse-3.purwadhikafs2.com/admin";
 
 class AdminWarehousePage extends React.Component {
 

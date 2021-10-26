@@ -17,7 +17,7 @@ import NavigationBar from "../../components/NavigationBar";
 
 import PageTitle from "../../components/pageTitle";
 
-const BASE_URL = "http://localhost:2000";
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
 
 class CheckoutPage extends React.Component {
   constructor(props) {
@@ -57,7 +57,7 @@ class CheckoutPage extends React.Component {
                   <Figure.Image
                     width={70}
                     height={70}
-                    src={`http://localhost:2000/products/${item.productimg}`}
+                    src={`https://api-warehouse-3.purwadhikafs2.com/products/${item.productimg}`}
                   />
                 </div>
                 <Figure.Caption>

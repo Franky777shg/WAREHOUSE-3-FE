@@ -13,7 +13,7 @@ import Axios from "axios";
 import Skeleton from "react-loading-skeleton";
 import { Link } from "react-router-dom";
 
-const URL_API = "http://localhost:2000/user";
+const URL_API = "https://api-warehouse-3.purwadhikafs2.com/user";
 
 export default class Profile extends React.Component {
   constructor(props) {

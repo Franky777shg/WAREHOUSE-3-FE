@@ -1,7 +1,7 @@
 import Axios from 'axios'
 
-const BASE_URL = "http://localhost:2000";
-// const URL_API = 'http://localhost:2000/user'
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
+// const URL_API = 'https://api-warehouse-3.purwadhikafs2.com/user'
 
 export const userLogin = (email, password) => {
   return (dispatch) => {

@@ -9,7 +9,7 @@ import { keepAdminLogin } from "../../redux/actions";
 
 import NavigationBar from "../../components/__admin/NavigationBar";
 
-const BASE_URL = "http://localhost:2000";
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
 
 class HomePage extends React.Component {
   constructor(props) {
@@ -381,7 +381,7 @@ class HomePage extends React.Component {
                             <Carousel.Item interval={1500} key={index}>
                               <img
                                 className="d-block w-100"
-                                src={`http://localhost:2000/products/${item.productimg}`}
+                                src={`https://api-warehouse-3.purwadhikafs2.com/products/${item.productimg}`}
                                 style={{ height: '70%', width: '100%' }}
                               />
                               <Carousel.Caption>

@@ -30,7 +30,7 @@ class ProdAdminEditPage extends React.Component {
     fetchData = () => {
         let idProd = this.props.match.params.id
         window.scrollTo(0, 0)
-        Axios.get(`http://localhost:2000/prod-admin/get-product-admin-detail/${idProd}`)
+        Axios.get(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/get-product-admin-detail/${idProd}`)
             .then((res) => {
                 console.log("Detail prodID",res.data)
                 this.setState({
@@ -39,13 +39,13 @@ class ProdAdminEditPage extends React.Component {
                     maxStockOp: res.data[0].TotalStockOperational
                 })
 
-                Axios.get(`http://localhost:2000/prod-admin/get-categories`)
+                Axios.get(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/get-categories`)
                     .then((res) => {
                         //    console.log("Categories",res.data)
                         this.setState({
                             cate: res.data
                         })
-                        Axios.get(`http://localhost:2000/prod-admin/get-detail-stock-op/${idProd}`)
+                        Axios.get(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/get-detail-stock-op/${idProd}`)
                             .then((res) => {
                                 //    console.log("GetStock", res.data)
                                 this.setState({
@@ -80,7 +80,7 @@ class ProdAdminEditPage extends React.Component {
         }
         // console.log("id",idProdStock)
 
-        Axios.post(`http://localhost:2000/prod-admin/edit-stock/${idProdStock}`, obj)
+        Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/edit-stock/${idProdStock}`, obj)
             .then(res => {
                 // console.log(res.data)
                 this.setState({
@@ -110,7 +110,7 @@ class ProdAdminEditPage extends React.Component {
             }
             console.log(updData)
 
-            Axios.post(`http://localhost:2000/prod-admin/edit-product/${this.state.prodDetail.id_product}/`, updData)
+            Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/edit-product/${this.state.prodDetail.id_product}/`, updData)
                 .then(res => {
                     // console.log("Data Save", res.data)
                     this.setState({
@@ -135,7 +135,7 @@ class ProdAdminEditPage extends React.Component {
         // console.log(data.get('PROD'))
         let idProd = this.props.match.params.id
 
-        Axios.post(`http://localhost:2000/prod-admin/edit-detailfoto/${idProd}`, data, { headers: { 'Content-type': 'multipart/form-data' } })
+        Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/edit-detailfoto/${idProd}`, data, { headers: { 'Content-type': 'multipart/form-data' } })
             .then(res => {
                 // console.log("Upload", res.data)
                 this.setState({
@@ -176,7 +176,7 @@ class ProdAdminEditPage extends React.Component {
                 <div className="d-flex flex-wrap  bd-highlight mb-3 justify-content-center">
                     <div className="d-flex flex-column">
                         <Image className="me-3 mb-2" width={360} height={400}
-                            src={`http://localhost:2000/products/${this.state.prodDetail.productimg}`}
+                            src={`https://api-warehouse-3.purwadhikafs2.com/products/${this.state.prodDetail.productimg}`}
                         />
                         <Button style={styles.btnUpload}
                             variant="outline-dark"

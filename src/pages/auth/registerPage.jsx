@@ -15,7 +15,7 @@ import heroImage from "../../assets/img/login hero/loginhero5.png";
 import regSuccessHero from "../../assets/img/info/login.png";
 import Axios from "axios";
 import { connect } from "react-redux";
-const BASE_URL = "http://localhost:2000";
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
 
 class RegisterPage extends React.Component {
   constructor(props) {

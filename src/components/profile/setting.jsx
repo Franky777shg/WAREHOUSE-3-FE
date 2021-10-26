@@ -20,7 +20,7 @@ import {
 } from "react-bootstrap";
 import firebase from "../../firebase";
 import Skeleton from "react-loading-skeleton";
-const URL_API = "http://localhost:2000/user";
+const URL_API = "https://api-warehouse-3.purwadhikafs2.com/user";
 
 class Setting extends React.Component {
   constructor(props) {

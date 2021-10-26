@@ -5,7 +5,7 @@ import Success from "../../components/Success";
 
 import activationSuccessHero from "../../assets/img/info/accountactive.png";
 
-const API_URL = "http://localhost:2000";
+const API_URL = "https://api-warehouse-3.purwadhikafs2.com";
 
 class VerifPage extends React.Component {
   constructor(props) {

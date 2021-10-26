@@ -17,7 +17,7 @@ import NavigationBar from "../components/NavigationBar";
 import { Link } from "react-router-dom";
 
 import Skeleton from "react-loading-skeleton";
-const BASE_URL = "http://localhost:2000";
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
 
 class ProductPage extends React.Component {
     constructor(props) {
@@ -36,7 +36,7 @@ class ProductPage extends React.Component {
     }
 
     componentDidMount() {
-        Axios.post(`http://localhost:2000/product/get-product/`)
+        Axios.post(`https://api-warehouse-3.purwadhikafs2.com/product/get-product/`)
             .then((res) => {
                 this.setState({
                     dataProd: res.data[0],
@@ -88,7 +88,7 @@ class ProductPage extends React.Component {
             return null;
         } else {
             Axios.post(
-                `http://localhost:2000/product/filter-product?page=${this.state.currentPage}`,
+                `https://api-warehouse-3.purwadhikafs2.com/product/filter-product?page=${this.state.currentPage}`,
                 obj
             )
                 .then((res) => {
@@ -137,7 +137,7 @@ class ProductPage extends React.Component {
         console.log("Hasil klik Sort", obj);
 
         Axios.post(
-            `http://localhost:2000/product/sort-product?page=${this.state.currentPage}`,
+            `https://api-warehouse-3.purwadhikafs2.com/product/sort-product?page=${this.state.currentPage}`,
             obj
         )
             .then((res) => {
@@ -159,7 +159,7 @@ class ProductPage extends React.Component {
         if (this.state.pageNext === "") {
             //paginate biasa
             Axios.post(
-                `http://localhost:2000/product/get-product?page=${this.state.currentPage + 1
+                `https://api-warehouse-3.purwadhikafs2.com/product/get-product?page=${this.state.currentPage + 1
                 }`
             )
                 .then((res) => {
@@ -182,7 +182,7 @@ class ProductPage extends React.Component {
             let obj = { name, category };
 
             Axios.post(
-                `http://localhost:2000/product/filter-product?page=${this.state.currentPage + 1
+                `https://api-warehouse-3.purwadhikafs2.com/product/filter-product?page=${this.state.currentPage + 1
                 }`,
                 obj
             )
@@ -222,7 +222,7 @@ class ProductPage extends React.Component {
             console.log("Hasil klik Sort", obj);
 
             Axios.post(
-                `http://localhost:2000/product/sort-product?page=${this.state.currentPage + 1}`,
+                `https://api-warehouse-3.purwadhikafs2.com/product/sort-product?page=${this.state.currentPage + 1}`,
                 obj
             )
                 .then((res) => {
@@ -246,7 +246,7 @@ class ProductPage extends React.Component {
         if (this.state.pagePrev === "") {
             //paginate biasa
             Axios.post(
-                `http://localhost:2000/product/get-product?page=${this.state.currentPage - 1
+                `https://api-warehouse-3.purwadhikafs2.com/product/get-product?page=${this.state.currentPage - 1
                 }`
             )
                 .then((res) => {
@@ -269,7 +269,7 @@ class ProductPage extends React.Component {
             let obj = { name, category };
 
             Axios.post(
-                `http://localhost:2000/product/filter-product?page=${this.state.currentPage - 1
+                `https://api-warehouse-3.purwadhikafs2.com/product/filter-product?page=${this.state.currentPage - 1
                 }`,
                 obj
             )
@@ -309,7 +309,7 @@ class ProductPage extends React.Component {
             console.log("Hasil klik Sort", obj);
 
             Axios.post(
-                `http://localhost:2000/product/sort-product?page=${this.state.currentPage - 1}`,
+                `https://api-warehouse-3.purwadhikafs2.com/product/sort-product?page=${this.state.currentPage - 1}`,
                 obj
             )
                 .then((res) => {
@@ -413,7 +413,7 @@ class ProductPage extends React.Component {
                                                         <Card.Img
                                                             style={style.cardImage}
                                                             variant="top"
-                                                            src={`http://localhost:2000/products/${item.productimg}`}
+                                                            src={`https://api-warehouse-3.purwadhikafs2.com/products/${item.productimg}`}
                                                         />
                                                     )}
                                                 </div>

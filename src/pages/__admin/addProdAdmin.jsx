@@ -26,7 +26,7 @@ class AddProductAdmin extends React.Component {
     }
 
     fetchCate = () => {
-        Axios.get(`http://localhost:2000/prod-admin/get-categories`)
+        Axios.get(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/get-categories`)
             .then((res => {
                 this.setState({
                     cate: res.data
@@ -64,17 +64,17 @@ class AddProductAdmin extends React.Component {
         if (!name || !category || !description || !price || this.state.images === "") {
             return this.setState({ inputEmpty: [true, "Cannot be empty, Please input all of data !"] })
         } else {
-            Axios.post(`http://localhost:2000/prod-admin/add-product`, obj)
+            Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/add-product`, obj)
                 .then((res) => {
                     // console.log(res.data)
                     this.setState({ id_product: res.data.id_product })
-                    Axios.post(`http://localhost:2000/prod-admin/edit-detailfoto/${this.state.id_product}`, data,
+                    Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/edit-detailfoto/${this.state.id_product}`, data,
                         { headers: { 'Content-type': 'multipart/form-data' } })
                         .then((res) => {
                             this.setState({
                                 successAdd: [true, "New Product Successfully added !"],
                             })
-                            Axios.post(`http://localhost:2000/prod-admin/add-stock-default/${this.state.id_product}`)
+                            Axios.post(`https://api-warehouse-3.purwadhikafs2.com/prod-admin/add-stock-default/${this.state.id_product}`)
                                 .then((res) => {
                                     console.log("Add stock-op default")
                                 })

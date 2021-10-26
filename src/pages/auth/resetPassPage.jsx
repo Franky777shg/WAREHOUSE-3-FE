@@ -6,7 +6,7 @@ import "../../assets/styles/utils.css";
 import "../../assets/styles/auth.css";
 import Success from "../../components/Success";
 import resetSuccess from "../../assets/img/info/registersuccess.png";
-const BASE_URL = "http://localhost:2000";
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
 
 class ResetPassPage extends React.Component {
   constructor(props) {

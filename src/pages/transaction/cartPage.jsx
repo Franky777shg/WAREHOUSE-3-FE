@@ -25,7 +25,7 @@ import buySuccess from "../../assets/img/info/cart.png";
 import { Redirect } from "react-router";
 import utils from "../../assets/styles/utils.module.css";
 
-const BASE_URL = "http://localhost:2000";
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
 const paymentMethod = [
   {
     bank: "Bank Negara Indonesia",
@@ -219,7 +219,7 @@ class CartPage extends React.Component {
                   <Figure.Image
                     width={70}
                     height={70}
-                    src={`http://localhost:2000/products/${item.productimg}`}
+                    src={`https://api-warehouse-3.purwadhikafs2.com/products/${item.productimg}`}
                   />
                 </div>
                 <Figure.Caption>

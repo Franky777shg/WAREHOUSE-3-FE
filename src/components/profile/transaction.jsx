@@ -16,7 +16,7 @@ import {
 
 import { Link } from "react-router-dom";
 import Info from "../Info";
-const BASE_URL = "http://localhost:2000";
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
 const token = localStorage.getItem("token");
 const Error =
   "https://firebasestorage.googleapis.com/v0/b/e-commerce-f95d6.appspot.com/o/info%2Ferror.png?alt=media&token=cb31b07e-6bc7-4fb8-aa56-41ac6a50bb0c";

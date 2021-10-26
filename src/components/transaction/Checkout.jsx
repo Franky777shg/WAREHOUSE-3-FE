@@ -4,7 +4,7 @@ import { Row, Form, Col, Card, Button, Badge } from "react-bootstrap";
 import utils from "../../assets/styles/utils.module.css";
 import "../../assets/styles/checkout.css";
 
-const BASE_URL = "http://localhost:2000";
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
 
 export default class Checkout extends React.Component {
   constructor(props) {

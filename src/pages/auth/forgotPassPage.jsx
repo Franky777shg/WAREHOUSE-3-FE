@@ -8,7 +8,7 @@ import heroImage from "../../assets/img/login hero/loginhero5.png";
 import resetHero from "../../assets/img/info/chatbot.png";
 import Success from "../../components/Success";
 
-const BASE_URL = "http://localhost:2000";
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
 
 class ForgotPassPage extends React.Component {
   constructor(props) {

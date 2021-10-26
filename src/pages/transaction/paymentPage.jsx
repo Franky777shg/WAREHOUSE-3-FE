@@ -15,7 +15,7 @@ import utils from "../../assets/styles/utils.module.css";
 
 import firebase from "../../firebase";
 
-const BASE_URL = "http://localhost:2000";
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
 const mandiri =
   "https://firebasestorage.googleapis.com/v0/b/e-commerce-f95d6.appspot.com/o/paymethods%2Fmandiri.png?alt=media&token=cb738bd8-e547-4737-9c41-ca99dca3df1f";
 const bsi =

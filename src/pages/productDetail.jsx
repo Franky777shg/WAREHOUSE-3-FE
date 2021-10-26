@@ -7,7 +7,7 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import { addToCart } from "../redux/actions";
 
-const BASE_URL = "http://localhost:2000";
+const BASE_URL = "https://api-warehouse-3.purwadhikafs2.com";
 
 class DetailPage extends React.Component {
   constructor(props) {
@@ -146,7 +146,7 @@ class DetailPage extends React.Component {
                 className="d-block"
                 src={
                   detailProd
-                    ? `http://localhost:2000/products/${detailProd.productimg}`
+                    ? `https://api-warehouse-3.purwadhikafs2.com/products/${detailProd.productimg}`
                     : ""
                 }
                 fluid
