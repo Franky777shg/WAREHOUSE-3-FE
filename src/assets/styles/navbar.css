@@ -1,0 +1,6 @@
+.actionBtn {
+  border: none;
+}
+.actionBtn:hover {
+  background-color: #eaeaea;
+}
